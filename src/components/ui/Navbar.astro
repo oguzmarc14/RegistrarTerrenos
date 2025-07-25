@@ -1,0 +1,26 @@
+<nav class:list={[
+  "bg-white/10",           // fondo blanco con 10% opacidad (parece vidrio)
+  "backdrop-blur-md",      // desenfoque del fondo
+  "backdrop-saturate-150", // saturación más rica
+  "border-b",              // opcional: línea inferior
+  "border-white/20",       // borde blanco con opacidad
+  "shadow-lg",             // sombra sutil
+  "sticky",                // si quieres que se quede fijo
+  "top-0",                 // si es sticky
+  "z-50"                   // asegúrate que esté por encima
+]}>
+  <div class:list={["flex", "justify-between", "items-center", "px-4", "py-3"]}>
+    <img src="/logo.png" class:list={["w-40"]} alt="" />
+    <ul class:list={["flex", "text-white", "font-bold", "text-1xl", "gap-4", "font-serif"]}>
+      <li class="hover:scale-105 hover:text-blue-300"><a href="/Home">Home</a></li>
+      <li class="hover:scale-105 hover:text-blue-300"><a href="/MostrarTerrenos">Terrenos</a></li>
+      <li class="hover:scale-105 hover:text-blue-300"><a href="#">Acerca de nosotros</a></li>
+      <li class="hover:scale-105 hover:text-blue-300"><a href="#">Conócenos</a></li>
+    </ul>
+    <ul class="flex gap-3">
+      <li><img src="/facebook.png" class="w-8" alt="Facebook"></li>
+      <li><img src="/instagram.png" class="w-8" alt="Instagram"></li>
+      <li><img src="/tik-tok.png" class="w-8" alt="TikTok"></li>
+    </ul>
+  </div>
+</nav>
