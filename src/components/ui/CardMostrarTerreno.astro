@@ -3,7 +3,7 @@ interface Props {
   titulo: string;
   descripcion: string;
   precio: number;
-  src_imagen: string;
+  imagenes: string[];
   textBoton: string;
   hrefBoton: string;
   medidas?: string;
@@ -15,7 +15,7 @@ const {
   titulo,
   descripcion,
   precio,
-  src_imagen,
+  imagenes,
   medidas,
   ubicacion,
   fecha,
@@ -24,15 +24,29 @@ const {
 } = Astro.props;
 
 const baseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
-const imageUrl = `${baseUrl}/storage/v1/object/public/terrenos-imagenes/${src_imagen}`;
 ---
 
-<article class="relative bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 h-120">
-  <img
-    src={imageUrl}
-    alt={titulo}
-    class="w-full h-48 object-cover"
-  />
+<article class="relative bg-gray-800/20 rounded-2xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 h-160 w-110">
+
+  <!-- ✅ Carrusel Swiper renderizado correctamente -->
+  <swiper-container
+    class="w-full h-70 rounded-t-2xl"
+    slides-per-view="1"
+    loop="true"
+    pagination="true"
+    navigation="true"
+  >
+    <!-- 👇 Usa Astro "each" con etiquetas HTML directamente -->
+    {imagenes.map((img, i) => (
+      <swiper-slide>
+        <img
+          src={`${baseUrl}/storage/v1/object/public/terrenos-imagenes/${img}`}
+          alt={`${titulo} imagen ${i + 1}`}
+          class="w-full h-70 object-fill"
+        />
+      </swiper-slide>
+    ))}
+  </swiper-container>
 
   <div class="p-4 space-y-2">
     <h2 class="text-xl font-bold">{titulo}</h2>
@@ -41,6 +55,14 @@ const imageUrl = `${baseUrl}/storage/v1/object/public/terrenos-imagenes/${src_im
     {medidas && <p class="text-sm text-gray-500">Medidas: {medidas}</p>}
     {ubicacion && <p class="text-sm text-gray-500">Ubicación: {ubicacion}</p>}
     {fecha && <p class="text-xs text-gray-400">Publicado: {new Date(fecha).toLocaleDateString()}</p>}
-    <a href={hrefBoton} class:list={["absolute", "bottom-5", "-left-[-12px]", "bg-blue-700","px-3", "py-2", "rounded-2xl", "text-white"]}>{textBoton}</a>
+
+    <a href={hrefBoton} class="absolute bottom-5 left-4 bg-blue-700 px-3 py-2 rounded-2xl text-white">
+      {textBoton}
+    </a>
   </div>
 </article>
+
+<!-- ✅ Import Swiper Web Components -->
+<script type="module">
+  import 'swiper/element/bundle';
+</script>

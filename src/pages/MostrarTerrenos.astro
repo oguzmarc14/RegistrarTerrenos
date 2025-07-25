@@ -1,7 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import TerrenoCard from "../components/ui/CardMostrarTerreno.astro";
 import { createClient } from "@supabase/supabase-js";
+import CardMostrarTerreno from "../components/ui/CardMostrarTerreno.astro";
 
 const supabase = createClient(
   import.meta.env.PUBLIC_SUPABASE_URL,
@@ -19,18 +19,20 @@ const { data: terrenos, error } = await supabase
 
   {error && <p class="text-red-500 text-center">Error al cargar terrenos</p>}
 
-  <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto">
+<div class:list={["grid", "grid-cols-1", "sm:grid-cols-2", "lg:grid-cols-3", "gap-8", "max-w-[1500px]", "mx-auto", "px-4"]}>
+
     {
       terrenos?.map((terreno) => (
-        <TerrenoCard
+        <CardMostrarTerreno
           titulo={terreno.titulo}
           descripcion={terreno.descripcion}
           precio={terreno.precio}
-          src_imagen={terreno.src_imagen}
+          imagenes={terreno.imagenes}
           medidas={terreno.medidas}
           ubicacion={terreno.ubicacion}
           fecha={terreno.fecha}
           textBoton="Me interesa"
+          hrefBoton="#"
 
         />
       ))

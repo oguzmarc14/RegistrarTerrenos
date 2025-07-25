@@ -38,9 +38,10 @@
         <input
           type="file"
           id="imagen"
-          name="imagen"
+          name="imagenes"
           accept="image/*"
           required
+          multiple
           class="hidden"
         />
         <label
@@ -49,11 +50,11 @@
         >
           Seleccionar imagen
         </label>
-        <img
-          id="previewImagen"
-          class="mt-2 max-w-full max-h-20 rounded shadow hidden"
-          alt="Vista previa"
-        />
+        <div
+          id="previewContainer"
+          class="mt-2 flex gap-2 flex-wrap justify-center"
+        >
+        </div>
       </div>
       <button
         type="submit"
