@@ -1,26 +1,54 @@
+---
+interface Prop {
+    class?: string
+}
+
+const { class: className=""} = Astro.props as Prop
+---
+
 <nav class:list={[
-  "bg-white/10",           // fondo blanco con 10% opacidad (parece vidrio)
-  "backdrop-blur-md",      // desenfoque del fondo
-  "backdrop-saturate-150", // saturación más rica
-  "border-b",              // opcional: línea inferior
-  "border-white/20",       // borde blanco con opacidad
-  "shadow-lg",             // sombra sutil
-  "sticky",                // si quieres que se quede fijo
-  "top-0",                 // si es sticky
-  "z-50"                   // asegúrate que esté por encima
+  "bg-white/10",
+  "backdrop-blur-md",
+  "backdrop-saturate-150",
+  "border-b",
+  "border-white/20",
+  "shadow-lg",
+  "sticky",
+  "top-0",
+  className
 ]}>
-  <div class:list={["flex", "justify-between", "items-center", "px-4", "py-3"]}>
-    <img src="/logo.png" class:list={["w-40"]} alt="" />
-    <ul class:list={["flex", "text-white", "font-bold", "text-1xl", "gap-4", "font-serif"]}>
-      <li class="hover:scale-105 hover:text-blue-300"><a href="/Home">Home</a></li>
-      <li class="hover:scale-105 hover:text-blue-300"><a href="/MostrarTerrenos">Terrenos</a></li>
-      <li class="hover:scale-105 hover:text-blue-300"><a href="#">Acerca de nosotros</a></li>
-      <li class="hover:scale-105 hover:text-blue-300"><a href="#">Conócenos</a></li>
-    </ul>
-    <ul class="flex gap-3">
-      <li><img src="/facebook.png" class="w-8" alt="Facebook"></li>
-      <li><img src="/instagram.png" class="w-8" alt="Instagram"></li>
-      <li><img src="/tik-tok.png" class="w-8" alt="TikTok"></li>
+  <div>
+    <!-- Parte superior: logo + redes -->
+    <div class:list={["flex", "justify-between", "items-center", "px-4", "py-3", "gap-36"]}>
+      <a href="/Home"><img src="/logo.png" class:list={["w-40", "hover:scale-110", "duration-300"]} alt="Logo del sitio" /></a>
+
+      <ul class="flex gap-3">
+        <li class:list={["hover:scale-110", "duration-300"]}><a href="https://facebook.com" aria-label="Facebook"><img src="/facebook.png" class="w-12" alt="Facebook" /></a></li>
+        <li class:list={["hover:scale-110", "duration-300"]}><a href="https://instagram.com" aria-label="Instagram"><img src="/instagram.png" class="w-12" alt="Instagram" /></a></li>
+        <li class:list={["hover:scale-110", "duration-300"]}><a href="https://tiktok.com" aria-label="TikTok"><img src="/tik-tok.png" class="w-12" alt="TikTok" /></a></li>
+      </ul>
+    </div>
+
+    <!-- Línea de separación -->
+    <div class="border-t border-white/20 mx-6 my-2"></div>
+
+    <!-- Parte inferior: enlaces principales -->
+    <ul class:list={[
+      "flex",
+      "justify-center",
+      "text-white",
+      "gap-8",
+      "font-bold",
+      "uppercase",
+      "tracking-wide",
+      "text-sm",
+      "pb-3"
+    ]}>
+      <li class:list={["hover:scale-110", "hover:text-blue-500", "duration-300"]}><a href="/Home">Home</a></li>
+      <li class:list={["hover:scale-110", "hover:text-blue-500", "duration-300"]}><a href="/MostrarTerrenos">Terrenos</a></li>
+      <li class:list={["hover:scale-110", "hover:text-blue-500", "duration-300"]}><a href="/Conocenos">Conócenos</a></li>
     </ul>
   </div>
 </nav>
+
+

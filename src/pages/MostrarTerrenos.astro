@@ -2,7 +2,6 @@
 import Layout from "../layouts/Layout.astro";
 import { createClient } from "@supabase/supabase-js";
 import CardMostrarTerreno from "../components/ui/CardMostrarTerreno.astro";
-import Navbar from "../components/ui/Navbar.astro";
 
 const supabase = createClient(
   import.meta.env.PUBLIC_SUPABASE_URL,
@@ -14,9 +13,9 @@ const { data: terrenos, error } = await supabase
   .select("*")
   .order("fecha", { ascending: false });
 ---
-<Navbar/>
+
 <Layout>
-  <h1 class="text-5xl font-bold text-center mb-10 text-gray-100 font-serif">Algunos de nuestros Terrenos</h1>
+  <h2 class="text-5xl font-bold text-center mb-10 text-gray-100 font-serif">Algunos de nuestros Terrenos</h2>
 
   {error && <p class="text-red-500 text-center">Error al cargar terrenos</p>}
 

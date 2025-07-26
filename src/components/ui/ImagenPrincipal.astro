@@ -1,5 +1,7 @@
 ---
+// Importaciones
 import Button from "./Button.astro";
+import Navbar from "./Navbar.astro";
 
 interface Props {
   h2Title: string;
@@ -19,19 +21,24 @@ const {
 } = Astro.props as Props;
 ---
 
-<article class="relative">
+<!-- ✅ Navbar por fuera y en lo más alto -->
+
+<article class="relative h-screen overflow-hidden">
+  <!-- ✅ Imagen de fondo -->
   <img
-    class="h-screen w-full object-center"
+    class="absolute h-screen w-full object-cover"
     src={srcImage}
-    alt="Imagen de batería"
+    alt="Imagen de fondo"
   />
 
+  <Navbar class="absolute top-0 left-0 w-full z-10" />
+
+  <!-- ✅ Contenido sobre la imagen -->
   <div
     class:list={[
       "absolute",
       "left-0",
-      "top-1/2",
-      "-translate-y-1/2",
+      "top-54",
       "flex",
       "flex-col",
       "text-white",
@@ -43,12 +50,11 @@ const {
       "duration-150"
     ]}
   >
-    <h2 class="text-7xl font-bold mb-4">{h2Title}</h2>
-    <h3 class="text-xl ml-1">{description}</h3>
+    <h2 class="text-6xl font-bold mb-4">{h2Title}</h2>
+    <h3 class="text-2xl ml-1">{description}</h3>
     <div class="flex flex-row gap-5 mt-6">
       <Button href="#" text="Ver video" isGhost={true} />
       <Button href="#" text="Ver terrenos" isGhost={false} />
     </div>
   </div>
 </article>
-
