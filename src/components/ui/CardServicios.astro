@@ -1,0 +1,31 @@
+---
+interface Prop{
+  titulo: string;
+  descripcion: string;
+  boton: string
+}
+
+const { titulo, descripcion, boton } = Astro.props as Prop;
+---
+
+<article 
+  class="flex items-center justify-end px-6 py-12"
+>
+  <div 
+    class="bg-gray-800/50 shadow-xl rounded-3xl w-full max-w-120 p-10 flex flex-col items-center text-center space-y-3"
+  >
+    <h2 class="text-3xl md:text-4xl text-white">
+      {titulo}
+    </h2>
+    <p class="text-lg text-white leading-relaxed">
+      {descripcion}
+    </p>
+    <button 
+      type="button" 
+      class="bg-sky-900 text-white px-6 py-3 rounded-2xl mt-4 
+             shadow-md hover:bg-sky-800 transition cursor-pointer"
+    >
+      {boton}
+    </button>
+  </div>
+</article>

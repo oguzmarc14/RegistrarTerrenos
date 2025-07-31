@@ -5,6 +5,12 @@ import "/styles/global.css";
 <!doctype html>
 <html lang="en">
   <head>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&family=Playfair+Display+SC:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&display=swap"
+      rel="stylesheet"
+    />
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
@@ -15,7 +21,7 @@ import "/styles/global.css";
     <link rel="icon" href="/favicon.ico" />
     <title>Astro Basics</title>
   </head>
-  <body class:list={["bg-gray-950"]}>
+  <body class:list={["bg-gray-200"]}>
     <slot />
   </body>
 </html>
