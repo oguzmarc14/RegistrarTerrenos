@@ -1,11 +1,13 @@
 // src/pages/api/registrarTerreno.ts
 import type { APIRoute } from 'astro';
-import { v4 as uuidv4 } from 'uuid';
 
 export const POST: APIRoute = async ({ request }) => {
   const body = await request.json();
 
-  const response = await fetch('https://TU_PROYECTO.supabase.co/rest/v1/Terrenos', {
+  // Import dinámico para evitar error en Vercel
+  const { v4: uuidv4 } = await import('uuid');
+
+  const response = await fetch(`${import.meta.env.PUBLIC_SUPABASE_URL}/rest/v1/Terrenos`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
