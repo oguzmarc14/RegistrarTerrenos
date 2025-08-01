@@ -19,10 +19,10 @@ const { class: className=""} = Astro.props as Prop
 ]}>
   <div>
     <!-- Parte superior: logo + redes -->
-    <div class:list={["flex", "justify-between", "items-center", "px-4", "py-3", "gap-36"]}>
+    <div class:list={["flex", "justify-between", "items-center", "px-4", "py-3", "gap-36", ]}>
       <a href="/Home"><img src="/logo.png" class:list={["w-40", "hover:scale-110", "duration-300"]} alt="Logo del sitio" /></a>
 
-      <ul class="flex gap-3">
+      <ul class:list={["flex", "gap-3"]}>
         <li class:list={["hover:scale-110", "duration-300"]}><a href="https://facebook.com" aria-label="Facebook"><img src="/facebook.png" class="w-12" alt="Facebook" /></a></li>
         <li class:list={["hover:scale-110", "duration-300"]}><a href="https://instagram.com" aria-label="Instagram"><img src="/instagram.png" class="w-12" alt="Instagram" /></a></li>
         <li class:list={["hover:scale-110", "duration-300"]}><a href="https://tiktok.com" aria-label="TikTok"><img src="/tik-tok.png" class="w-12" alt="TikTok" /></a></li>
@@ -44,10 +44,10 @@ const { class: className=""} = Astro.props as Prop
       "text-sm",
       "pb-3"
     ]}>
-      <li class:list={["hover:scale-110", "hover:text-blue-500", "duration-300"]}><a href="/index">Home</a></li>
-      <li class:list={["hover:scale-110", "hover:text-blue-500", "duration-300"]}><a href="/Terrenos">Terrenos</a></li>
-      <li class:list={["hover:scale-110", "hover:text-blue-500", "duration-300"]}><a href="/Conocenos">Conócenos</a></li>
-      <li class:list={["hover:scale-110", "hover:text-blue-500", "duration-300"]}><a href="/Registra Terreno">Registrar Terreno</a></li>
+      <li class:list={["hover:scale-110", "hover:text-blue-500", "duration-300", "text-xs", "sm:text-base"]}><a href="/">Home</a></li>
+      <li class:list={["hover:scale-110", "hover:text-blue-500", "duration-300", "text-xs", "sm:text-base"]}><a href="/Terrenos">Terrenos</a></li>
+      <li class:list={["hover:scale-110", "hover:text-blue-500", "duration-300", "text-xs", "sm:text-base"]}><a href="/Conocenos">Conócenos</a></li>
+      <li class:list={["hover:scale-110", "hover:text-blue-500", "duration-300", "text-xs", "sm:text-base"]}><a href="/RegistrarTerrenos">Registrar Terreno</a></li>
     </ul>
   </div>
 </nav>

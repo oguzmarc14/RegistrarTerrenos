@@ -7,10 +7,7 @@ interface Props {
   h2Title: string;
   srcImage: string;
   description: string;
-  textButton: string;
-  href: string;
   class?: string;
-  isGhost?: boolean;
 }
 
 const {
@@ -21,16 +18,28 @@ const {
 } = Astro.props as Props;
 ---
 
-<!-- ✅ Navbar por fuera y en lo más alto -->
-
-<article class="relative h-screen overflow-hidden">
+<article
+  class:list={[
+    "relative",
+    "h-screen",
+    "overflow-hidden",
+    className,
+  ]}
+>
   <!-- ✅ Imagen de fondo -->
   <img
-    class="absolute h-screen w-full object-cover"
     src={srcImage}
     alt="Imagen de fondo"
+    class:list={[
+      "absolute",
+      "inset-0",
+      "h-full",
+      "w-full",
+      "object-cover",
+    ]}
   />
 
+  <!-- ✅ Navbar -->
   <Navbar class="absolute top-0 left-0 w-full z-10" />
 
   <!-- ✅ Contenido sobre la imagen -->
@@ -38,21 +47,56 @@ const {
     class:list={[
       "absolute",
       "left-0",
-      "top-54",
+      "top-1/2",               // centrado vertical en mobile
+      "transform",
+      "-translate-y-1/2",      // ajuste de centrado
       "flex",
       "flex-col",
       "text-white",
-      "text-left",
-      "px-24",
-      "w-[55%]",
+      "px-6",                  // padding base
+      "md:px-16",              // mayor padding en tablet
+      "lg:px-24",              // mayor padding en desktop
+      "w-full",
+      "md:w-[70%]",            // ancho 70% en tablet
+      "lg:w-[55%]",            // ancho 55% en desktop
       "hover:scale-105",
       "transition-transform",
-      "duration-150"
+      "duration-200",
     ]}
   >
-    <h2 class="text-6xl font-bold mb-4">{h2Title}</h2>
-    <h3 class="text-2xl ml-1">{description}</h3>
-    <div class="flex flex-row gap-5 mt-6">
+    <h2
+      class:list={[
+        "font-bold",
+        "mb-4",
+        "text-3xl",    // base
+        "sm:text-4xl",
+        "md:text-5xl",
+        "lg:text-6xl",
+      ]}
+    >
+      {h2Title}
+    </h2>
+    <h3
+      class:list={[
+        "ml-0",
+        "md:ml-1",
+        "text-lg",     // base
+        "sm:text-xl",
+        "md:text-2xl",
+        "leading-relaxed",
+      ]}
+    >
+      {description}
+    </h3>
+    <div
+      class:list={[
+        "flex",
+        "flex-col",          // botones en columna en móvil
+        "sm:flex-row",       // en fila en pantallas medianas
+        "gap-4",
+        "mt-6",
+      ]}
+    >
       <Button href="#" text="Ver video" isGhost={true} />
       <Button href="#" text="Ver terrenos" isGhost={false} />
     </div>
