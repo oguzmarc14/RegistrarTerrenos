@@ -1,10 +1,11 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js';
 
+// ✅ Define tus variables (directas o inyectadas por Astro)
+const SUPABASE_URL = "https://ssrmztcxoijibjntrtqe.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNzcm16dGN4b2lqaWJqbnRydHFlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMzOTA3NDQsImV4cCI6MjA2ODk2Njc0NH0.Wg9rToI2VzpKrnNmAvRVIlky7bSRjCDfFZ4OuZIaesI";
+
 // ✅ Inicializa Supabase
-const supabase = createClient(
-  import.meta.env.PUBLIC_SUPABASE_URL,
-  import.meta.env.PUBLIC_SUPABASE_KEY
-);
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // ✅ Elementos del formulario
 const form = document.getElementById('formularioTerreno') as HTMLFormElement | null;
@@ -18,19 +19,17 @@ const inputs = form
 
 // ✅ Mostrar miniaturas al seleccionar imágenes
 inputImagen?.addEventListener('change', () => {
-  if (previewContainer) previewContainer.innerHTML = ''; // Limpiar miniaturas anteriores
+  if (previewContainer) previewContainer.innerHTML = '';
 
   if (inputImagen.files && inputImagen.files.length > 0) {
     Array.from(inputImagen.files).forEach((archivo) => {
       const reader = new FileReader();
-
       reader.onload = function (e) {
         const img = document.createElement('img');
         img.src = e.target?.result as string;
         img.className = 'max-w-[100px] max-h-[100px] rounded shadow';
         previewContainer?.appendChild(img);
       };
-
       reader.readAsDataURL(archivo);
     });
   }
@@ -81,7 +80,6 @@ form?.addEventListener('submit', async (e) => {
 
   const urls: string[] = [];
 
-  // 🔑 Subir máximo 5 imágenes
   for (let i = 0; i < Math.min(files.length, 5); i++) {
     const file = files[i];
 
@@ -96,7 +94,6 @@ form?.addEventListener('submit', async (e) => {
     }
 
     if (data?.path) {
-      // ✅ Obtener URL pública
       const { data: publicUrlData } = supabase.storage
         .from('terrenos-imagenes')
         .getPublicUrl(data.path);
@@ -107,7 +104,6 @@ form?.addEventListener('submit', async (e) => {
     }
   }
 
-  // ✅ Guardar en base de datos con URLs públicas
   const { error: insertError } = await supabase.from('Terrenos').insert({
     titulo: formData.get('titulo'),
     descripcion: formData.get('descripcion'),
@@ -115,7 +111,7 @@ form?.addEventListener('submit', async (e) => {
     medidas: formData.get('medidas'),
     ubicacion: formData.get('ubicacion'),
     fecha: new Date().toISOString(),
-    imagenes: urls, // 🔑 ahora guardamos las URLs públicas
+    imagenes: urls,
   });
 
   if (insertError) {
