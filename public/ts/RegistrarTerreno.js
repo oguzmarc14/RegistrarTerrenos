@@ -1,23 +1,21 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js';
 
-// ✅ Define tus variables (directas o inyectadas por Astro)
 const SUPABASE_URL = "https://ssrmztcxoijibjntrtqe.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNzcm16dGN4b2lqaWJqbnRydHFlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMzOTA3NDQsImV4cCI6MjA2ODk2Njc0NH0.Wg9rToI2VzpKrnNmAvRVIlky7bSRjCDfFZ4OuZIaesI";
+const SUPABASE_KEY = "tu_key";
 
-// ✅ Inicializa Supabase
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // ✅ Elementos del formulario
-const form = document.getElementById('formularioTerreno') as HTMLFormElement | null;
-const inputImagen = document.getElementById('imagen') as HTMLInputElement | null;
-const previewContainer = document.getElementById('previewContainer') as HTMLDivElement | null;
-const boton = document.getElementById('botonSubmit') as HTMLButtonElement | null;
+const form = document.getElementById('formularioTerreno');
+const inputImagen = document.getElementById('imagen');
+const previewContainer = document.getElementById('previewContainer');
+const boton = document.getElementById('botonSubmit');
 
-const inputs = form
-  ? Array.from(form.querySelectorAll('input, textarea')) as (HTMLInputElement | HTMLTextAreaElement)[]
+const inputs = form 
+  ? Array.from(form.querySelectorAll('input, textarea'))
   : [];
 
-// ✅ Mostrar miniaturas al seleccionar imágenes
+// ✅ Mostrar miniaturas
 inputImagen?.addEventListener('change', () => {
   if (previewContainer) previewContainer.innerHTML = '';
 
@@ -26,7 +24,7 @@ inputImagen?.addEventListener('change', () => {
       const reader = new FileReader();
       reader.onload = function (e) {
         const img = document.createElement('img');
-        img.src = e.target?.result as string;
+        img.src = e.target?.result;
         img.className = 'max-w-[100px] max-h-[100px] rounded shadow';
         previewContainer?.appendChild(img);
       };
@@ -37,10 +35,9 @@ inputImagen?.addEventListener('change', () => {
   verificarCampos();
 });
 
-// ✅ Verifica si todos los campos están completos
 function verificarCampos() {
   const todosLlenos = inputs.every((input) => {
-    if (input instanceof HTMLInputElement && input.type === 'file') {
+    if (input.type === 'file') {
       return input.files && input.files.length > 0;
     }
     return input.value.trim() !== '';
@@ -59,7 +56,6 @@ function verificarCampos() {
   }
 }
 
-// ✅ Escuchar cambios en todos los inputs
 inputs.forEach((input) => {
   input.addEventListener('input', verificarCampos);
   if (input.type === 'file') {
@@ -67,7 +63,6 @@ inputs.forEach((input) => {
   }
 });
 
-// ✅ Subir imagen y guardar datos
 form?.addEventListener('submit', async (e) => {
   e.preventDefault();
   const formData = new FormData(form);
@@ -78,11 +73,10 @@ form?.addEventListener('submit', async (e) => {
     return;
   }
 
-  const urls: string[] = [];
+  const urls = [];
 
   for (let i = 0; i < Math.min(files.length, 5); i++) {
     const file = files[i];
-
     const { data, error } = await supabase.storage
       .from('terrenos-imagenes')
       .upload(`terrenos/${Date.now()}-${file.name}`, file);
