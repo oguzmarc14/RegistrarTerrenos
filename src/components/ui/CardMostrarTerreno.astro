@@ -38,14 +38,14 @@ const baseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
   >
     <!-- 👇 Usa Astro "each" con etiquetas HTML directamente -->
     {imagenes.map((img, i) => (
-      <swiper-slide>
-        <img
-          src={`${baseUrl}/storage/v1/object/public/terrenos-imagenes/${img}`}
-          alt={`${titulo} imagen ${i + 1}`}
-          class="w-full h-70 object-fill"
-        />
-      </swiper-slide>
-    ))}
+  <swiper-slide>
+    <img
+      src={img}
+      alt={`${titulo} imagen ${i + 1}`}
+      class="w-full h-70 object-fill"
+    />
+  </swiper-slide>
+))}
   </swiper-container>
 
   <div class="p-4 space-y-2">
