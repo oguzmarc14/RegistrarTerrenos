@@ -23,7 +23,6 @@ const {
   hrefBoton,
 } = Astro.props;
 
-const baseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
 ---
 
 <article class="relative bg-white/100 rounded-2xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 h-160">
@@ -37,17 +36,26 @@ const baseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
     navigation="true"
   >
 
-  <!-- gofgo -->
-    <!-- 👇 Usa Astro "each" con etiquetas HTML directamente -->
-    {imagenes.map((img, i) => (
+ {imagenes && imagenes.length > 0 ? (
+  imagenes.map((img, i) => (
+    <swiper-slide>
+      <img
+        src={img}
+        alt={`${titulo} imagen ${i + 1}`}
+        class="w-full h-70 object-fill"
+      />
+    </swiper-slide>
+  ))
+) : (
   <swiper-slide>
     <img
-      src={img}
-      alt={`${titulo} imagen ${i + 1}`}
+      src="/no-image.jpg"
+      alt="Sin imagen"
       class="w-full h-70 object-fill"
     />
   </swiper-slide>
-))}
+)}
+
   </swiper-container>
 
   <div class="p-4 space-y-2">
