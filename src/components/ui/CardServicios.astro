@@ -9,7 +9,7 @@ const { titulo, descripcion, boton } = Astro.props as Prop;
 ---
 
 <article 
-  class="flex items-center justify-end px-6 py-12"
+  class="flex items-center justify-end md:px-6 md:py-12 py-6"
 >
   <div 
     class="bg-gray-800/50 shadow-xl rounded-3xl w-full max-w-120 p-10 flex flex-col items-center text-center space-y-3"
@@ -17,7 +17,7 @@ const { titulo, descripcion, boton } = Astro.props as Prop;
     <h2 class="text-3xl md:text-4xl text-white">
       {titulo}
     </h2>
-    <p class="text-lg text-white leading-relaxed">
+    <p class="md:text-lg text-white leading-relaxed text-sm">
       {descripcion}
     </p>
     <button 

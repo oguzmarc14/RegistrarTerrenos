@@ -15,6 +15,7 @@ const { class: className=""} = Astro.props as Prop
   "shadow-lg",
   "sticky",
   "top-0",
+  "w-full",
   className
 ]}>
   <div>
@@ -41,13 +42,12 @@ const { class: className=""} = Astro.props as Prop
       "font-bold",
       "uppercase",
       "tracking-wide",
-      "text-sm",
       "pb-3"
     ]}>
-      <li class:list={["hover:scale-110", "hover:text-blue-500", "duration-300", "text-xs", "sm:text-base", "md:text-sm"]}><a href="/">Home</a></li>
-      <li class:list={["hover:scale-110", "hover:text-blue-500", "duration-300", "text-xs", "sm:text-base", "md:text-sm"]}><a href="/Terrenos">Terrenos</a></li>
-      <li class:list={["hover:scale-110", "hover:text-blue-500", "duration-300", "text-xs", "sm:text-base", "md:text-sm"]}><a href="/Conocenos">Conócenos</a></li>
-      <li class:list={["hover:scale-110", "hover:text-blue-500", "duration-300", "text-xs", "sm:text-base", "md:text-sm"]}><a href="/RegistrarTerrenos">Registrar Terreno</a></li>
+      <li class:list={["hover:scale-110", "hover:text-blue-500", "duration-300", "text-[9px]", "sm:text-base", "md:text-sm"]}><a href="/">Home</a></li>
+      <li class:list={["hover:scale-110", "hover:text-blue-500", "duration-300", "text-[9px]", "sm:text-base", "md:text-sm"]}><a href="/Terrenos">Terrenos</a></li>
+      <li class:list={["hover:scale-110", "hover:text-blue-500", "duration-300", "text-[9px]", "sm:text-base", "md:text-sm"]}><a href="/Conocenos">Conócenos</a></li>
+      <li class:list={["hover:scale-110", "hover:text-blue-500", "duration-300", "text-[9px]", "sm:text-base", "md:text-sm"]}><a href="/RegistrarTerrenos">Registrar Terreno</a></li>
     </ul>
   </div>
 </nav>
