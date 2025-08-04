@@ -1,0 +1,95 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Navbar from "../ui/Navbar.astro";
+
+const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
+const supabaseKey = import.meta.env.PUBLIC_SUPABASE_KEY;
+---
+
+<Layout>
+  <div class="bg-sky-950">
+    <Navbar />
+
+    <section class="max-w-7xl mx-auto px-4 py-8">
+      <h2 class="text-4xl md:text-5xl text-center mb-10 text-gray-100 font-serif">
+        Terrenos en venta
+      </h2>
+      <div 
+        id="contenedor-terrenos"
+        class="grid gap-10 sm:gap-12 md:gap-14 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 max-w-9xl mx-auto px-4 md:px-8 text-white"
+        data-url={supabaseUrl}
+        data-key={supabaseKey}
+      >
+        <p class="text-center col-span-full">Cargando terrenos...</p>
+      </div>
+    </section>
+  </div>
+</Layout>
+
+<script type="module">
+  import { createClient } from 'https://esm.sh/@supabase/supabase-js';
+
+  const contenedor = document.getElementById("contenedor-terrenos");
+  const supabaseUrl = contenedor.dataset.url;
+  const supabaseKey = contenedor.dataset.key;
+
+  const supabase = createClient(supabaseUrl, supabaseKey);
+
+  async function cargarTerrenos() {
+    contenedor.innerHTML = "<p class='col-span-full text-center'>Cargando terrenos...</p>";
+
+    const { data, error } = await supabase
+      .from("Terrenos")
+      .select("*")
+      .order("fecha", { ascending: false });
+
+    if (error) {
+      contenedor.innerHTML = "<p class='col-span-full text-center text-red-500'>❌ Error al cargar terrenos</p>";
+      console.error(error);
+      return;
+    }
+
+    if (!data || data.length === 0) {
+      contenedor.innerHTML = "<p class='col-span-full text-center'>No hay terrenos aún.</p>";
+      return;
+    }
+
+    contenedor.innerHTML = ""; // limpiar
+
+    data.forEach((terreno) => {
+      const card = `
+        <article class="relative bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 h-160">
+          <swiper-container class="w-full h-70 rounded-t-2xl" slides-per-view="1" loop="true" pagination="true" navigation="true">
+            ${
+              terreno.imagenes && terreno.imagenes.length > 0
+                ? terreno.imagenes.map(
+                    (img, i) => `
+                  <swiper-slide>
+                    <img src="${img}" alt="${terreno.titulo} imagen ${i + 1}" class="w-full h-70 object-fill"/>
+                  </swiper-slide>
+                `
+                  ).join("")
+                : `
+                  <swiper-slide>
+                    <img src="/no-image.jpg" alt="Sin imagen" class="w-full h-70 object-fill"/>
+                  </swiper-slide>
+                `
+            }
+          </swiper-container>
+          <div class="p-4 space-y-2">
+            <h2 class="text-xl font-bold">${terreno.titulo}</h2>
+            <p class="text-sm text-gray-700">${terreno.descripcion}</p>
+            <p class="text-green-700 font-semibold">$${terreno.precio.toLocaleString()} MXN</p>
+            ${terreno.medidas ? `<p class="text-sm text-gray-500">Medidas: ${terreno.medidas}</p>` : ""}
+            ${terreno.ubicacion ? `<p class="text-sm text-gray-500">Ubicación: ${terreno.ubicacion}</p>` : ""}
+            ${terreno.fecha ? `<p class="text-xs text-gray-400">Publicado: ${new Date(terreno.fecha).toLocaleDateString()}</p>` : ""}
+            <a href="#" class="absolute bottom-5 left-4 bg-gradient-to-b from-blue-900 to-blue-500 px-3 py-2 rounded-2xl text-white border-2 border-blue-600">Me interesa</a>
+          </div>
+        </article>
+      `;
+      contenedor.insertAdjacentHTML("beforeend", card);
+    });
+  }
+
+  cargarTerrenos();
+</script>
