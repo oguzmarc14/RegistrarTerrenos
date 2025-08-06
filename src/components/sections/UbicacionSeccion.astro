@@ -2,10 +2,16 @@
 import UbicacionComponent from "../ui/UbicacionComponent.astro"
 ---
 
-<section class:list={["flex", "flex-col", "items-center", "bg-gradient-to-b", "from-sky-950/80", "to-[#0C2540]"]}>
-  <h2 class:list={["mt-16", "text-5xl", "text-white", "font-normal"]}>Conoce mi ubicacion</h2>
-  <div class:list={["w-7xl", "mt-6", "rounded-3xl"]}><UbicacionComponent lat={21.5209919} lon={-102.2377808} zoom={17} alto="400" /></div>
-  
-</section>
+<section class=" flex flex-col items-center bg-gradient-to-b from-sky-950/80 to-[#0C2540] px-4 py-12">
+  <h2 class="-mt-18 text-3xl md:text-5xl text-white font-normal text-center">
+    Conoce mi ubicación
+  </h2>
 
-bg-gradient-to-t from-sky-950/95 via-gray-700 to-sky-950
+  <div class="w-full max-w-5xl mt-10 rounded-3xl overflow-hidden aspect-video mb-14">
+    <UbicacionComponent 
+      lat={21.5209919} 
+      lon={-102.2377808} 
+      zoom={17} 
+    />
+  </div>
+</section>

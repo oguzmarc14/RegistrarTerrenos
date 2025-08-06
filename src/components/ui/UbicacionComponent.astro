@@ -4,22 +4,17 @@ interface Props {
   lat: number;
   lon: number;
   zoom?: number;
-  ancho?: string;
-  alto?: string;
 }
 
 const {
   lat,
   lon,
   zoom = 17,
-  ancho = "100%",
-  alto = "450"
 } = Astro.props;
 ---
 
 <iframe
-  width={ancho}
-  height={alto}
+  class="w-full h-full"
   style="border:0;"
   loading="lazy"
   allowfullscreen
