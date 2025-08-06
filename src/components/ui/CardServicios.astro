@@ -9,10 +9,10 @@ const { titulo, descripcion, boton } = Astro.props as Prop;
 ---
 
 <article 
-  class="flex items-center justify-end md:px-6 md:py-12 py-6"
+  class="flex items-center justify-end md:px-6 md:py-12 py-6 hover:scale-105 duration-500"
 >
   <div 
-    class="bg-gray-800/50 shadow-xl rounded-3xl w-full max-w-120 p-10 flex flex-col items-center text-center space-y-3"
+    class="bg-sky-950/10 shadow-xl rounded-3xl w-full max-w-120 p-10 flex flex-col items-center text-center space-y-3 border-1 border-sky-800"
   >
     <h2 class="text-3xl md:text-4xl text-white">
       {titulo}
@@ -22,8 +22,8 @@ const { titulo, descripcion, boton } = Astro.props as Prop;
     </p>
     <button 
       type="button" 
-      class="bg-sky-900 text-white px-6 py-3 rounded-2xl mt-4 
-             shadow-md hover:bg-sky-800 transition cursor-pointer"
+      class="bg-sky-800/80 text-white px-6 py-3 rounded-2xl mt-4 
+             shadow-md hover:bg-sky-800 transition cursor-pointer hover:scale-110 duration-300"
     >
       {boton}
     </button>
