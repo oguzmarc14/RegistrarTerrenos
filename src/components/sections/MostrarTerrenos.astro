@@ -1,6 +1,5 @@
 ---
 import Layout from "../../layouts/Layout.astro";
-import Navbar from "../ui/Navbar.astro";
 
 const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
 const supabaseKey = import.meta.env.PUBLIC_SUPABASE_KEY;
@@ -8,12 +7,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_KEY;
 
 <Layout>
   <div class="bg-sky-950">
-    <Navbar />
-
     <section class=" mx-auto px-4 py-8 ">
-      <h2 class="text-4xl md:text-5xl text-center mb-10 text-gray-100 font-serif">
-        Terrenos en venta
-      </h2>
       <div 
         id="contenedor-terrenos"
         class="grid gap-10 sm:gap-12 md:gap-14 grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-3 mx-auto px-4 md:px-8 text-white w-max-7xl"
