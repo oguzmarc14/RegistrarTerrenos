@@ -1,0 +1,50 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import CardMostrarTerreno from '../../components/ui/CardMostrarTerreno.astro';
+import { supabase } from '../../lib/supabaseClient';
+import Navbar from '../../components/ui/Navbar.astro';
+import Footer from '../../components/sections/Footer.astro';
+
+const { data: terrenos, error } = await supabase
+  .from("Terrenos")
+  .select("*")
+  .eq("tipo", "comercial")
+  .order("fecha", { ascending: false });
+---
+
+<Layout>
+  <section class="bg-gradient-to-b from-sky-950 via-sky-950 to-sky-950/90">
+
+  <div>
+     <Navbar/>
+  </div>
+ 
+    <div class="text-center max-w-4xl mx-auto mb-12">
+      <h2 class="text-4xl font-semibold text-sky-100 mb-4 mt-8">Propiedades Comerciales Disponibles</h2>
+      <p class="text-lg text-sky-100/80 leading-relaxed">
+        Aquí puedes ver todos los terrenos actualmente en venta o renta.
+      </p>
+    </div>
+    
+    {error && <p class="text-red-500 text-center">Error al cargar terrenos</p>}
+
+    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto">
+      {Array.isArray(terrenos) &&
+        terrenos.map((terreno) => (
+          <CardMostrarTerreno
+            titulo={terreno.titulo}
+            descripcion={terreno.descripcion}
+            precio={terreno.precio}
+            imagenes={terreno.imagenes}
+            textBoton="Ver más"
+            hrefBoton="#"
+            medidas={terreno.medidas}
+            ubicacion={terreno.ubicacion}
+            fecha={terreno.fecha}
+          />
+        ))}
+    </div>
+    
+    <Footer/>
+  </section>
+</Layout>
