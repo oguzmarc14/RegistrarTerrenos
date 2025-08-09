@@ -1,12 +1,11 @@
 ---
+export const prerender = false;
+
 import Layout from '../../layouts/Layout.astro';
 import CardMostrarTerreno from '../../components/ui/CardMostrarTerreno.astro';
 import { supabase } from '../../lib/supabaseClient';
 import Navbar from '../../components/ui/Navbar.astro';
 import Footer from '../../components/sections/Footer.astro';
-
-// 🔍 Esto imprimirá en los logs de Vercel la URL para verificar que sí está llegando
-console.log('SUPABASE_URL', import.meta.env.PUBLIC_SUPABASE_URL);
 
 const { data: terrenos, error } = await supabase
   .from("Terrenos")
@@ -14,7 +13,6 @@ const { data: terrenos, error } = await supabase
   .eq("tipo", "departamento")
   .order("fecha", { ascending: false });
 ---
-
 <Layout>
   <section class="bg-gradient-to-b from-sky-950 via-sky-950 to-sky-950/90">
 
