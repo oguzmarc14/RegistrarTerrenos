@@ -5,6 +5,9 @@ import { supabase } from '../../lib/supabaseClient';
 import Navbar from '../../components/ui/Navbar.astro';
 import Footer from '../../components/sections/Footer.astro';
 
+// 🔍 Esto imprimirá en los logs de Vercel la URL para verificar que sí está llegando
+console.log('SUPABASE_URL', import.meta.env.PUBLIC_SUPABASE_URL);
+
 const { data: terrenos, error } = await supabase
   .from("Terrenos")
   .select("*")
