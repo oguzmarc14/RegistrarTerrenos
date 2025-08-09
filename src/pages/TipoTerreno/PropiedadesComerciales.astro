@@ -1,11 +1,12 @@
 ---
-export const prerender = false; // 👈 Fuerza SSR para esta página
+export const prerender = false; // 👈 SSR para esta página
 
 import Layout from '../../layouts/Layout.astro';
 import CardMostrarTerreno from '../../components/ui/CardMostrarTerreno.astro';
-import { supabase } from '../../lib/supabaseClient';
 import Navbar from '../../components/ui/Navbar.astro';
 import Footer from '../../components/sections/Footer.astro';
+import TipoTerreno from '../../components/ui/TipoTerreno.astro';
+import { supabase } from '../../lib/supabaseClient';
 
 const { data: terrenos, error } = await supabase
   .from("Terrenos")
@@ -16,37 +17,53 @@ const { data: terrenos, error } = await supabase
 
 <Layout>
   <section class="bg-gradient-to-b from-sky-950 via-sky-950 to-sky-950/90">
+    <div>
+      <Navbar />
+    </div>
 
-  <div>
-     <Navbar/>
-  </div>
- 
+    <!-- HERO -->
+    <div class="text-center px-6 mt-8">
+      <h2 class="text-4xl md:text-5xl text-white">
+        Propiedades comerciales en venta y renta en Encarnación de Díaz
+      </h2>
+      <p class="text-sky-100/80 max-w-4xl mx-auto mt-4">
+        Locales, bodegas y oficinas para tu negocio. Consulta precios, ubicación y características actualizadas.
+      </p>
+      <div class="mt-6">
+        <TipoTerreno />
+      </div>
+    </div>
+
+    <!-- Intro listado -->
     <div class="text-center max-w-4xl mx-auto mb-12">
-      <h2 class="text-4xl font-semibold text-sky-100 mb-4 mt-8">Propiedades Comerciales Disponibles</h2>
       <p class="text-lg text-sky-100/80 leading-relaxed">
-        Aquí puedes ver todos los terrenos actualmente en venta o renta.
+        Aquí puedes ver todas las propiedades comerciales actualmente en venta o renta.
       </p>
     </div>
-    
-    {error && <p class="text-red-500 text-center">Error al cargar terrenos</p>}
 
-    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto">
+    {error && <p class="text-red-500 text-center">Error al cargar propiedades comerciales</p>}
+
+    <!-- Listado -->
+    <div class="grid items-stretch gap-14 md:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-3 xl:max-w-[1300px] 2xl:max-w-[1700px] mx-auto px-8 mb-12">
       {Array.isArray(terrenos) &&
         terrenos.map((terreno) => (
-          <CardMostrarTerreno
-            titulo={terreno.titulo}
-            descripcion={terreno.descripcion}
-            precio={terreno.precio}
-            imagenes={terreno.imagenes}
-            textBoton="Ver más"
-            hrefBoton="#"
-            medidas={terreno.medidas}
-            ubicacion={terreno.ubicacion}
-            fecha={terreno.fecha}
-          />
-        ))}
+          <div class="h-full">
+            <CardMostrarTerreno
+              imagenes={terreno.imagenes}
+              titulo={terreno.titulo}
+              descripcion={terreno.descripcion}
+              precio={terreno.precio}
+              textBoton="Me interesa"
+              hrefBoton="#"
+              medidas={terreno.medidas}
+              ubicacion={terreno.ubicacion}
+              fecha={terreno.fecha}
+            />
+          </div>
+        ))
+      }
     </div>
-    
-    <Footer/>
+
+    <Footer />
   </section>
 </Layout>
