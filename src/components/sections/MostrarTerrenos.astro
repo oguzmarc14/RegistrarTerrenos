@@ -1,12 +1,13 @@
 ---
 import Layout from "../../layouts/Layout.astro";
+import Footer from "./Footer.astro";
 
 const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
 const supabaseKey = import.meta.env.PUBLIC_SUPABASE_KEY;
 ---
 
-<Layout>
-  <div class="bg-sky-950">
+<Layout>  
+  <div class="bg-gradient-to-b from-sky-950 via-sky-800/90 to-sky-950/90">
     <section class="mx-auto px-4 py-8">
       <div
         id="contenedor-terrenos"
@@ -17,6 +18,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_KEY;
         <p class="text-center col-span-full">Cargando terrenos...</p>
       </div>
     </section>
+  <Footer/>
   </div>
 </Layout>
 
@@ -55,7 +57,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_KEY;
 
     data.forEach((terreno) => {
       const card = `
-  <article class="relative bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 h-160">
+  <article class="relative bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-xl duration-300 h-160 hover:scale-102 duration-300">
     <swiper-container class="w-full h-70 rounded-t-2xl" slides-per-view="1" pagination="true" navigation="true" loop="${terreno.imagenes && terreno.imagenes.length > 1}">
       ${
         terreno.imagenes && terreno.imagenes.length > 0
@@ -83,17 +85,16 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_KEY;
       ${terreno.ubicacion ? `<p class="text-sm text-gray-500">Ubicación: ${terreno.ubicacion}</p>` : ""}
       ${terreno.fecha ? `<p class="text-xs text-gray-400">Publicado: ${new Date(terreno.fecha).toLocaleDateString()}</p>` : ""}
       <a
-        href="https://wa.me/524759513349?text=Hola%20Alondra%20Aldana%20quiero%20información%20de%20este%20terreno%20${encodeURIComponent(terreno.titulo)}%20en%20${encodeURIComponent(terreno.ubicacion)}"
+        href="https://wa.me/524751080850?text=Hola%20Noe%20Aguilera%20quiero%20información%20de%20este%20terreno:%20${encodeURIComponent(terreno.titulo)}%20en%20${encodeURIComponent(terreno.ubicacion)}"
         target="_blank"
         rel="noopener noreferrer"
-        class="absolute bottom-5 left-4 bg-gradient-to-b from-blue-900 to-blue-500 px-3 py-2 rounded-2xl text-white border-2 border-blue-600"
+        class="absolute bottom-5 left-4 bg-gradient-to-b from-blue-900 to-blue-500 px-3 py-2 rounded-2xl text-white border-2 border-blue-600 hover:scale-110 duration-300"
       >
         Me interesa
       </a>
     </div>
   </article>
 `;
-
       contenedor.insertAdjacentHTML("beforeend", card);
     });
   }
