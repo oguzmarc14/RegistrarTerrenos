@@ -2,10 +2,11 @@
 interface Prop{
   titulo: string;
   descripcion: string;
-  boton: string
+  boton: string;
+  href: string;
 }
 
-const { titulo, descripcion, boton } = Astro.props as Prop;
+const { titulo, descripcion, boton, href } = Astro.props as Prop;
 ---
 
 <article 
@@ -20,12 +21,13 @@ const { titulo, descripcion, boton } = Astro.props as Prop;
     <p class="md:text-lg text-white leading-relaxed text-sm">
       {descripcion}
     </p>
-    <button 
+    <a 
+      href={href}
       type="button" 
       class="bg-sky-800/80 text-white px-6 py-3 rounded-2xl mt-4 
              shadow-md hover:bg-sky-800 transition cursor-pointer hover:scale-110 duration-300"
     >
       {boton}
-    </button>
+  </a>
   </div>
 </article>

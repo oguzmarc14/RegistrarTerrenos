@@ -6,7 +6,7 @@ const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
 const supabaseKey = import.meta.env.PUBLIC_SUPABASE_KEY;
 ---
 
-<Layout>  
+<Layout>
   <div class="bg-gradient-to-b from-sky-950 via-sky-800/90 to-sky-950/90">
     <section class="mx-auto px-4 py-8">
       <div
@@ -18,7 +18,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_KEY;
         <p class="text-center col-span-full">Cargando terrenos...</p>
       </div>
     </section>
-  <Footer/>
+    <Footer />
   </div>
 </Layout>
 
@@ -78,20 +78,27 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_KEY;
       }
     </swiper-container>
     <div class="p-4 space-y-2">
-      <h2 class="text-xl font-bold text-black">${terreno.titulo}</h2>
+      <h2 class="text-2xl font-bold text-black">${terreno.titulo}</h2>
       <p class="text-sm text-gray-700">${terreno.descripcion ?? ""}</p>
       <p class="text-green-700 font-semibold">$${Number(terreno.precio).toLocaleString()} MXN</p>
       ${terreno.medidas ? `<p class="text-sm text-gray-500">Medidas: ${terreno.medidas}</p>` : ""}
       ${terreno.ubicacion ? `<p class="text-sm text-gray-500">Ubicación: ${terreno.ubicacion}</p>` : ""}
       ${terreno.fecha ? `<p class="text-xs text-gray-400">Publicado: ${new Date(terreno.fecha).toLocaleDateString()}</p>` : ""}
       <a
-        href="https://wa.me/524751080850?text=Hola%20Noe%20Aguilera%20quiero%20información%20de%20este%20terreno:%20${encodeURIComponent(terreno.titulo)}%20en%20${encodeURIComponent(terreno.ubicacion)}"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="absolute bottom-5 left-4 bg-gradient-to-b from-blue-900 to-blue-500 px-3 py-2 rounded-2xl text-white border-2 border-blue-600 hover:scale-110 duration-300"
-      >
-        Me interesa
-      </a>
+  href="https://wa.me/524751080850?text=Hola%20Noe%20Aguilera%20quiero%20información%20de%20este%20terreno:%20${encodeURIComponent(terreno.titulo)}%20en%20${encodeURIComponent(terreno.ubicacion)}"
+  target="_blank"
+  rel="noopener noreferrer"
+  class="absolute bottom-5 left-4 bg-green-700 px-3 py-2 rounded-2xl text-white border-2 border-green-800 flex items-center gap-2 hover:scale-110 duration-300"
+>
+  <!-- Logo WhatsApp Blanco -->
+  <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 32 32" class="w-5 h-5">
+    <path
+      d="M16 3C9.373 3 4 8.373 4 15c0 2.604.787 5.004 2.145 7.017L4 29l7.17-2.104C12.19 27.184 14.05 27.5 16 27.5c6.627 0 12-5.373 12-12S22.627 3 16 3zm0 22c-1.702 0-3.3-.393-4.728-1.088l-.338-.168-4.26 1.248 1.264-4.147-.22-.34A8.932 8.932 0 0 1 7 15c0-4.963 4.037-9 9-9s9 4.037 9 9-4.037 9-9 9zm4.998-6.682c-.273-.137-1.616-.797-1.867-.888s-.433-.137-.613.137c-.18.273-.703.888-.862 1.07-.16.18-.32.205-.593.068-.273-.137-1.15-.423-2.191-1.345-.81-.723-1.357-1.616-1.516-1.889-.16-.273-.017-.42.12-.557.124-.124.273-.32.41-.48.137-.16.182-.273.273-.456.091-.18.046-.34-.023-.48-.068-.137-.613-1.48-.84-2.03-.221-.53-.446-.46-.613-.468l-.523-.009c-.18 0-.48.068-.733.34s-.96.94-.96 2.29.983 2.656 1.12 2.84c.137.182 1.937 2.957 4.693 4.144.657.283 1.17.453 1.57.58.66.21 1.26.18 1.733.11.53-.079 1.616-.658 1.844-1.295.228-.637.228-1.182.16-1.295-.068-.114-.25-.183-.523-.32z"
+    />
+  </svg>
+  Contactame
+</a>
+
     </div>
   </article>
 `;
