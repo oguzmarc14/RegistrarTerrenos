@@ -75,7 +75,7 @@ form?.addEventListener("submit", async (e) => {
 
   const urls = [];
 
-  for (let i = 0; i < Math.min(files.length, 5); i++) {
+    for (let i = 0; i < files.length; i++) {
     const file = files[i];
     const { data, error } = await supabase.storage
       .from("terrenos-imagenes")
