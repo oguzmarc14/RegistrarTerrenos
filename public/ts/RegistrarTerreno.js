@@ -63,6 +63,41 @@ inputs.forEach((input) => {
   }
 });
 
+
+// Función para convertir un archivo de imagen a WebP usando canvas
+async function convertirAWebP(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      const img = new Image();
+      img.onload = function () {
+        const canvas = document.createElement("canvas");
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0);
+        canvas.toBlob(
+          (blob) => {
+            if (blob) {
+              // Renombrar archivo a .webp
+              const webpFile = new File([blob], file.name.replace(/\.[^.]+$/, ".webp"), { type: "image/webp" });
+              resolve(webpFile);
+            } else {
+              reject(new Error("No se pudo convertir a WebP"));
+            }
+          },
+          "image/webp",
+          0.9 // calidad
+        );
+      };
+      img.onerror = reject;
+      img.src = e.target.result;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
 form?.addEventListener("submit", async (e) => {
   e.preventDefault();
   const formData = new FormData(form);
@@ -75,11 +110,20 @@ form?.addEventListener("submit", async (e) => {
 
   const urls = [];
 
-    for (let i = 0; i < files.length; i++) {
+  for (let i = 0; i < files.length; i++) {
     const file = files[i];
+    let webpFile;
+    try {
+      webpFile = await convertirAWebP(file);
+    } catch (err) {
+      alert("❌ Error convirtiendo imagen a WebP");
+      console.error(err);
+      return;
+    }
+
     const { data, error } = await supabase.storage
       .from("terrenos-imagenes")
-      .upload(`terrenos/${Date.now()}-${file.name}`, file);
+      .upload(`terrenos/${Date.now()}-${webpFile.name}`, webpFile);
 
     if (error) {
       alert("❌ Error subiendo imagen");
