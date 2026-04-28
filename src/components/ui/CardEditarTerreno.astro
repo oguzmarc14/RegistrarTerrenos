@@ -3,18 +3,11 @@
 ---
 <div class="relative min-h-screen bg-cover bg-center bg-no-repeat" style="background-image: url('/header1.webp')">
   <div class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
-  <div class="relative z-10 max-w-4xl mx-auto px-4 py-10">
+  <div class="relative z-10 max-w-7xl mx-auto px-4 py-10">
     <div class="flex items-center justify-center gap-4 flex-col mb-8">
-      <h1 class="text-3xl md:text-4xl font-bold text-white drop-shadow">Editar o eliminar terreno</h1>
+      <h1 class="text-3xl md:text-4xl font-bold text-white drop-shadow">Administrar terrenos</h1>
     </div>
-    <form id="formularioEditarTerreno" class="bg-sky-950/70 backdrop-blur-md rounded-2xl shadow-2xl p-6">
-      <!-- Aquí van los campos del terreno a editar, se llenarán dinámicamente -->
-      <div id="campos-editar-terreno"></div>
-      <div class="flex gap-4 mt-6">
-        <button type="submit" class="bg-amber-600 hover:bg-amber-700 text-white font-bold py-2 px-4 rounded">Guardar cambios</button>
-        <button type="button" id="eliminarTerreno" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Eliminar terreno</button>
-      </div>
-    </form>
+    <div id="admin-terrenos-lista" class="grid gap-10 sm:gap-12 md:gap-14 grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-3 mx-auto px-4 md:px-8 text-white w-max-7xl"></div>
   </div>
 </div>
 <script type="module" src="/ts/EditarTerreno.js"></script>
