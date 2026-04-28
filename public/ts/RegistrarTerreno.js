@@ -20,7 +20,9 @@ inputImagen?.addEventListener("change", () => {
   if (previewContainer) previewContainer.innerHTML = "";
 
   if (inputImagen.files && inputImagen.files.length > 0) {
-    Array.from(inputImagen.files).forEach((archivo) => {
+    // Ordenar archivos por nombre antes de mostrarlos
+    const archivosOrdenados = Array.from(inputImagen.files).sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' }));
+    archivosOrdenados.forEach((archivo) => {
       const reader = new FileReader();
       reader.onload = function (e) {
         const img = document.createElement("img");
