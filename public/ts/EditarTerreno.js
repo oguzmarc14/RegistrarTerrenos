@@ -25,7 +25,7 @@ async function cargarTerrenosAdmin() {
       <div class="p-4 space-y-2 flex-1">
         <h2 class="text-2xl font-bold text-black">${terreno.titulo}</h2>
         <p class="text-sm text-gray-700">${terreno.descripcion ?? ""}</p>
-        <p class="text-green-700 font-semibold">$${Number(terreno.precio).toLocaleString()} MXN</p>
+        <p class="text-green-700 font-semibold">$${terreno.precio} MXN</p>
         ${terreno.medidas ? `<p class="text-sm text-gray-500">Medidas: ${terreno.medidas}</p>` : ""}
         ${terreno.ubicacion ? `<p class="text-sm text-gray-500">Ubicación: ${terreno.ubicacion}</p>` : ""}
         ${terreno.fecha ? `<p class="text-xs text-gray-400">Publicado: ${new Date(terreno.fecha).toLocaleDateString()}</p>` : ""}
@@ -47,7 +47,7 @@ lista.addEventListener("click", async (e) => {
   const eliminarBtn = e.target.closest(".eliminarTerrenoBtn");
   if (editarBtn) {
     const id = editarBtn.dataset.id;
-    window.location.href = `/EditarTerreno?id=${id}&modo=editar`;
+    window.location.href = `/EditarTerrenoId?id=${id}`;
   }
   if (eliminarBtn) {
     const id = eliminarBtn.dataset.id;
