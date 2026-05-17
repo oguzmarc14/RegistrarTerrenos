@@ -21,14 +21,7 @@ const imagenes = Array.isArray(terreno?.imagenes) ? (terreno.imagenes as string[
   <section class="min-h-screen bg-gradient-to-b from-sky-950 via-sky-900 to-sky-950 text-white">
     <Navbar />
 
-    <div class="mx-auto max-w-7xl px-4 py-8 md:py-12">
-      <a
-        href="/Terrenos"
-        class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-white/90 backdrop-blur hover:bg-white/15 transition"
-      >
-        <span aria-hidden="true">←</span>
-        Volver al listado
-      </a>
+    <div class="mx-auto max-w-7xl px-4 mb-10">
 
       {error && (
         <div class="mt-8 rounded-2xl border border-red-400/30 bg-red-500/10 p-6 text-red-100">
@@ -44,10 +37,10 @@ const imagenes = Array.isArray(terreno?.imagenes) ? (terreno.imagenes as string[
 
       {terreno && (
         <article class="mt-8 overflow-hidden rounded-[2rem] border border-white/10 bg-white shadow-2xl shadow-black/20 text-slate-900">
-          <div class="grid lg:grid-cols-2">
+          <div class="grid grid-cols-1 lg:grid-cols-2">
             <div class="relative bg-slate-100">
               <swiper-container
-                class="block h-[320px] sm:h-[420px] lg:h-full lg:min-h-[620px]"
+                class="block h-52 sm:h-68 lg:h-full lg:min-h-[44rem]"
                 slides-per-view="1"
                 pagination="true"
                 navigation="true"
@@ -59,7 +52,7 @@ const imagenes = Array.isArray(terreno?.imagenes) ? (terreno.imagenes as string[
                       <img
                         src={img}
                         alt={`${terreno.titulo} imagen ${index + 1}`}
-                        class="h-[320px] w-full object-cover sm:h-[420px] lg:h-[620px]"
+                        class="h-52 w-full object-cover sm:h-68 lg:h-[44rem]"
                       />
                     </swiper-slide>
                   ))
@@ -68,36 +61,36 @@ const imagenes = Array.isArray(terreno?.imagenes) ? (terreno.imagenes as string[
                     <img
                       src="/no-image.jpg"
                       alt="Sin imagen"
-                      class="h-[320px] w-full object-cover sm:h-[420px] lg:h-[620px]"
+                      class="h-52 w-full object-cover sm:h-68 lg:h-[44rem]"
                     />
                   </swiper-slide>
                 )}
               </swiper-container>
             </div>
 
-            <div class="flex flex-col justify-between p-6 sm:p-8 lg:p-10">
+            <div class="flex flex-col justify-between p-4 sm:p-5 lg:p-8">
               <div>
-                <div class="mb-4 flex flex-wrap items-center gap-3">
-                  <span class="rounded-full bg-sky-950 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white">
+                <div class="mb-3 flex flex-wrap items-center gap-3">
+                  <span class="rounded-full bg-sky-900 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white">
                     Detalle de propiedad
                   </span>
                   {terreno.tipo && (
-                    <span class="rounded-full bg-amber-100 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-amber-800">
+                      <span class="rounded-full bg-sky-900/20 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-black">
                       {terreno.tipo}
                     </span>
                   )}
                 </div>
 
-                <h1 class="text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">
+                <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-slate-950">
                   {terreno.titulo}
                 </h1>
 
-                <p class="mt-4 text-base leading-7 text-slate-600 sm:text-lg">
+                <p class="mt-2 text-sm leading-7 text-slate-600 sm:text-base">
                   {terreno.descripcion}
                 </p>
 
-                <div class="mt-6 flex flex-wrap items-end gap-4">
-                  <p class="text-3xl font-bold text-emerald-700 sm:text-4xl">
+                <div class="mt-3 flex flex-wrap items-end gap-4">
+                  <p class="text-2xl font-bold text-emerald-700 sm:text-3xl">
                     ${Number(terreno.precio).toLocaleString()} MXN
                   </p>
                   {terreno.fecha && (
@@ -108,22 +101,22 @@ const imagenes = Array.isArray(terreno?.imagenes) ? (terreno.imagenes as string[
                 </div>
               </div>
 
-              <div class="mt-8 grid gap-4 sm:grid-cols-2">
+              <div class="mt-5 grid gap-3 sm:grid-cols-2">
                 {terreno.medidas && (
-                  <div class="rounded-2xl bg-slate-50 p-4 ring-1 ring-slate-200">
-                    <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Medidas</p>
-                    <p class="mt-1 text-lg font-semibold text-slate-900">{terreno.medidas}</p>
+                  <div class="rounded-2xl bg-slate-100 p-3 ring-1 ring-slate-300">
+                    <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-600">Medidas</p>
+                    <p class="mt-1 text-base font-semibold text-slate-900">{terreno.medidas}</p>
                   </div>
                 )}
                 {terreno.ubicacion && (
-                  <div class="rounded-2xl bg-slate-50 p-4 ring-1 ring-slate-200">
-                    <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Ubicación</p>
-                    <p class="mt-1 text-lg font-semibold text-slate-900">{terreno.ubicacion}</p>
+                  <div class="rounded-2xl bg-slate-100 p-3 ring-1 ring-slate-300">
+                    <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-600">Ubicación</p>
+                    <p class="mt-1 text-base font-semibold text-slate-900">{terreno.ubicacion}</p>
                   </div>
                 )}
               </div>
 
-              <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+              <div class="mt-6 flex flex-col gap-3 sm:flex-row">
                 <a
                   href={`https://wa.me/524751080850?text=${encodeURIComponent(`Hola, quiero información de esta propiedad: ${terreno.titulo}${terreno.ubicacion ? ` en ${terreno.ubicacion}` : ""}`)}`}
                   target="_blank"
@@ -135,7 +128,7 @@ const imagenes = Array.isArray(terreno?.imagenes) ? (terreno.imagenes as string[
 
                 <a
                   href="/Terrenos"
-                  class="inline-flex items-center justify-center rounded-2xl border border-slate-300 bg-white px-5 py-3 font-semibold text-slate-700 transition hover:bg-slate-50"
+                  class="inline-flex items-center justify-center rounded-2xl border border-slate-300 bg-sky-900 px-5 py-3 font-semibold text-white transition hover:bg-slate-50"
                 >
                   Volver al listado
                 </a>
@@ -149,3 +142,43 @@ const imagenes = Array.isArray(terreno?.imagenes) ? (terreno.imagenes as string[
     <Footer />
   </section>
 </Layout>
+
+<script type="module">
+  // Hide/show navbar on scroll (only for this detail page)
+  const nav = document.querySelector('nav');
+  if (nav) {
+    nav.style.transition = 'transform 280ms ease, opacity 220ms ease';
+    let lastY = window.scrollY;
+    let ticking = false;
+
+    const onScroll = () => {
+      const currentY = window.scrollY;
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          if (currentY > lastY && currentY > 60) {
+            // scrolling down
+            nav.style.transform = 'translateY(-110%)';
+            nav.style.opacity = '0';
+            nav.style.pointerEvents = 'none';
+          } else {
+            // scrolling up
+            nav.style.transform = '';
+            nav.style.opacity = '';
+            nav.style.pointerEvents = '';
+          }
+          lastY = currentY;
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    // ensure nav is visible when leaving the page or on load
+    window.addEventListener('pageshow', () => {
+      nav.style.transform = '';
+      nav.style.opacity = '';
+      nav.style.pointerEvents = '';
+    });
+  }
+</script>
