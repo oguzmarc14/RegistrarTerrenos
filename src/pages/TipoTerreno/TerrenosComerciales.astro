@@ -49,6 +49,7 @@ const { data: terrenos, error } = await supabase
         terrenos.map((terreno) => (
           <div class="h-full">
             <CardMostrarTerreno
+              id={terreno.id}
               imagenes={terreno.imagenes}
               titulo={terreno.titulo}
               descripcion={terreno.descripcion}

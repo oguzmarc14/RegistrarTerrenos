@@ -46,6 +46,7 @@ const { data: terrenos, error } = await supabase
       {Array.isArray(terrenos) &&
         terrenos.map((terreno) => (
           <CardMostrarTerreno
+            id={terreno.id}
             imagenes={terreno.imagenes}
             titulo={terreno.titulo}
             descripcion={terreno.descripcion}

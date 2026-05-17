@@ -1,0 +1,151 @@
+---
+export const prerender = false;
+
+import Layout from "../../layouts/Layout.astro";
+import Navbar from "../../components/ui/Navbar.astro";
+import Footer from "../../components/sections/Footer.astro";
+import { supabase } from "../../lib/supabaseClient";
+
+const { id } = Astro.params;
+
+const { data: terreno, error } = await supabase
+  .from("Terrenos")
+  .select("*")
+  .eq("id", id)
+  .single();
+
+const imagenes = Array.isArray(terreno?.imagenes) ? (terreno.imagenes as string[]) : [];
+---
+
+<Layout>
+  <section class="min-h-screen bg-gradient-to-b from-sky-950 via-sky-900 to-sky-950 text-white">
+    <Navbar />
+
+    <div class="mx-auto max-w-7xl px-4 py-8 md:py-12">
+      <a
+        href="/Terrenos"
+        class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-white/90 backdrop-blur hover:bg-white/15 transition"
+      >
+        <span aria-hidden="true">←</span>
+        Volver al listado
+      </a>
+
+      {error && (
+        <div class="mt-8 rounded-2xl border border-red-400/30 bg-red-500/10 p-6 text-red-100">
+          No se pudo cargar la propiedad.
+        </div>
+      )}
+
+      {!error && !terreno && (
+        <div class="mt-8 rounded-2xl border border-white/10 bg-white/5 p-6 text-white/80">
+          No se encontró la propiedad solicitada.
+        </div>
+      )}
+
+      {terreno && (
+        <article class="mt-8 overflow-hidden rounded-[2rem] border border-white/10 bg-white shadow-2xl shadow-black/20 text-slate-900">
+          <div class="grid lg:grid-cols-2">
+            <div class="relative bg-slate-100">
+              <swiper-container
+                class="block h-[320px] sm:h-[420px] lg:h-full lg:min-h-[620px]"
+                slides-per-view="1"
+                pagination="true"
+                navigation="true"
+                loop={imagenes.length > 1 ? "true" : "false"}
+              >
+                {imagenes.length > 0 ? (
+                  imagenes.map((img: string, index: number) => (
+                    <swiper-slide>
+                      <img
+                        src={img}
+                        alt={`${terreno.titulo} imagen ${index + 1}`}
+                        class="h-[320px] w-full object-cover sm:h-[420px] lg:h-[620px]"
+                      />
+                    </swiper-slide>
+                  ))
+                ) : (
+                  <swiper-slide>
+                    <img
+                      src="/no-image.jpg"
+                      alt="Sin imagen"
+                      class="h-[320px] w-full object-cover sm:h-[420px] lg:h-[620px]"
+                    />
+                  </swiper-slide>
+                )}
+              </swiper-container>
+            </div>
+
+            <div class="flex flex-col justify-between p-6 sm:p-8 lg:p-10">
+              <div>
+                <div class="mb-4 flex flex-wrap items-center gap-3">
+                  <span class="rounded-full bg-sky-950 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white">
+                    Detalle de propiedad
+                  </span>
+                  {terreno.tipo && (
+                    <span class="rounded-full bg-amber-100 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-amber-800">
+                      {terreno.tipo}
+                    </span>
+                  )}
+                </div>
+
+                <h1 class="text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">
+                  {terreno.titulo}
+                </h1>
+
+                <p class="mt-4 text-base leading-7 text-slate-600 sm:text-lg">
+                  {terreno.descripcion}
+                </p>
+
+                <div class="mt-6 flex flex-wrap items-end gap-4">
+                  <p class="text-3xl font-bold text-emerald-700 sm:text-4xl">
+                    ${Number(terreno.precio).toLocaleString()} MXN
+                  </p>
+                  {terreno.fecha && (
+                    <p class="text-sm text-slate-500">
+                      Publicado: {new Date(terreno.fecha).toLocaleDateString()}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              <div class="mt-8 grid gap-4 sm:grid-cols-2">
+                {terreno.medidas && (
+                  <div class="rounded-2xl bg-slate-50 p-4 ring-1 ring-slate-200">
+                    <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Medidas</p>
+                    <p class="mt-1 text-lg font-semibold text-slate-900">{terreno.medidas}</p>
+                  </div>
+                )}
+                {terreno.ubicacion && (
+                  <div class="rounded-2xl bg-slate-50 p-4 ring-1 ring-slate-200">
+                    <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Ubicación</p>
+                    <p class="mt-1 text-lg font-semibold text-slate-900">{terreno.ubicacion}</p>
+                  </div>
+                )}
+              </div>
+
+              <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+                <a
+                  href={`https://wa.me/524751080850?text=${encodeURIComponent(`Hola, quiero información de esta propiedad: ${terreno.titulo}${terreno.ubicacion ? ` en ${terreno.ubicacion}` : ""}`)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="inline-flex items-center justify-center rounded-2xl bg-emerald-600 px-5 py-3 font-semibold text-white transition hover:bg-emerald-700"
+                >
+                  Contactar por WhatsApp
+                </a>
+
+                <a
+                  href="/Terrenos"
+                  class="inline-flex items-center justify-center rounded-2xl border border-slate-300 bg-white px-5 py-3 font-semibold text-slate-700 transition hover:bg-slate-50"
+                >
+                  Volver al listado
+                </a>
+              </div>
+            </div>
+          </div>
+        </article>
+      )}
+    </div>
+
+    <Footer />
+  </section>
+</Layout>

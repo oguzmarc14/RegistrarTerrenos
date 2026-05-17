@@ -1,5 +1,6 @@
   ---
   interface Props {
+    id: string | number;
     titulo: string;
     descripcion: string;
     precio: number;
@@ -12,6 +13,7 @@
   }
 
   const {
+    id,
     titulo,
     descripcion,
     precio,
@@ -26,10 +28,10 @@
   import 'swiper/element/bundle';
   ---
 
-  <article class="relative bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 h-160">
+  <article class="relative flex h-160 flex-col overflow-hidden rounded-[1.6rem] border border-slate-200/70 bg-white/95 shadow-[0_20px_50px_rgba(15,23,42,0.12)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_28px_70px_rgba(15,23,42,0.18)]">
     <!-- Carrusel -->
     <swiper-container
-      class="w-full h-70 rounded-t-2xl"
+      class="w-full h-70 rounded-t-[1.6rem]"
       slides-per-view="1"
       pagination="true"
       navigation="true"
@@ -59,26 +61,41 @@
     </swiper-container>
 
     <!-- Contenido -->
-    <div class="p-4 space-y-2">
-      <h2 class="text-xl font-bold">{titulo}</h2>
-      <p class="text-sm text-gray-700 overflow-hidden" style="display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;">{descripcion}</p>
-      <p class="text-green-700 font-semibold">${Number(precio).toLocaleString()} MXN</p>
-      {medidas && <p class="text-sm text-gray-500">Medidas: {medidas}</p>}
-      {ubicacion && <p class="text-sm text-gray-500">Ubicación: {ubicacion}</p>}
+    <div class="flex flex-1 flex-col p-5 sm:p-6">
+      <div class="space-y-2">
+        <h2 class="text-[1.35rem] font-semibold tracking-tight text-slate-950">{titulo}</h2>
+        <p class="text-sm leading-6 text-slate-600 overflow-hidden" style="display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;">{descripcion}</p>
+        <div class="flex items-center justify-between gap-3 pt-1">
+          <p class="text-lg font-bold text-emerald-700">${Number(precio).toLocaleString()} MXN</p>
+        </div>
+        <div class="space-y-1 text-sm text-slate-500">
+          {medidas && <p>Medidas: {medidas}</p>}
+          {ubicacion && <p>Ubicación: {ubicacion}</p>}
+        </div>
+      </div>
 
-      <!-- Botón WhatsApp -->
-      <a
-        href={`https://wa.me/524759513349?text=${
-          encodeURIComponent(
-            `Hola, quiero información de este terreno: ${titulo}${ubicacion ? ` en ${ubicacion}` : ''}`
-          )
-        }`}
-        target="_blank"
-        rel="noopener noreferrer"
-        class="absolute bottom-5 left-4 bg-gradient-to-b from-blue-900 to-blue-500 px-3 py-2 rounded-2xl text-white border-2 border-blue-600"
-      >
-        {textBoton}
-      </a>
+      <div class="mt-auto mb-3 flex flex-wrap gap-3 pt-4">
+        <!-- Botón WhatsApp -->
+        <a
+          href={`https://wa.me/524759513349?text=${
+            encodeURIComponent(
+              `Hola, quiero información de este terreno: ${titulo}${ubicacion ? ` en ${ubicacion}` : ''}`
+            )
+          }`}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex min-w-[150px] flex-1 items-center justify-center gap-2 rounded-full border border-emerald-700/20 bg-gradient-to-r from-emerald-600 to-emerald-500 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-950/15 transition hover:-translate-y-0.5 hover:from-emerald-500 hover:to-emerald-400"
+        >
+          {textBoton}
+        </a>
+
+        <a
+          href={`/Terreno/${id}`}
+          class="inline-flex min-w-[150px] flex-1 items-center justify-center gap-2 rounded-full border border-blue-950/20 bg-gradient-to-r from-blue-950 via-slate-900 to-blue-900 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-950/20 transition hover:-translate-y-0.5 hover:from-blue-900 hover:via-slate-900 hover:to-blue-800"
+        >
+          Ver más
+        </a>
+      </div>
     </div>
   </article>
 
