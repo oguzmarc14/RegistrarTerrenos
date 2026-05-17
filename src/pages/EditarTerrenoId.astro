@@ -4,7 +4,7 @@ import FormEditarTerreno from "../components/ui/FormEditarTerreno.astro";
 import { createClient } from "@supabase/supabase-js";
 
 const supabase = createClient(import.meta.env.PUBLIC_SUPABASE_URL, import.meta.env.PUBLIC_SUPABASE_KEY);
-const id = Astro.request.url.searchParams.get("id");
+const id = Astro.url.searchParams.get("id");
 let terreno = null;
 if (id) {
   const { data } = await supabase.from("Terrenos").select("*").eq("id", id).single();

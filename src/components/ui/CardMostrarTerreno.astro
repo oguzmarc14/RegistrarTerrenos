@@ -61,15 +61,10 @@
     <!-- Contenido -->
     <div class="p-4 space-y-2">
       <h2 class="text-xl font-bold">{titulo}</h2>
-      <p class="text-sm text-gray-700">{descripcion}</p>
+      <p class="text-sm text-gray-700 overflow-hidden" style="display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;">{descripcion}</p>
       <p class="text-green-700 font-semibold">${Number(precio).toLocaleString()} MXN</p>
       {medidas && <p class="text-sm text-gray-500">Medidas: {medidas}</p>}
       {ubicacion && <p class="text-sm text-gray-500">Ubicación: {ubicacion}</p>}
-      {fecha && (
-        <p class="text-xs text-gray-400">
-          Publicado: {new Date(fecha).toLocaleDateString()}
-        </p>
-      )}
 
       <!-- Botón WhatsApp -->
       <a

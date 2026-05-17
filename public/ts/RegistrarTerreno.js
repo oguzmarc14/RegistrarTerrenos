@@ -12,6 +12,10 @@ const inputImagen = document.getElementById("imagen");
 const previewContainer = document.getElementById("previewContainer");
 const boton = document.getElementById("botonSubmit");
 const selectTipo = document.getElementById("tipo");
+const descripcionInput = form ? form.querySelector('textarea[name="descripcion"]') : null;
+
+const MAX_DESCRIPTION_WORDS = 47;
+const MAX_DESCRIPTION_CHARS = 320;
 
 const inputs = form ? Array.from(form.querySelectorAll("input, textarea")) : [];
 
@@ -58,11 +62,29 @@ function verificarCampos() {
   }
 }
 
+function limitarDescripcion() {
+  if (!descripcionInput) return;
+
+  const palabras = descripcionInput.value.trim().split(/\s+/).filter(Boolean);
+  if (palabras.length > MAX_DESCRIPTION_WORDS) {
+    descripcionInput.value = palabras.slice(0, MAX_DESCRIPTION_WORDS).join(" ");
+  }
+
+  if (descripcionInput.value.length > MAX_DESCRIPTION_CHARS) {
+    descripcionInput.value = descripcionInput.value.slice(0, MAX_DESCRIPTION_CHARS);
+  }
+}
+
 inputs.forEach((input) => {
   input.addEventListener("input", verificarCampos);
   if (input.type === "file") {
     input.addEventListener("change", verificarCampos);
   }
+});
+
+descripcionInput?.addEventListener("input", () => {
+  limitarDescripcion();
+  verificarCampos();
 });
 
 
@@ -103,6 +125,19 @@ async function convertirAWebP(file) {
 form?.addEventListener("submit", async (e) => {
   e.preventDefault();
   const formData = new FormData(form);
+  const descripcion = String(formData.get("descripcion") ?? "").trim();
+  const palabrasDescripcion = descripcion.split(/\s+/).filter(Boolean);
+
+  if (palabrasDescripcion.length > MAX_DESCRIPTION_WORDS) {
+    alert(`❌ La descripción no puede tener más de ${MAX_DESCRIPTION_WORDS} palabras.`);
+    return;
+  }
+
+  if (descripcion.length > MAX_DESCRIPTION_CHARS) {
+    alert("❌ La descripción es demasiado larga.");
+    return;
+  }
+
   const files = inputImagen?.files;
 
   if (!files || files.length === 0) {
@@ -146,7 +181,7 @@ form?.addEventListener("submit", async (e) => {
 
   const { error: insertError } = await supabase.from("Terrenos").insert({
     titulo: formData.get("titulo"),
-    descripcion: formData.get("descripcion"),
+    descripcion,
     precio: Number(formData.get("precio")),
     medidas: formData.get("medidas"),
     ubicacion: formData.get("ubicacion"),

@@ -79,11 +79,10 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_KEY;
     </swiper-container>
     <div class="p-4 space-y-2">
       <h2 class="text-2xl font-bold text-black">${terreno.titulo}</h2>
-      <p class="text-sm text-gray-700">${terreno.descripcion ?? ""}</p>
+      <p class="text-sm text-gray-700 overflow-hidden" style="display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;">${terreno.descripcion ?? ""}</p>
       <p class="text-green-700 font-semibold">$${Number(terreno.precio).toLocaleString()} MXN</p>
       ${terreno.medidas ? `<p class="text-sm text-gray-500">Medidas: ${terreno.medidas}</p>` : ""}
       ${terreno.ubicacion ? `<p class="text-sm text-gray-500">Ubicación: ${terreno.ubicacion}</p>` : ""}
-      ${terreno.fecha ? `<p class="text-xs text-gray-400">Publicado: ${new Date(terreno.fecha).toLocaleDateString()}</p>` : ""}
       <a
   href="https://wa.me/524751080850?text=Hola%20Noe%20Aguilera%20quiero%20información%20de%20este%20terreno:%20${encodeURIComponent(terreno.titulo)}%20en%20${encodeURIComponent(terreno.ubicacion)}"
   target="_blank"

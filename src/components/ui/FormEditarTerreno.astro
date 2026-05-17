@@ -1,11 +1,13 @@
 ---
 // Formulario para editar un terreno individual
 const { terreno } = Astro.props;
+const imagenesActuales = Array.isArray(terreno.imagenes) ? (terreno.imagenes as string[]) : [];
 ---
 <form id="formularioEditarTerreno" class="bg-sky-950/70 backdrop-blur-md rounded-2xl shadow-2xl p-6 mt-8">
   <input type="hidden" name="id" value={terreno.id} />
   <input name="titulo" value={terreno.titulo ?? ''} placeholder="Nombre del terreno" required class="border border-white/20 bg-white/10 text-white placeholder-white/60 p-3 rounded w-full mb-3" />
-  <textarea name="descripcion" placeholder="Descripción" required class="h-28 border border-white/20 bg-white/10 text-white placeholder-white/60 p-3 rounded w-full mb-3">{terreno.descripcion ?? ''}</textarea>
+  <textarea name="descripcion" maxlength="320" placeholder="Descripción" required class="h-28 resize-none border border-white/20 bg-white/10 text-white placeholder-white/60 p-3 rounded w-full mb-1">{terreno.descripcion ?? ''}</textarea>
+  <p class="text-xs text-white/60 mb-3">Máximo 47 palabras.</p>
   <input name="precio" value={terreno.precio ?? ''} placeholder="Precio" required class="border border-white/20 bg-white/10 text-white placeholder-white/60 p-3 rounded w-full mb-3" />
   <input name="medidas" value={terreno.medidas ?? ''} placeholder="Medidas (Ej. 120x60)" class="border border-white/20 bg-white/10 text-white placeholder-white/60 p-3 rounded w-full mb-3" />
   <input name="ubicacion" value={terreno.ubicacion ?? ''} placeholder="Ubicación" class="border border-white/20 bg-white/10 text-white placeholder-white/60 p-3 rounded w-full mb-3" />
@@ -20,8 +22,8 @@ const { terreno } = Astro.props;
   <div class="mb-3">
     <label class="block text-white/80 mb-1">Imágenes actuales:</label>
     <div id="imagenes-actuales" class="flex gap-2 flex-wrap mb-2">
-      {Array.isArray(terreno.imagenes) && terreno.imagenes.map((img, idx) => (
-        <div class="relative" key={idx}>
+      {imagenesActuales.map((img, idx) => (
+        <div class="relative">
           <img src={img} alt={`img${idx}`} class="w-20 h-20 object-cover rounded" />
         </div>
       ))}
@@ -33,4 +35,4 @@ const { terreno } = Astro.props;
     <button type="submit" class="bg-amber-600 hover:bg-amber-700 text-white font-bold py-2 px-4 rounded">Guardar cambios</button>
   </div>
 </form>
-<script type="module" src="/ts/EditarTerreno.js"></script>
+<script type="module" src="/ts/EditarTerrenoForm.js"></script>
