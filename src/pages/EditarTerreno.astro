@@ -3,6 +3,16 @@ import Layout from "../layouts/Layout.astro";
 import CardEditarTerreno from "../components/ui/CardEditarTerreno.astro";
 ---
 
+<script is:inline>
+  document.documentElement.classList.add("auth-loading");
+</script>
+
+<style is:global>
+  html.auth-loading body {
+    visibility: hidden;
+  }
+</style>
+
 <Layout>
   <section class="min-h-screen bg-gradient-to-b from-sky-950 via-sky-800 to-sky-950 text-white">
     <div class="mx-auto max-w-7xl px-4 py-10 sm:py-12 lg:py-14">
@@ -22,3 +32,5 @@ import CardEditarTerreno from "../components/ui/CardEditarTerreno.astro";
     </div>
   </section>
 </Layout>
+
+<script type="module" src="/ts/authGuard.js"></script>

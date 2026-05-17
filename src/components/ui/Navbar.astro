@@ -23,11 +23,21 @@ const { class: className=""} = Astro.props as Prop
     <div class:list={["flex", "justify-between", "items-center", "px-4", "py-3", "gap-36", ]}>
       <a href="/"><img src="/logo.png" class:list={["w-40", "hover:scale-110", "duration-300"]} alt="Logo del sitio" /></a>
 
-      <ul class:list={["flex", "gap-3"]}>
-        <li class:list={["hover:scale-110", "duration-300"]}><a href="https://www.facebook.com/noe.aguilera.3133" aria-label="Facebook"><img src="/facebook.png" class="w-12" alt="Facebook" /></a></li>
-        <li class:list={["hover:scale-110", "duration-300"]}><a href="https://www.instagram.com/noeaguilera30/" aria-label="Instagram"><img src="/instagram.png" class="w-12" alt="Instagram" /></a></li>
-        <li class:list={["hover:scale-110", "duration-300"]}><a href="https://www.tiktok.com/@noeaguileratrader" aria-label="TikTok"><img src="/tik-tok.png" class="w-12" alt="TikTok" /></a></li>
-      </ul>
+      <div class="flex items-center gap-3">
+        <ul class:list={["flex", "gap-3"]}>
+          <li class:list={["hover:scale-110", "duration-300"]}><a href="https://www.facebook.com/noe.aguilera.3133" aria-label="Facebook"><img src="/facebook.png" class="w-12" alt="Facebook" /></a></li>
+          <li class:list={["hover:scale-110", "duration-300"]}><a href="https://www.instagram.com/noeaguilera30/" aria-label="Instagram"><img src="/instagram.png" class="w-12" alt="Instagram" /></a></li>
+          <li class:list={["hover:scale-110", "duration-300"]}><a href="https://www.tiktok.com/@noeaguileratrader" aria-label="TikTok"><img src="/tik-tok.png" class="w-12" alt="TikTok" /></a></li>
+        </ul>
+
+        <button
+          id="logout-button"
+          type="button"
+          class="hidden rounded-full border border-sky-900/20 bg-sky-900 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-sky-950/20 transition hover:bg-sky-800"
+        >
+          Cerrar sesión
+        </button>
+      </div>
     </div>
 
     <!-- Línea de separación -->
@@ -50,5 +60,29 @@ const { class: className=""} = Astro.props as Prop
     </ul>
   </div>
 </nav>
+
+<script type="module">
+  const AUTH_SESSION_KEY = "admin_session_active";
+  const LOGIN_PATH = "/iniciarsesion";
+
+  const logoutButton = document.getElementById("logout-button");
+
+  if (logoutButton) {
+    const refreshVisibility = () => {
+      const hasSession = window.sessionStorage.getItem(AUTH_SESSION_KEY) === "true";
+      logoutButton.classList.toggle("hidden", !hasSession);
+    };
+
+    refreshVisibility();
+
+    logoutButton.addEventListener("click", () => {
+      window.sessionStorage.removeItem(AUTH_SESSION_KEY);
+      window.location.href = LOGIN_PATH;
+    });
+
+    window.addEventListener("storage", refreshVisibility);
+    window.addEventListener("pageshow", refreshVisibility);
+  }
+</script>
 
 
