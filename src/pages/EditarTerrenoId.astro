@@ -12,8 +12,19 @@ if (id) {
 }
 ---
 <Layout>
-  <div class="flex flex-col items-center justify-center min-h-screen">
-    <h1 class="text-3xl md:text-4xl font-bold text-white drop-shadow mb-8">Editar terreno</h1>
-    {terreno ? <FormEditarTerreno terreno={terreno} /> : <p class="text-red-500">No se encontró el terreno.</p>}
-  </div>
+  <section class="min-h-screen bg-gradient-to-b from-sky-950 via-sky-800 to-sky-950 text-white">
+    <div class="mx-auto max-w-7xl px-4 py-10 sm:py-12 lg:py-14">
+      <div class="mb-8 text-center">
+        <span class="inline-flex items-center rounded-full bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.25em] text-white/80 backdrop-blur">
+          Edición individual
+        </span>
+        <h1 class="mt-4 text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">Editar terreno</h1>
+        <p class="mx-auto mt-3 max-w-3xl text-sm leading-7 text-sky-100/80 sm:text-base">
+          Ajusta la información de la propiedad con una vista más elegante y clara.
+        </p>
+      </div>
+
+      {terreno ? <FormEditarTerreno terreno={terreno} /> : <p class="text-center text-red-200">No se encontró el terreno.</p>}
+    </div>
+  </section>
 </Layout>
