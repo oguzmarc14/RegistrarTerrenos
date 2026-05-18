@@ -2,7 +2,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js";
 
 const SUPABASE_URL = "https://ssrmztcxoijibjntrtqe.supabase.co";
 const SUPABASE_KEY =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNzcm16dGN4b2lqaWJqbnRydHFlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMzOTA3NDQsImV4cCI6MjA2ODk2Njc0NH0.Wg9rToI2VzpKrnNmAvRVIlky7bSRjCDfFZ4OuZIaesI";
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNzcm16dGN4b2lqaWJqbnRydHFlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMzOTA3NDQsImV4cCI6MjA2ODk2Njc0NH0.Wg9rToI2VzpKrnNmAvRVIlky7bSRjCDfFZ4OuZIaesI";  
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
@@ -15,16 +15,12 @@ const inputs = form
   ? Array.from(form.querySelectorAll("input, textarea, select"))
   : [];
 
-function mostrarAlerta({
-  titulo = "Mensaje",
-  mensaje = "",
-  tipo = "success",
-}) {
-  const existente = document.getElementById("custom-alert");
+let archivosSeleccionados = [];
+let indicePortada = 0;
 
-  if (existente) {
-    existente.remove();
-  }
+function mostrarAlerta({ titulo = "Mensaje", mensaje = "", tipo = "success" }) {
+  const existente = document.getElementById("custom-alert");
+  if (existente) existente.remove();
 
   const colores = {
     success: {
@@ -42,9 +38,7 @@ function mostrarAlerta({
   const estilo = colores[tipo] || colores.success;
 
   const modal = document.createElement("div");
-
   modal.id = "custom-alert";
-
   modal.className =
     "fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm";
 
@@ -52,16 +46,11 @@ function mostrarAlerta({
     <div class="w-full max-w-md overflow-hidden rounded-[2rem] border ${estilo.borde} bg-slate-950 text-white shadow-2xl">
       <div class="bg-gradient-to-r ${estilo.fondo} p-5 text-center">
         <div class="text-5xl">${estilo.icono}</div>
-
-        <h2 class="mt-3 text-2xl font-black tracking-tight">
-          ${titulo}
-        </h2>
+        <h2 class="mt-3 text-2xl font-black tracking-tight">${titulo}</h2>
       </div>
 
       <div class="p-6 text-center">
-        <p class="text-sm leading-7 text-slate-300">
-          ${mensaje}
-        </p>
+        <p class="text-sm leading-7 text-slate-300">${mensaje}</p>
 
         <button
           id="cerrar-alerta"
@@ -75,51 +64,64 @@ function mostrarAlerta({
 
   document.body.appendChild(modal);
 
-  const cerrar = document.getElementById("cerrar-alerta");
-
-  cerrar?.addEventListener("click", () => {
+  document.getElementById("cerrar-alerta")?.addEventListener("click", () => {
     modal.remove();
   });
 }
 
+function renderizarPreviews() {
+  if (!previewContainer) return;
+
+  previewContainer.innerHTML = "";
+
+  archivosSeleccionados.forEach((archivo, index) => {
+    const reader = new FileReader();
+
+    reader.onload = function (e) {
+      const wrapper = document.createElement("button");
+      wrapper.type = "button";
+      wrapper.className =
+        "group relative overflow-hidden rounded-2xl text-left transition hover:scale-[1.03]";
+
+      const img = document.createElement("img");
+      img.src = e.target?.result;
+
+      img.className =
+        index === indicePortada
+          ? "h-32 w-full rounded-2xl border-4 border-sky-500 object-cover shadow-2xl"
+          : "h-24 w-full rounded-2xl border border-slate-200 object-cover shadow-md opacity-80 group-hover:opacity-100";
+
+      wrapper.appendChild(img);
+
+      const badge = document.createElement("div");
+      badge.className =
+        index === indicePortada
+          ? "absolute left-2 top-2 rounded-full bg-sky-600 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white shadow-lg backdrop-blur"
+          : "absolute left-2 top-2 rounded-full bg-black/60 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white opacity-0 shadow-lg backdrop-blur transition group-hover:opacity-100";
+
+      badge.innerText = index === indicePortada ? "Portada" : "Elegir portada";
+      wrapper.appendChild(badge);
+
+      wrapper.addEventListener("click", () => {
+        indicePortada = index;
+        renderizarPreviews();
+      });
+
+      previewContainer.appendChild(wrapper);
+    };
+
+    reader.readAsDataURL(archivo);
+  });
+}
+
 inputImagen?.addEventListener("change", () => {
-  if (previewContainer) previewContainer.innerHTML = "";
+  archivosSeleccionados = inputImagen.files
+    ? Array.from(inputImagen.files)
+    : [];
 
-  if (inputImagen.files && inputImagen.files.length > 0) {
-    const archivosOrdenados = Array.from(inputImagen.files);
+  indicePortada = 0;
 
-    archivosOrdenados.forEach((archivo, index) => {
-      const reader = new FileReader();
-
-      reader.onload = function (e) {
-        const wrapper = document.createElement("div");
-        wrapper.className = "relative overflow-hidden rounded-2xl";
-
-        const img = document.createElement("img");
-        img.src = e.target?.result;
-
-        img.className =
-          index === 0
-            ? "h-32 w-full rounded-2xl border-4 border-sky-400 object-cover shadow-2xl"
-            : "h-24 w-full rounded-2xl border border-slate-200 object-cover shadow-md";
-
-        wrapper.appendChild(img);
-
-        if (index === 0) {
-          const badge = document.createElement("div");
-          badge.className =
-            "absolute left-2 top-2 rounded-full bg-sky-500 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white shadow-lg backdrop-blur";
-          badge.innerText = "Portada";
-          wrapper.appendChild(badge);
-        }
-
-        previewContainer?.appendChild(wrapper);
-      };
-
-      reader.readAsDataURL(archivo);
-    });
-  }
-
+  renderizarPreviews();
   verificarCampos();
 });
 
@@ -205,7 +207,6 @@ form?.addEventListener("submit", async (e) => {
   e.preventDefault();
 
   const formData = new FormData(form);
-  const files = inputImagen?.files;
   const tipo = formData.get("tipo");
 
   if (!tipo) {
@@ -217,7 +218,7 @@ form?.addEventListener("submit", async (e) => {
     return;
   }
 
-  if (!files || files.length === 0) {
+  if (!archivosSeleccionados || archivosSeleccionados.length === 0) {
     mostrarAlerta({
       titulo: "Faltan imágenes",
       mensaje: "Selecciona al menos una imagen para publicar el terreno.",
@@ -229,10 +230,15 @@ form?.addEventListener("submit", async (e) => {
   boton.disabled = true;
   boton.textContent = "Subiendo terreno...";
 
+  const archivosOrdenadosParaSubir = [
+    archivosSeleccionados[indicePortada],
+    ...archivosSeleccionados.filter((_, index) => index !== indicePortada),
+  ];
+
   const urls = [];
 
-  for (let i = 0; i < files.length; i++) {
-    const file = files[i];
+  for (let i = 0; i < archivosOrdenadosParaSubir.length; i++) {
+    const file = archivosOrdenadosParaSubir[i];
 
     let webpFile;
 
@@ -316,6 +322,8 @@ form?.addEventListener("submit", async (e) => {
   });
 
   form.reset();
+  archivosSeleccionados = [];
+  indicePortada = 0;
 
   if (previewContainer) previewContainer.innerHTML = "";
 
