@@ -14,23 +14,41 @@ const MAX_DESCRIPTION_CHARS = 320;
 
 // Preview de nuevas imágenes
 if (nuevasImagenesInput) {
-  nuevasImagenesInput.addEventListener("change", () => {
-    previewNuevas.innerHTML = "";
-    if (nuevasImagenesInput.files && nuevasImagenesInput.files.length > 0) {
-      const archivosOrdenados = Array.from(nuevasImagenesInput.files).sort((a, b) => 
-        a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' })
-      );
-      archivosOrdenados.forEach((archivo) => {
-        const reader = new FileReader();
-        reader.onload = function (e) {
-          const img = document.createElement("img");
-          img.src = e.target?.result;
-          img.className = "w-20 h-20 object-cover rounded";
-          previewNuevas.appendChild(img);
-        };
-        reader.readAsDataURL(archivo);
-      });
+  nuevasImagenesInput.addEventListener("change", function () {
+    if (previewNuevas) {
+      previewNuevas.innerHTML = "";
     }
+
+    if (!nuevasImagenesInput.files || nuevasImagenesInput.files.length === 0) {
+      return;
+    }
+
+    const archivosOrdenados = Array.from(nuevasImagenesInput.files).sort(
+      function (a, b) {
+        return a.name.localeCompare(b.name, undefined, {
+          numeric: true,
+          sensitivity: "base",
+        });
+      },
+    );
+
+    archivosOrdenados.forEach(function (archivo) {
+      const reader = new FileReader();
+
+      reader.onload = function (e) {
+        const img = document.createElement("img");
+        const target = e && e.target ? e.target : null;
+
+        img.src = target && target.result ? target.result : "";
+        img.className = "w-20 h-20 object-cover rounded";
+
+        if (previewNuevas) {
+          previewNuevas.appendChild(img);
+        }
+      };
+
+      reader.readAsDataURL(archivo);
+    });
   });
 }
 
@@ -130,7 +148,7 @@ if (form) {
 
       // Procesar y subir nuevas imágenes
       if (nuevasImagenesInput && nuevasImagenesInput.files.length > 0) {
-        for (let file of nuevasImagenesInput.files) {
+        for (const file of Array.from(nuevasImagenesInput.files)) {
           try {
             const webpFile = await convertirAWebP(file);
             const url = await subirImagenASupabase(webpFile);

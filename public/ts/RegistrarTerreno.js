@@ -2,7 +2,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js";
 
 const SUPABASE_URL = "https://ssrmztcxoijibjntrtqe.supabase.co";
 const SUPABASE_KEY =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNzcm16dGN4b2lqaWJqbnRydHFlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMzOTA3NDQsImV4cCI6MjA2ODk2Njc0NH0.Wg9rToI2VzpKrnNmAvRVIlky7bSRjCDfFZ4OuZIaesI";  
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNzcm16dGN4b2lqaWJqbnRydHFlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMzOTA3NDQsImV4cCI6MjA2ODk2Njc0NH0.Wg9rToI2VzpKrnNmAvRVIlky7bSRjCDfFZ4OuZIaesI";
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
@@ -11,62 +11,109 @@ const inputImagen = document.getElementById("imagen");
 const previewContainer = document.getElementById("previewContainer");
 const boton = document.getElementById("botonSubmit");
 
-const inputs = form ? Array.from(form.querySelectorAll("input, textarea, select")) : [];
+const inputs = form
+  ? Array.from(form.querySelectorAll("input, textarea, select"))
+  : [];
+
+function mostrarAlerta({
+  titulo = "Mensaje",
+  mensaje = "",
+  tipo = "success",
+}) {
+  const existente = document.getElementById("custom-alert");
+
+  if (existente) {
+    existente.remove();
+  }
+
+  const colores = {
+    success: {
+      borde: "border-emerald-400/30",
+      fondo: "from-emerald-500 to-emerald-600",
+      icono: "✅",
+    },
+    error: {
+      borde: "border-rose-400/30",
+      fondo: "from-rose-500 to-rose-600",
+      icono: "❌",
+    },
+  };
+
+  const estilo = colores[tipo] || colores.success;
+
+  const modal = document.createElement("div");
+
+  modal.id = "custom-alert";
+
+  modal.className =
+    "fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm";
+
+  modal.innerHTML = `
+    <div class="w-full max-w-md overflow-hidden rounded-[2rem] border ${estilo.borde} bg-slate-950 text-white shadow-2xl">
+      <div class="bg-gradient-to-r ${estilo.fondo} p-5 text-center">
+        <div class="text-5xl">${estilo.icono}</div>
+
+        <h2 class="mt-3 text-2xl font-black tracking-tight">
+          ${titulo}
+        </h2>
+      </div>
+
+      <div class="p-6 text-center">
+        <p class="text-sm leading-7 text-slate-300">
+          ${mensaje}
+        </p>
+
+        <button
+          id="cerrar-alerta"
+          class="mt-6 inline-flex items-center justify-center rounded-2xl bg-white px-6 py-3 text-sm font-bold text-slate-900 transition hover:scale-105 hover:bg-slate-200"
+        >
+          Continuar
+        </button>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+
+  const cerrar = document.getElementById("cerrar-alerta");
+
+  cerrar?.addEventListener("click", () => {
+    modal.remove();
+  });
+}
 
 inputImagen?.addEventListener("change", () => {
   if (previewContainer) previewContainer.innerHTML = "";
 
   if (inputImagen.files && inputImagen.files.length > 0) {
+    const archivosOrdenados = Array.from(inputImagen.files);
 
-  // Mantener orden original seleccionado por usuario
-  // La primera imagen será la portada principal
-  const archivosOrdenados = Array.from(inputImagen.files);
-
-  archivosOrdenados.forEach((archivo, index) => {
-    const reader = new FileReader();
-
-    reader.onload = function (e) {
-      const wrapper = document.createElement("div");
-      wrapper.className = "relative";
-
-      const img = document.createElement("img");
-      img.src = e.target?.result;
-
-      img.className =
-        index === 0
-          ? "h-28 w-full rounded-2xl border-4 border-sky-400 object-cover shadow-xl"
-          : "h-24 w-full rounded-2xl border border-slate-200 object-cover shadow-md";
-
-      wrapper.appendChild(img);
-
-      // Badge portada principal
-      if (index === 0) {
-        const badge = document.createElement("div");
-
-        badge.className =
-          "absolute left-2 top-2 rounded-full bg-sky-500 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white shadow-lg";
-
-        badge.innerText = "Portada";
-
-        wrapper.appendChild(badge);
-      }
-
-      previewContainer?.appendChild(wrapper);
-    };
-
-    reader.readAsDataURL(archivo);
-  });
-}
-
-    archivosOrdenados.forEach((archivo) => {
+    archivosOrdenados.forEach((archivo, index) => {
       const reader = new FileReader();
 
       reader.onload = function (e) {
+        const wrapper = document.createElement("div");
+        wrapper.className = "relative overflow-hidden rounded-2xl";
+
         const img = document.createElement("img");
         img.src = e.target?.result;
+
         img.className =
-          "h-24 w-full rounded-2xl border border-slate-200 object-cover shadow-md";
-        previewContainer?.appendChild(img);
+          index === 0
+            ? "h-32 w-full rounded-2xl border-4 border-sky-400 object-cover shadow-2xl"
+            : "h-24 w-full rounded-2xl border border-slate-200 object-cover shadow-md";
+
+        wrapper.appendChild(img);
+
+        if (index === 0) {
+          const badge = document.createElement("div");
+          badge.className =
+            "absolute left-2 top-2 rounded-full bg-sky-500 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white shadow-lg backdrop-blur";
+          badge.innerText = "Portada";
+          wrapper.appendChild(badge);
+        }
+
+        previewContainer?.appendChild(wrapper);
       };
 
       reader.readAsDataURL(archivo);
@@ -119,6 +166,7 @@ async function convertirAWebP(file) {
 
       img.onload = function () {
         const canvas = document.createElement("canvas");
+
         canvas.width = img.width;
         canvas.height = img.height;
 
@@ -161,12 +209,20 @@ form?.addEventListener("submit", async (e) => {
   const tipo = formData.get("tipo");
 
   if (!tipo) {
-    alert("❌ Por favor selecciona un tipo de propiedad");
+    mostrarAlerta({
+      titulo: "Falta información",
+      mensaje: "Por favor selecciona un tipo de propiedad.",
+      tipo: "error",
+    });
     return;
   }
 
   if (!files || files.length === 0) {
-    alert("❌ No hay imágenes seleccionadas");
+    mostrarAlerta({
+      titulo: "Faltan imágenes",
+      mensaje: "Selecciona al menos una imagen para publicar el terreno.",
+      tipo: "error",
+    });
     return;
   }
 
@@ -183,8 +239,14 @@ form?.addEventListener("submit", async (e) => {
     try {
       webpFile = await convertirAWebP(file);
     } catch (err) {
-      alert("❌ Error convirtiendo imagen a WebP");
+      mostrarAlerta({
+        titulo: "Error con la imagen",
+        mensaje: "No se pudo convertir una imagen a formato WEBP.",
+        tipo: "error",
+      });
+
       console.error(err);
+
       boton.disabled = false;
       boton.textContent = "Subir terreno";
       return;
@@ -192,11 +254,17 @@ form?.addEventListener("submit", async (e) => {
 
     const { data, error } = await supabase.storage
       .from("terrenos-imagenes")
-      .upload(`terrenos/${Date.now()}-${webpFile.name}`, webpFile);
+      .upload(`terrenos/${Date.now()}-${i}-${webpFile.name}`, webpFile);
 
     if (error) {
-      alert("❌ Error subiendo imagen");
+      mostrarAlerta({
+        titulo: "Error al subir imagen",
+        mensaje: "No se pudo subir una de las imágenes. Intenta de nuevo.",
+        tipo: "error",
+      });
+
       console.error(error);
+
       boton.disabled = false;
       boton.textContent = "Subir terreno";
       return;
@@ -226,16 +294,29 @@ form?.addEventListener("submit", async (e) => {
   });
 
   if (insertError) {
-    alert("❌ Error guardando terreno");
+    mostrarAlerta({
+      titulo: "Error al guardar",
+      mensaje: "No se pudo guardar el terreno en la base de datos.",
+      tipo: "error",
+    });
+
     console.error(insertError);
+
     boton.disabled = false;
     boton.textContent = "Subir terreno";
     return;
   }
 
-  alert(`✅ Terreno guardado con ${urls.length} imagen${urls.length !== 1 ? "es" : ""}`);
+  mostrarAlerta({
+    titulo: "Terreno publicado",
+    mensaje: `El terreno se guardó correctamente con ${urls.length} imagen${
+      urls.length !== 1 ? "es" : ""
+    }.`,
+    tipo: "success",
+  });
 
   form.reset();
+
   if (previewContainer) previewContainer.innerHTML = "";
 
   boton.textContent = "Subir terreno";
