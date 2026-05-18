@@ -66,16 +66,17 @@ lista.addEventListener("click", async (e) => {
   if (eliminarBtn) {
     const id = eliminarBtn.dataset.id;
     if (!confirm("¿Seguro que deseas eliminar este terreno?")) return;
-    const res = await fetch("/api/editarTerreno-api", {
+    const res = await fetch(`/api/editarTerreno-api?id=${encodeURIComponent(id)}`, {
       method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id }),
     });
+
+    const payload = await res.json().catch(() => null);
+
     if (res.ok) {
       alert("✅ Terreno eliminado");
       cargarTerrenosAdmin();
     } else {
-      alert("❌ Error al eliminar");
+      alert(payload?.error ?? "❌ Error al eliminar");
     }
   }
 });

@@ -17,12 +17,46 @@ inputImagen?.addEventListener("change", () => {
   if (previewContainer) previewContainer.innerHTML = "";
 
   if (inputImagen.files && inputImagen.files.length > 0) {
-    const archivosOrdenados = Array.from(inputImagen.files).sort((a, b) =>
-      a.name.localeCompare(b.name, undefined, {
-        numeric: true,
-        sensitivity: "base",
-      })
-    );
+
+  // Mantener orden original seleccionado por usuario
+  // La primera imagen será la portada principal
+  const archivosOrdenados = Array.from(inputImagen.files);
+
+  archivosOrdenados.forEach((archivo, index) => {
+    const reader = new FileReader();
+
+    reader.onload = function (e) {
+      const wrapper = document.createElement("div");
+      wrapper.className = "relative";
+
+      const img = document.createElement("img");
+      img.src = e.target?.result;
+
+      img.className =
+        index === 0
+          ? "h-28 w-full rounded-2xl border-4 border-sky-400 object-cover shadow-xl"
+          : "h-24 w-full rounded-2xl border border-slate-200 object-cover shadow-md";
+
+      wrapper.appendChild(img);
+
+      // Badge portada principal
+      if (index === 0) {
+        const badge = document.createElement("div");
+
+        badge.className =
+          "absolute left-2 top-2 rounded-full bg-sky-500 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white shadow-lg";
+
+        badge.innerText = "Portada";
+
+        wrapper.appendChild(badge);
+      }
+
+      previewContainer?.appendChild(wrapper);
+    };
+
+    reader.readAsDataURL(archivo);
+  });
+}
 
     archivosOrdenados.forEach((archivo) => {
       const reader = new FileReader();

@@ -37,7 +37,7 @@ import Layout from "../layouts/Layout.astro";
 
           <!-- TITULO -->
           <h1
-            class="mt-5 mb-8 text-left text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl"
+            class="mb-8 mt-5 text-left text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl"
           >
             Inicia sesión para administrar tus terrenos
           </h1>
@@ -236,12 +236,8 @@ import Layout from "../layouts/Layout.astro";
       message.className =
         "min-h-5 text-sm font-medium text-emerald-600";
 
-      const returnTo = new URLSearchParams(
-        window.location.search,
-      ).get("returnTo");
-
-      window.location.href =
-        returnTo || "/EditarTerreno";
+      // SIEMPRE IR AL PANEL ADMIN
+      window.location.href = "/panelAdmin";
     });
   }
 </script>

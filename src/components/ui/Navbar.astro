@@ -1,62 +1,84 @@
 ---
 interface Prop {
-    class?: string
+  class?: string;
+  isOverlay?: boolean;
 }
 
-const { class: className=""} = Astro.props as Prop
+const {
+  class: className = "",
+  isOverlay = false,
+} = Astro.props as Prop;
 ---
 
-<nav class:list={[
-  "bg-white/10",
-  "backdrop-blur-md",
-  "backdrop-saturate-150",
-  "border-b",
-  "border-white/20",
-  "shadow-lg",
-  "sticky",
-  "top-0",
-  "w-full",
-  className
-]}>
+<nav
+  class:list={[
+    "z-30",
+    "w-full",
+    "border-b",
+    "border-white/15",
+    "bg-sky-950/80",
+    "backdrop-blur-md",
+    "backdrop-saturate-150",
+    "shadow-lg",
+    isOverlay ? "absolute left-0 top-0" : "relative",
+    className,
+  ]}
+>
   <div>
-    <!-- Parte superior: logo + redes -->
-    <div class:list={["flex", "justify-between", "items-center", "px-4", "py-3", "gap-36", ]}>
-      <a href="/"><img src="/logo.png" class:list={["w-40", "hover:scale-110", "duration-300"]} alt="Logo del sitio" /></a>
+    <div class="flex items-center justify-between gap-4 px-4 py-3">
+      <a href="/">
+        <img
+          src="/logo.png"
+          class="w-28 duration-300 hover:scale-105 sm:w-40"
+          alt="Logo del sitio"
+        />
+      </a>
 
       <div class="flex items-center gap-3">
-        <ul class:list={["flex", "gap-3"]}>
-          <li class:list={["hover:scale-110", "duration-300"]}><a href="https://www.facebook.com/noe.aguilera.3133" aria-label="Facebook"><img src="/facebook.png" class="w-12" alt="Facebook" /></a></li>
-          <li class:list={["hover:scale-110", "duration-300"]}><a href="https://www.instagram.com/noeaguilera30/" aria-label="Instagram"><img src="/instagram.png" class="w-12" alt="Instagram" /></a></li>
-          <li class:list={["hover:scale-110", "duration-300"]}><a href="https://www.tiktok.com/@noeaguileratrader" aria-label="TikTok"><img src="/tik-tok.png" class="w-12" alt="TikTok" /></a></li>
+        <ul class="flex gap-3">
+          <li class="duration-300 hover:scale-110">
+            <a href="https://www.facebook.com/noe.aguilera.3133" aria-label="Facebook">
+              <img src="/facebook.png" class="w-8 sm:w-12" alt="Facebook" />
+            </a>
+          </li>
+
+          <li class="duration-300 hover:scale-110">
+            <a href="https://www.instagram.com/noeaguilera30/" aria-label="Instagram">
+              <img src="/instagram.png" class="w-8 sm:w-12" alt="Instagram" />
+            </a>
+          </li>
+
+          <li class="duration-300 hover:scale-110">
+            <a href="https://www.tiktok.com/@noeaguileratrader" aria-label="TikTok">
+              <img src="/tik-tok.png" class="w-8 sm:w-12" alt="TikTok" />
+            </a>
+          </li>
         </ul>
 
         <button
           id="logout-button"
           type="button"
-          class="hidden rounded-full border border-sky-900/20 bg-sky-900 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-sky-950/20 transition hover:bg-sky-800"
+          class="hidden rounded-full border border-white/10 bg-sky-900 px-4 py-2 text-xs font-semibold text-white shadow-lg shadow-sky-950/20 transition hover:bg-sky-800 sm:text-sm"
         >
           Cerrar sesión
         </button>
       </div>
     </div>
 
-    <!-- Línea de separación -->
-    <div class="border-t border-white/20 mx-6 my-2"></div>
+    <div class="mx-6 border-t border-white/15"></div>
 
-    <!-- Parte inferior: enlaces principales -->
-    <ul class:list={[
-      "flex",
-      "justify-center",
-      "text-white",
-      "gap-8",
-      "font-bold",
-      "uppercase",
-      "tracking-wide",
-      "pb-3"
-    ]}>
-      <li class:list={["hover:scale-110", "hover:text-blue-500", "duration-300", "text-[9px]", "sm:text-base", "md:text-sm"]}><a href="/">Home</a></li>
-      <li class:list={["hover:scale-110", "hover:text-blue-500", "duration-300", "text-[9px]", "sm:text-base", "md:text-sm"]}><a href="/Terrenos">Terrenos</a></li>
-      <li class:list={["hover:scale-110", "hover:text-blue-500", "duration-300", "text-[9px]", "sm:text-base", "md:text-sm"]}><a href="/#Video-Terrenos">Conóceme</a></li>
+    <ul class="flex justify-center gap-8 pb-3 pt-3 text-[10px] font-bold uppercase tracking-wide text-white sm:text-sm">
+      <li class="duration-300 hover:scale-110 hover:text-sky-300">
+        <a href="/">Home</a>
+      </li>
+
+      <li class="duration-300 hover:scale-110 hover:text-sky-300">
+        <a href="/Terrenos">Terrenos</a>
+      </li>
+
+      <li class="duration-300 hover:scale-110 hover:text-sky-300">
+        <a href="/#Video-Terrenos">Conóceme</a>
+      </li>
     </ul>
   </div>
 </nav>
@@ -69,7 +91,9 @@ const { class: className=""} = Astro.props as Prop
 
   if (logoutButton) {
     const refreshVisibility = () => {
-      const hasSession = window.sessionStorage.getItem(AUTH_SESSION_KEY) === "true";
+      const hasSession =
+        window.sessionStorage.getItem(AUTH_SESSION_KEY) === "true";
+
       logoutButton.classList.toggle("hidden", !hasSession);
     };
 
@@ -84,5 +108,3 @@ const { class: className=""} = Astro.props as Prop
     window.addEventListener("pageshow", refreshVisibility);
   }
 </script>
-
-

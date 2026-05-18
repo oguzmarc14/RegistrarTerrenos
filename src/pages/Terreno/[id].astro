@@ -76,7 +76,7 @@ const imagenes = Array.isArray(terreno?.imagenes)
                 </swiper-container>
               </div>
 
-              <div class="flex flex-col justify-between p-4 sm:p-5 lg:p-8">
+              <div class="flex flex-col justify-between p-4 sm:p-5 lg:p-8 bg-sky-900/30">
                 <div>
                   <div class="mb-3 flex flex-wrap items-center gap-3">
                     <span class="rounded-full bg-sky-900 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white">
@@ -89,7 +89,7 @@ const imagenes = Array.isArray(terreno?.imagenes)
                     )}
                   </div>
 
-                  <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-slate-950">
+                  <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-sky-950">
                     {terreno.titulo}
                   </h1>
 
@@ -112,8 +112,8 @@ const imagenes = Array.isArray(terreno?.imagenes)
 
                 <div class="mt-5 grid gap-3 sm:grid-cols-2">
                   {terreno.medidas && (
-                    <div class="rounded-2xl bg-slate-100 p-3 ring-1 ring-slate-300">
-                      <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-600">
+                    <div class="rounded-2xl bg-sky-700/20 p-3 ring-1 ring-slate-300">
+                      <p class="text-xs font-semibold uppercase tracking-[0.2em] text-sky-800">
                         Medidas
                       </p>
                       <p class="mt-1 text-base font-semibold text-slate-900">
@@ -122,8 +122,8 @@ const imagenes = Array.isArray(terreno?.imagenes)
                     </div>
                   )}
                   {terreno.ubicacion && (
-                    <div class="rounded-2xl bg-slate-100 p-3 ring-1 ring-slate-300">
-                      <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-600">
+                    <div class="rounded-2xl bg-sky-700/20 p-3 ring-1 ring-slate-300">
+                      <p class="text-xs font-semibold uppercase tracking-[0.2em] text-sky-800">
                         Ubicación
                       </p>
 
@@ -150,14 +150,14 @@ const imagenes = Array.isArray(terreno?.imagenes)
                     href={`https://wa.me/524751080850?text=${encodeURIComponent(`Hola, quiero información de esta propiedad: ${terreno.titulo}${terreno.ubicacion ? ` en ${terreno.ubicacion}` : ""}`)}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="inline-flex items-center justify-center rounded-2xl bg-emerald-600 px-5 py-3 font-semibold text-white transition hover:bg-emerald-700"
+                    class="inline-flex items-center justify-center rounded-2xl bg-emerald-600 px-5 py-3 font-semibold text-white transition hover:bg-emerald-700 hover:scale-105"
                   >
                     Contactar por WhatsApp
                   </a>
 
                   <a
                     href="/Terrenos"
-                    class="inline-flex items-center justify-center rounded-2xl border border-slate-300 bg-sky-900 px-5 py-3 font-semibold text-white transition hover:bg-slate-50"
+                    class="inline-flex items-center justify-center rounded-2xl border border-slate-300 bg-sky-900 px-5 py-3 font-semibold text-white transition hover:bg-sky-800 hover:scale-105"
                   >
                     Volver al listado
                   </a>
