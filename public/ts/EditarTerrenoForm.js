@@ -8,13 +8,16 @@ const form = document.getElementById("formularioEditarTerreno");
 const nuevasImagenesInput = document.getElementById("nuevasImagenes");
 const previewNuevas = document.getElementById("previewNuevas");
 const descripcionInput = form ? form.querySelector('textarea[name="descripcion"]') : null;
+const imagenesActualesEl = document.getElementById("imagenes-actuales");
 
-const MAX_DESCRIPTION_WORDS = 47;
-const MAX_DESCRIPTION_CHARS = 320;
+let imagenPortadaSeleccionada = null;
+let indicePortadaNuevas = 0;
 
 // Preview de nuevas imágenes
 if (nuevasImagenesInput) {
   nuevasImagenesInput.addEventListener("change", function () {
+    indicePortadaNuevas = 0;
+
     if (previewNuevas) {
       previewNuevas.innerHTML = "";
     }
@@ -36,14 +39,38 @@ if (nuevasImagenesInput) {
       const reader = new FileReader();
 
       reader.onload = function (e) {
+        const wrapper = document.createElement("button");
+        wrapper.type = "button";
+        wrapper.className = "group relative overflow-hidden rounded-2xl text-left transition hover:scale-[1.03]";
+
         const img = document.createElement("img");
         const target = e && e.target ? e.target : null;
 
         img.src = target && target.result ? target.result : "";
-        img.className = "w-20 h-20 object-cover rounded";
+        img.className =
+          index === indicePortadaNuevas
+            ? "h-32 w-full rounded-2xl border-4 border-sky-500 object-cover shadow-2xl"
+            : "h-24 w-full rounded-2xl border border-slate-200 object-cover shadow-md opacity-80 group-hover:opacity-100";
+
+        const badge = document.createElement("div");
+        badge.className =
+          index === indicePortadaNuevas
+            ? "absolute left-2 top-2 rounded-full bg-sky-600 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white shadow-lg backdrop-blur"
+            : "absolute left-2 top-2 rounded-full bg-black/60 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white opacity-0 shadow-lg backdrop-blur transition group-hover:opacity-100";
+
+        badge.innerText = index === indicePortadaNuevas ? "Portada" : "Elegir portada";
+
+        wrapper.addEventListener("click", () => {
+          imagenPortadaSeleccionada = img.src;
+          indicePortadaNuevas = index;
+          renderizarNuevasPreviews();
+        });
+
+        wrapper.appendChild(img);
+        wrapper.appendChild(badge);
 
         if (previewNuevas) {
-          previewNuevas.appendChild(img);
+          previewNuevas.appendChild(wrapper);
         }
       };
 
@@ -52,20 +79,105 @@ if (nuevasImagenesInput) {
   });
 }
 
-function limitarDescripcion() {
-  if (!descripcionInput) return;
+function renderizarImagenesActuales() {
+  if (!imagenesActualesEl) return;
 
-  const palabras = descripcionInput.value.trim().split(/\s+/).filter(Boolean);
-  if (palabras.length > MAX_DESCRIPTION_WORDS) {
-    descripcionInput.value = palabras.slice(0, MAX_DESCRIPTION_WORDS).join(" ");
-  }
+  const botones = Array.from(imagenesActualesEl.querySelectorAll("button.imagen-actual"));
 
-  if (descripcionInput.value.length > MAX_DESCRIPTION_CHARS) {
-    descripcionInput.value = descripcionInput.value.slice(0, MAX_DESCRIPTION_CHARS);
-  }
+  botones.forEach((boton, index) => {
+    const img = boton.querySelector("img");
+    const badge = boton.querySelector(".badge-portada");
+
+    if (!img) return;
+
+    const esPortada = imagenPortadaSeleccionada
+      ? img.src === imagenPortadaSeleccionada
+      : index === 0;
+
+    img.className = esPortada
+      ? "h-32 w-full rounded-2xl border-4 border-sky-500 object-cover shadow-2xl"
+      : "h-24 w-full rounded-2xl border border-slate-200 object-cover shadow-md opacity-80 group-hover:opacity-100";
+
+    if (badge) {
+      badge.className = esPortada
+        ? "badge-portada absolute left-2 top-2 rounded-full bg-sky-600 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white shadow-lg backdrop-blur"
+        : "badge-portada absolute left-2 top-2 rounded-full bg-black/60 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white opacity-0 shadow-lg backdrop-blur transition group-hover:opacity-100";
+
+      badge.innerText = esPortada ? "Portada" : "Elegir portada";
+    }
+  });
 }
 
-descripcionInput?.addEventListener("input", limitarDescripcion);
+function renderizarNuevasPreviews() {
+  if (!previewNuevas) return;
+
+  const archivos = Array.from(nuevasImagenesInput?.files || []);
+  const archivosOrdenados = archivos.sort(function (a, b) {
+    return a.name.localeCompare(b.name, undefined, {
+      numeric: true,
+      sensitivity: "base",
+    });
+  });
+
+  previewNuevas.innerHTML = "";
+
+  archivosOrdenados.forEach(function (archivo, index) {
+    const reader = new FileReader();
+
+    reader.onload = function (e) {
+      const wrapper = document.createElement("button");
+      wrapper.type = "button";
+      wrapper.className = "group relative overflow-hidden rounded-2xl text-left transition hover:scale-[1.03]";
+
+      const img = document.createElement("img");
+      const target = e && e.target ? e.target : null;
+
+      img.src = target && target.result ? target.result : "";
+      img.className =
+        index === indicePortadaNuevas
+          ? "h-32 w-full rounded-2xl border-4 border-sky-500 object-cover shadow-2xl"
+          : "h-24 w-full rounded-2xl border border-slate-200 object-cover shadow-md opacity-80 group-hover:opacity-100";
+
+      const badge = document.createElement("div");
+      badge.className =
+        index === indicePortadaNuevas
+          ? "absolute left-2 top-2 rounded-full bg-sky-600 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white shadow-lg backdrop-blur"
+          : "absolute left-2 top-2 rounded-full bg-black/60 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white opacity-0 shadow-lg backdrop-blur transition group-hover:opacity-100";
+
+      badge.innerText = index === indicePortadaNuevas ? "Portada" : "Elegir portada";
+
+      wrapper.addEventListener("click", () => {
+        imagenPortadaSeleccionada = img.src;
+        indicePortadaNuevas = index;
+        renderizarNuevasPreviews();
+      });
+
+      wrapper.appendChild(img);
+      wrapper.appendChild(badge);
+      previewNuevas.appendChild(wrapper);
+    };
+
+    reader.readAsDataURL(archivo);
+  });
+}
+
+if (imagenesActualesEl) {
+  const primeraImagen = imagenesActualesEl.querySelector("img");
+  imagenPortadaSeleccionada = primeraImagen ? primeraImagen.src : null;
+
+  imagenesActualesEl.addEventListener("click", function (e) {
+    const boton = e.target.closest("button.imagen-actual");
+    if (!boton) return;
+
+    const img = boton.querySelector("img");
+    if (!img) return;
+
+    imagenPortadaSeleccionada = img.src;
+    renderizarImagenesActuales();
+  });
+
+  renderizarImagenesActuales();
+}
 
 // Convertir imagen a WebP
 async function convertirAWebP(file) {
@@ -113,6 +225,20 @@ async function subirImagenASupabase(file) {
   return publicData.publicUrl;
 }
 
+function normalizarPrecio(valor) {
+  const texto = String(valor ?? "").trim();
+
+  if (!texto) {
+    return NaN;
+  }
+
+  const sinEspacios = texto.replace(/\s+/g, "");
+  const sinSeparadoresMiles = sinEspacios.replace(/,/g, "");
+  const soloNumero = sinSeparadoresMiles.replace(/[^\d.-]/g, "");
+
+  return Number(soloNumero);
+}
+
 // Manejar envío del formulario
 if (form) {
   form.addEventListener("submit", async (e) => {
@@ -124,23 +250,19 @@ if (form) {
     const precio = form.querySelector('input[name="precio"]').value;
     const medidas = form.querySelector('input[name="medidas"]').value;
     const ubicacion = form.querySelector('input[name="ubicacion"]').value;
+    const googleMaps = form.querySelector('input[name="googleMaps"]').value;
     const tipo = form.querySelector('select[name="tipo"]').value;
-    const palabrasDescripcion = descripcion.trim().split(/\s+/).filter(Boolean);
 
-    if (palabrasDescripcion.length > MAX_DESCRIPTION_WORDS) {
-      alert(`❌ La descripción no puede tener más de ${MAX_DESCRIPTION_WORDS} palabras.`);
-      return;
-    }
+    const precioNormalizado = normalizarPrecio(precio);
 
-    if (descripcion.length > MAX_DESCRIPTION_CHARS) {
-      alert("❌ La descripción es demasiado larga.");
+    if (Number.isNaN(precioNormalizado)) {
+      alert("❌ Ingresa un precio válido.");
       return;
     }
 
     try {
       // Obtener imágenes actuales
       let imagenes = [];
-      const imagenesActualesEl = document.getElementById("imagenes-actuales");
       if (imagenesActualesEl) {
         const imgs = imagenesActualesEl.querySelectorAll("img");
         imagenes = Array.from(imgs).map(img => img.src);
@@ -153,9 +275,22 @@ if (form) {
             const webpFile = await convertirAWebP(file);
             const url = await subirImagenASupabase(webpFile);
             imagenes.push(url);
+
+            if (!imagenPortadaSeleccionada) {
+              imagenPortadaSeleccionada = url;
+            }
           } catch (error) {
             console.error("Error al procesar imagen:", error);
           }
+        }
+      }
+
+      if (imagenPortadaSeleccionada && imagenes.length > 0) {
+        const indicePortada = imagenes.findIndex((url) => url === imagenPortadaSeleccionada);
+
+        if (indicePortada > 0) {
+          const portada = imagenes.splice(indicePortada, 1)[0];
+          imagenes.unshift(portada);
         }
       }
 
@@ -164,9 +299,10 @@ if (form) {
         id,
         titulo,
         descripcion,
-        precio: parseFloat(precio),
+        precio: precioNormalizado,
         medidas,
         ubicacion,
+        google_maps: googleMaps,
         tipo,
       };
       

@@ -12,7 +12,21 @@ export const PUT: APIRoute = async ({ request }) => {
     console.log("=== INICIO PUT ===");
     console.log("Body recibido:", JSON.stringify(body, null, 2));
     
-    const { id, ...campos } = body;
+    const { id, googleMaps, ...campos } = body;
+    const precioNormalizado = typeof campos.precio === "string"
+      ? Number(
+          campos.precio
+            .replace(/\s+/g, "")
+            .replace(/,/g, "")
+            .replace(/[^\d.-]/g, "")
+        )
+      : campos.precio;
+
+    const datosActualizacion = {
+      ...campos,
+      precio: precioNormalizado,
+      ...(googleMaps ? { google_maps: googleMaps } : {}),
+    };
     
     if (!id) {
       console.error("ERROR: ID es requerido");
@@ -20,7 +34,7 @@ export const PUT: APIRoute = async ({ request }) => {
     }
     
     console.log("ID:", id);
-    console.log("Campos a actualizar:", campos);
+    console.log("Campos a actualizar:", datosActualizacion);
     
     // Verificar que el registro existe
     const { data: verificar, error: errorVerif } = await supabase
@@ -38,7 +52,7 @@ export const PUT: APIRoute = async ({ request }) => {
     // Actualizar
     const { data: updateData, error: updateError, count } = await supabase
       .from("Terrenos")
-      .update(campos)
+      .update(datosActualizacion)
       .eq("id", id)
       .select();
     
