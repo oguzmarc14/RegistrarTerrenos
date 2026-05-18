@@ -25,6 +25,18 @@
     tipo,
   } = Astro.props;
 
+  function formatearPrecio(valor: string | number | null | undefined): string {
+    const texto = String(valor ?? "").trim();
+
+    if (!texto) return "";
+
+    const esSoloNumero = /^[\d.,\s]+$/.test(texto);
+    if (!esSoloNumero) return texto;
+
+    const numero = Number(texto.replace(/\s+/g, "").replace(/,/g, ""));
+    return Number.isFinite(numero) ? `$${numero.toLocaleString()} MXN` : texto;
+  }
+
   // Si quieres usar los web components de Swiper empacados por Vite:
   import 'swiper/element/bundle';
   ---
@@ -69,7 +81,7 @@
         <p class="text-sm text-slate-600 overflow-hidden" style="display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;">{descripcion}</p>
 
         <div class="pt-2">
-          <p class="text-xl sm:text-2xl font-extrabold text-emerald-700">${Number(precio).toLocaleString()} MXN</p>
+          <p class="text-xl sm:text-2xl font-extrabold text-emerald-700">${formatearPrecio(precio)}</p>
         </div>
 
         <div class="mt-2 flex flex-col sm:flex-row sm:gap-2 gap-2">

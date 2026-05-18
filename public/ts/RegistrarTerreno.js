@@ -218,6 +218,18 @@ form?.addEventListener("submit", async (e) => {
     return;
   }
 
+  // Validar que el precio no esté vacío
+  const precio = formData.get("precio")?.trim();
+  if (!precio) {
+    mostrarAlerta({
+      titulo: "Precio requerido",
+      mensaje: "Por favor ingresa un precio. Puede ser un número (ej. 50000) o texto (ej. Consultar, A negociar).",
+      tipo: "error",
+    });
+    boton.disabled = false;
+    return;
+  }
+
   if (!archivosSeleccionados || archivosSeleccionados.length === 0) {
     mostrarAlerta({
       titulo: "Faltan imágenes",
@@ -290,7 +302,7 @@ form?.addEventListener("submit", async (e) => {
   const { error: insertError } = await supabase.from("Terrenos").insert({
     titulo: formData.get("titulo"),
     descripcion: formData.get("descripcion"),
-    precio: Number(formData.get("precio")),
+    precio: precio,
     medidas: formData.get("medidas"),
     ubicacion: formData.get("ubicacion"),
     google_maps: formData.get("googleMaps"),

@@ -136,13 +136,25 @@ async function cargarTerrenosAdmin() {
 
   lista.innerHTML = "";
 
+  function formatearPrecio(valor) {
+    const texto = String(valor ?? "").trim();
+
+    if (!texto) return "";
+
+    const esSoloNumero = /^[\d.,\s]+$/.test(texto);
+    if (!esSoloNumero) return texto;
+
+    const numero = Number(texto.replace(/\s+/g, "").replace(/,/g, ""));
+    return Number.isFinite(numero) ? `$${numero.toLocaleString()} MXN` : texto;
+  }
+
   data.forEach((terreno) => {
     const imagenPrincipal =
       Array.isArray(terreno.imagenes) && terreno.imagenes.length > 0
         ? terreno.imagenes[0]
         : null;
 
-    const precioFormateado = Number(terreno.precio || 0).toLocaleString();
+    const precioFormateado = formatearPrecio(terreno.precio);
 
     const card = document.createElement("article");
 
@@ -168,7 +180,7 @@ async function cargarTerrenosAdmin() {
             }
 
             <p class="text-sm font-bold text-emerald-700">
-              $${precioFormateado} MXN
+              ${precioFormateado}
             </p>
           </div>
 

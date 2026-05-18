@@ -13,18 +13,19 @@ export const PUT: APIRoute = async ({ request }) => {
     console.log("Body recibido:", JSON.stringify(body, null, 2));
     
     const { id, googleMaps, ...campos } = body;
-    const precioNormalizado = typeof campos.precio === "string"
-      ? Number(
-          campos.precio
-            .replace(/\s+/g, "")
-            .replace(/,/g, "")
-            .replace(/[^\d.-]/g, "")
-        )
-      : campos.precio;
+    const precio = typeof campos.precio === "string"
+      ? campos.precio.trim()
+      : String(campos.precio ?? "").trim();
+
+    if (!precio) {
+      return new Response(JSON.stringify({ error: "El precio es requerido" }), {
+        status: 400,
+      });
+    }
 
     const datosActualizacion = {
       ...campos,
-      precio: precioNormalizado,
+      precio,
       ...(googleMaps ? { google_maps: googleMaps } : {}),
     };
     

@@ -35,7 +35,7 @@ if (nuevasImagenesInput) {
       },
     );
 
-    archivosOrdenados.forEach(function (archivo) {
+    archivosOrdenados.forEach(function (archivo, index) {
       const reader = new FileReader();
 
       reader.onload = function (e) {
@@ -212,17 +212,56 @@ async function convertirAWebP(file) {
   });
 }
 
-// Subir imagen a Supabase
-async function subirImagenASupabase(file) {
-  const nombreArchivo = `${Date.now()}_${file.name}`;
-  const { data, error } = await supabase.storage
-    .from("terrenos")
-    .upload(`imagenes/${nombreArchivo}`, file);
-  if (error) throw error;
-  const { data: publicData } = supabase.storage
-    .from("terrenos")
-    .getPublicUrl(`imagenes/${nombreArchivo}`);
-  return publicData.publicUrl;
+// Función para mostrar alertas personalizadas
+function mostrarAlerta({ titulo = "Mensaje", mensaje = "", tipo = "success" }) {
+  const existente = document.getElementById("custom-alert");
+  if (existente) existente.remove();
+
+  const colores = {
+    success: {
+      borde: "border-emerald-400/30",
+      fondo: "from-emerald-500 to-emerald-600",
+      icono: "✅",
+    },
+    error: {
+      borde: "border-rose-400/30",
+      fondo: "from-rose-500 to-rose-600",
+      icono: "❌",
+    },
+  };
+
+  const estilo = colores[tipo] || colores.success;
+
+  const modal = document.createElement("div");
+  modal.id = "custom-alert";
+  modal.className =
+    "fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm";
+
+  modal.innerHTML = `
+    <div class="w-full max-w-md overflow-hidden rounded-[2rem] border ${estilo.borde} bg-slate-950 text-white shadow-2xl">
+      <div class="bg-gradient-to-r ${estilo.fondo} p-5 text-center">
+        <div class="text-5xl">${estilo.icono}</div>
+        <h2 class="mt-3 text-2xl font-black tracking-tight">${titulo}</h2>
+      </div>
+
+      <div class="p-6 text-center">
+        <p class="text-sm leading-7 text-slate-300">${mensaje}</p>
+
+        <button
+          id="cerrar-alerta"
+          class="mt-6 inline-flex items-center justify-center rounded-2xl bg-white px-6 py-3 text-sm font-bold text-slate-900 transition hover:scale-105 hover:bg-slate-200"
+        >
+          Continuar
+        </button>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+
+  document.getElementById("cerrar-alerta")?.addEventListener("click", () => {
+    modal.remove();
+  });
 }
 
 function normalizarPrecio(valor) {
@@ -253,12 +292,19 @@ if (form) {
     const googleMaps = form.querySelector('input[name="googleMaps"]').value;
     const tipo = form.querySelector('select[name="tipo"]').value;
 
-    const precioNormalizado = normalizarPrecio(precio);
-
-    if (Number.isNaN(precioNormalizado)) {
-      alert("❌ Ingresa un precio válido.");
+    // Validar que el precio no esté vacío
+    const precioLimpio = precio?.trim();
+    if (!precioLimpio) {
+      mostrarAlerta({
+        titulo: "Precio requerido",
+        mensaje: "Por favor ingresa un precio. Puede ser un número (ej. 50000) o texto (ej. Consultar, A negociar).",
+        tipo: "error",
+      });
       return;
     }
+
+    // Usar el precio como texto directamente
+    const precioParaGuardar = precioLimpio;
 
     try {
       // Obtener imágenes actuales
@@ -299,7 +345,7 @@ if (form) {
         id,
         titulo,
         descripcion,
-        precio: precioNormalizado,
+        precio: precioParaGuardar,
         medidas,
         ubicacion,
         google_maps: googleMaps,
@@ -323,17 +369,29 @@ if (form) {
       console.log("Respuesta de la API:", responseData);
 
       if (response.ok) {
-        alert("✅ Terreno actualizado correctamente");
+        mostrarAlerta({
+          titulo: "Terreno actualizado",
+          mensaje: "El terreno se actualizó correctamente.",
+          tipo: "success",
+        });
         setTimeout(() => {
           window.location.href = "/EditarTerreno";
-        }, 500);
+        }, 1500);
       } else {
         console.error("Error en la respuesta:", responseData);
-        alert("❌ Error al actualizar: " + (responseData.error || "Error desconocido"));
+        mostrarAlerta({
+          titulo: "Error al actualizar",
+          mensaje: responseData.error || "No se pudo actualizar el terreno.",
+          tipo: "error",
+        });
       }
     } catch (error) {
       console.error("Error:", error);
-      alert("❌ Error: " + error.message);
+      mostrarAlerta({
+        titulo: "Error",
+        mensaje: error.message || "Ocurrió un error al actualizar el terreno.",
+        tipo: "error",
+      });
     }
   });
 }
