@@ -22,7 +22,7 @@ const { id } = Astro.params;
 
 const { data: terreno, error } = await supabase
   .from("Terrenos")
-  .select("*")
+  .select("id, titulo, descripcion, precio, imagenes, medidas, ubicacion, tipo, fecha, google_maps")
   .eq("id", id)
   .single();
 
@@ -73,6 +73,9 @@ const imagenes = Array.isArray(terreno?.imagenes)
                           src={img}
                           alt={`${terreno.titulo} imagen ${index + 1}`}
                           class="h-52 w-full object-cover sm:h-68 lg:h-[44rem]"
+                          loading={index === 0 ? "eager" : "lazy"}
+                          fetchpriority={index === 0 ? "high" : "low"}
+                          decoding="async"
                         />
                       </swiper-slide>
                     ))
@@ -82,6 +85,9 @@ const imagenes = Array.isArray(terreno?.imagenes)
                         src="/no-image.jpg"
                         alt="Sin imagen"
                         class="h-52 w-full object-cover sm:h-68 lg:h-[44rem]"
+                        loading="eager"
+                        fetchpriority="high"
+                        decoding="async"
                       />
                     </swiper-slide>
                   )}

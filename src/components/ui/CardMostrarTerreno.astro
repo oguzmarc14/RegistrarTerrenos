@@ -37,41 +37,36 @@
     return Number.isFinite(numero) ? `$${numero.toLocaleString()} MXN` : texto;
   }
 
-  // Si quieres usar los web components de Swiper empacados por Vite:
-  import 'swiper/element/bundle';
+  const imagenPrincipal = imagenes.length > 0 ? imagenes[0] : null;
+  const fotosExtra = Math.max(imagenes.length - 1, 0);
   ---
 
   <article class="relative flex flex-col overflow-hidden rounded-[1.6rem] border border-slate-200/70 bg-white/95 shadow-[0_20px_50px_rgba(15,23,42,0.12)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_28px_70px_rgba(15,23,42,0.18)] sm:min-h-[40rem]">
-    <!-- Carrusel -->
-    <swiper-container
-      class="w-full h-48 sm:h-[22rem] rounded-t-[1.6rem]"
-      slides-per-view="1"
-      pagination="true"
-      navigation="true"
-      loop={imagenes.length > 1 ? 'true' : 'false'}
-    >
-      {imagenes.length > 0 ? (
-        imagenes.map((img, i) => (
-          <swiper-slide>
-            <img
-              src={img}
-              alt={`${titulo} imagen ${i + 1}`}
-              class="w-full h-48 sm:h-[22rem] object-cover"
-              loading="lazy"
-            />
-          </swiper-slide>
-        ))
+    <div class="relative h-48 sm:h-[22rem] overflow-hidden rounded-t-[1.6rem] bg-slate-100">
+      {imagenPrincipal ? (
+        <img
+          src={imagenPrincipal}
+          alt={titulo}
+          class="h-full w-full object-cover"
+          loading="lazy"
+          decoding="async"
+        />
       ) : (
-        <swiper-slide>
-          <img
-            src="/no-image.jpg"
-            alt="Sin imagen"
-            class="w-full h-48 sm:h-70 object-cover"
-            loading="lazy"
-          />
-        </swiper-slide>
+        <img
+          src="/no-image.jpg"
+          alt="Sin imagen"
+          class="h-full w-full object-cover"
+          loading="lazy"
+          decoding="async"
+        />
       )}
-    </swiper-container>
+
+      {fotosExtra > 0 && (
+        <span class="absolute left-3 top-3 rounded-full bg-slate-950/80 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-white backdrop-blur">
+          +{fotosExtra} fotos
+        </span>
+      )}
+    </div>
 
     <!-- Contenido -->
     <div class="flex flex-1 flex-col p-3 sm:p-5">
@@ -116,7 +111,3 @@
   </article>
 
 
-  <!-- ✅ Import Swiper Web Components -->
-  <script type="module">
-    import "swiper/element/bundle";
-  </script>

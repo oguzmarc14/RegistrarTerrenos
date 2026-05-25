@@ -10,7 +10,7 @@ import { supabase } from '../../lib/supabaseClient';
 
 const { data: terrenos, error } = await supabase
   .from("Terrenos")
-  .select("*")
+  .select("id, titulo, descripcion, precio, imagenes, medidas, ubicacion, tipo, fecha")
   .eq("tipo", "comercial")
   .order("fecha", { ascending: false });
 ---

@@ -49,7 +49,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_KEY;
 
     const { data, error } = await supabase
       .from("Terrenos")
-      .select("*")
+      .select("id, titulo, descripcion, precio, imagenes, medidas, ubicacion, tipo, fecha")
       .order("fecha", { ascending: false });
 
     if (error) {
@@ -68,27 +68,29 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_KEY;
     contenedor.innerHTML = ""; // limpiar
 
     data.forEach((terreno) => {
+        const imagenPrincipal = Array.isArray(terreno.imagenes) && terreno.imagenes.length > 0
+          ? terreno.imagenes[0]
+          : null;
+
+        const fotosExtra = Array.isArray(terreno.imagenes)
+          ? Math.max(terreno.imagenes.length - 1, 0)
+          : 0;
+
         const card = `
     <article class="relative flex flex-col overflow-hidden rounded-[1.6rem] border border-slate-200/70 bg-white/95 shadow-[0_20px_50px_rgba(15,23,42,0.12)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_28px_70px_rgba(15,23,42,0.18)] sm:min-h-[40rem]">
-      <swiper-container class="w-full h-48 sm:h-[22rem] rounded-t-[1.6rem]" slides-per-view="1" pagination="true" navigation="true" loop="${terreno.imagenes && terreno.imagenes.length > 1}">
+      <div class="relative h-48 sm:h-[22rem] overflow-hidden rounded-t-[1.6rem] bg-slate-100">
         ${
-          terreno.imagenes && terreno.imagenes.length > 0
-            ? terreno.imagenes
-                .map(
-                  (img, i) => `
-                <swiper-slide>
-                  <img src="${img}" alt="${terreno.titulo} imagen ${i + 1}" class="w-full h-48 sm:h-[22rem] object-cover"/>
-                </swiper-slide>
-              `
-                )
-                .join("")
-            : `
-              <swiper-slide>
-                <img src="/no-image.jpg" alt="Sin imagen" class="w-full h-48 sm:h-[22rem] object-cover"/>
-              </swiper-slide>
-            `
+          imagenPrincipal
+            ? `<img src="${imagenPrincipal}" alt="${terreno.titulo}" class="h-full w-full object-cover" loading="lazy" decoding="async" />`
+            : `<img src="/no-image.jpg" alt="Sin imagen" class="h-full w-full object-cover" loading="lazy" decoding="async" />`
         }
-      </swiper-container>
+
+        ${
+          fotosExtra > 0
+            ? `<span class="absolute left-3 top-3 rounded-full bg-slate-950/80 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-white backdrop-blur">+${fotosExtra} fotos</span>`
+            : ""
+        }
+      </div>
       <div class="flex flex-1 flex-col p-3 sm:p-5">
         <div class="space-y-2">
           ${terreno.tipo ? `<span class="bg-sky-900/20 text-black inline-block px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide">${terreno.tipo}</span>` : ''}

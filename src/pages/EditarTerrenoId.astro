@@ -15,7 +15,7 @@ let terreno = null;
 if (id) {
   const { data } = await supabase
     .from("Terrenos")
-    .select("*")
+    .select("id, titulo, descripcion, precio, imagenes, medidas, ubicacion, tipo, fecha, google_maps")
     .eq("id", id)
     .single();
 

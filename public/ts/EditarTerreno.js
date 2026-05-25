@@ -122,7 +122,7 @@ async function cargarTerrenosAdmin() {
 
   const { data, error } = await supabase
     .from("Terrenos")
-    .select("*")
+    .select("id, titulo, descripcion, precio, imagenes, medidas, ubicacion, tipo, fecha, google_maps")
     .order("fecha", { ascending: false });
 
   if (error || !data || data.length === 0) {
@@ -165,7 +165,7 @@ async function cargarTerrenosAdmin() {
       <div class="w-full h-48 sm:h-[22rem] bg-slate-100 flex items-center justify-center">
         ${
           imagenPrincipal
-            ? `<img src="${imagenPrincipal}" alt="${terreno.titulo ?? "Terreno"}" class="w-full h-48 sm:h-[22rem] object-cover rounded-t-[1.8rem]" />`
+            ? `<img src="${imagenPrincipal}" alt="${terreno.titulo ?? "Terreno"}" class="w-full h-48 sm:h-[22rem] object-cover rounded-t-[1.8rem]" loading="lazy" decoding="async" />`
             : `<div class="w-full h-48 sm:h-[22rem] flex items-center justify-center text-slate-400">Sin imagen</div>`
         }
       </div>

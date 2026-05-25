@@ -9,8 +9,6 @@ const supabase = createClient(
 export const PUT: APIRoute = async ({ request }) => {
   try {
     const body = await request.json();
-    console.log("=== INICIO PUT ===");
-    console.log("Body recibido:", JSON.stringify(body, null, 2));
     
     const { id, googleMaps, ...campos } = body;
     const precio = typeof campos.precio === "string"
@@ -30,52 +28,25 @@ export const PUT: APIRoute = async ({ request }) => {
     };
     
     if (!id) {
-      console.error("ERROR: ID es requerido");
       return new Response(JSON.stringify({ error: "ID es requerido" }), { status: 400 });
     }
     
-    console.log("ID:", id);
-    console.log("Campos a actualizar:", datosActualizacion);
-    
-    // Verificar que el registro existe
-    const { data: verificar, error: errorVerif } = await supabase
-      .from("Terrenos")
-      .select("*")
-      .eq("id", id)
-      .single();
-    
-    console.log("Registro verificado:", verificar);
-    if (errorVerif) {
-      console.error("Error al verificar registro:", errorVerif);
-      return new Response(JSON.stringify({ error: "Terreno no encontrado: " + errorVerif.message }), { status: 400 });
-    }
-    
-    // Actualizar
     const { data: updateData, error: updateError, count } = await supabase
       .from("Terrenos")
       .update(datosActualizacion)
       .eq("id", id)
-      .select();
-    
-    console.log("Resultado update - Count:", count, "Error:", updateError, "Data:", updateData);
+      .select("id, titulo, descripcion, precio, imagenes, medidas, ubicacion, tipo, fecha, google_maps");
     
     if (updateError) {
-      console.error("Error de Supabase al actualizar:", updateError);
       return new Response(JSON.stringify({ error: "Error al actualizar: " + updateError.message }), { status: 500 });
     }
-    
-    // Verificar que se actualizó
-    const { data: verificarFinal, error: errorFinal } = await supabase
-      .from("Terrenos")
-      .select("*")
-      .eq("id", id)
-      .single();
-    
-    console.log("Datos finales después del update:", verificarFinal);
-    console.log("=== FIN PUT ===");
+
+    if (!updateData || updateData.length === 0) {
+      return new Response(JSON.stringify({ error: "Terreno no encontrado" }), { status: 404 });
+    }
     
     return new Response(JSON.stringify({ 
-      data: verificarFinal, 
+      data: updateData[0], 
       success: true,
       message: "Terreno actualizado correctamente"
     }), { status: 200 });
