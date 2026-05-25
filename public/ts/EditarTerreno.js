@@ -6,6 +6,28 @@ const SUPABASE_KEY =
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
+function getMiniatura(url) {
+  if (!url) return url;
+
+  try {
+    const parsedUrl = new URL(url);
+    const publicPath = "/storage/v1/object/public/";
+    const renderPath = "/storage/v1/render/image/public/";
+
+    if (!parsedUrl.pathname.includes(publicPath)) return url;
+
+    parsedUrl.pathname = parsedUrl.pathname.replace(publicPath, renderPath);
+    parsedUrl.searchParams.delete("download");
+    parsedUrl.searchParams.set("width", "1056");
+    parsedUrl.searchParams.set("quality", "72");
+    parsedUrl.searchParams.set("resize", "contain");
+
+    return parsedUrl.toString();
+  } catch {
+    return url;
+  }
+}
+
 const lista = document.getElementById("admin-terrenos-lista");
 
 function mostrarAlerta({ titulo = "Mensaje", mensaje = "", tipo = "success" }) {
@@ -153,6 +175,7 @@ async function cargarTerrenosAdmin() {
       Array.isArray(terreno.imagenes) && terreno.imagenes.length > 0
         ? terreno.imagenes[0]
         : null;
+    const imagenMiniatura = imagenPrincipal ? getMiniatura(imagenPrincipal) : null;
 
     const precioFormateado = formatearPrecio(terreno.precio);
 
@@ -162,11 +185,11 @@ async function cargarTerrenosAdmin() {
       "relative flex flex-col overflow-hidden rounded-[1.8rem] border border-slate-200/70 bg-white/95 shadow-[0_22px_54px_rgba(15,23,42,0.12)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_30px_74px_rgba(15,23,42,0.18)] sm:min-h-[40rem]";
 
     card.innerHTML = `
-      <div class="w-full h-48 sm:h-[22rem] bg-slate-100 flex items-center justify-center">
+      <div class="w-full h-[14.3rem] sm:h-[26.4rem] bg-slate-50 flex items-center justify-center overflow-hidden">
         ${
           imagenPrincipal
-            ? `<img src="${imagenPrincipal}" alt="${terreno.titulo ?? "Terreno"}" class="w-full h-48 sm:h-[22rem] object-cover rounded-t-[1.8rem]" loading="lazy" decoding="async" />`
-            : `<div class="w-full h-48 sm:h-[22rem] flex items-center justify-center text-slate-400">Sin imagen</div>`
+            ? `<img src="${imagenMiniatura}" data-original-url="${imagenPrincipal}" alt="${terreno.titulo ?? "Terreno"}" class="w-full h-full object-contain p-2 rounded-t-[1.8rem]" loading="lazy" decoding="async" onload="if(this.naturalWidth>this.naturalHeight){this.classList.remove('object-contain','p-2');this.classList.add('object-cover','scale-[1.25]');}" onerror="if(!this.dataset.fallbacked){this.dataset.fallbacked='1';this.src=this.dataset.originalUrl;}" />`
+            : `<div class="w-full h-full flex items-center justify-center text-slate-400">Sin imagen</div>`
         }
       </div>
 

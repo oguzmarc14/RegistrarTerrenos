@@ -4,6 +4,28 @@ const SUPABASE_URL = "https://ssrmztcxoijibjntrtqe.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNzcm16dGN4b2lqaWJqbnRydHFlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMzOTA3NDQsImV4cCI6MjA2ODk2Njc0NH0.Wg9rToI2VzpKrnNmAvRVIlky7bSRjCDfFZ4OuZIaesI";
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
+function getMiniatura(url) {
+  if (!url) return url;
+
+  try {
+    const parsedUrl = new URL(url);
+    const publicPath = "/storage/v1/object/public/";
+    const renderPath = "/storage/v1/render/image/public/";
+
+    if (!parsedUrl.pathname.includes(publicPath)) return url;
+
+    parsedUrl.pathname = parsedUrl.pathname.replace(publicPath, renderPath);
+    parsedUrl.searchParams.delete("download");
+    parsedUrl.searchParams.set("width", "420");
+    parsedUrl.searchParams.set("quality", "70");
+    parsedUrl.searchParams.set("resize", "cover");
+
+    return parsedUrl.toString();
+  } catch {
+    return url;
+  }
+}
+
 const form = document.getElementById("formularioEditarTerreno");
 const nuevasImagenesInput = document.getElementById("nuevasImagenes");
 const previewNuevas = document.getElementById("previewNuevas");
@@ -51,6 +73,11 @@ if (nuevasImagenesInput) {
           index === indicePortadaNuevas
             ? "h-32 w-full rounded-2xl border-4 border-sky-500 object-cover shadow-2xl"
             : "h-24 w-full rounded-2xl border border-slate-200 object-cover shadow-md opacity-80 group-hover:opacity-100";
+        img.onload = function () {
+          if (img.naturalWidth > img.naturalHeight) {
+            img.classList.add("scale-[1.18]");
+          }
+        };
 
         const badge = document.createElement("div");
         badge.className =
@@ -90,8 +117,9 @@ function renderizarImagenesActuales() {
 
     if (!img) return;
 
+    const urlOriginal = boton.dataset.url || img.dataset.originalUrl || img.src;
     const esPortada = imagenPortadaSeleccionada
-      ? img.src === imagenPortadaSeleccionada
+      ? urlOriginal === imagenPortadaSeleccionada
       : index === 0;
 
     img.className = esPortada
@@ -163,7 +191,8 @@ function renderizarNuevasPreviews() {
 
 if (imagenesActualesEl) {
   const primeraImagen = imagenesActualesEl.querySelector("img");
-  imagenPortadaSeleccionada = primeraImagen ? primeraImagen.src : null;
+  const primerBoton = imagenesActualesEl.querySelector("button.imagen-actual");
+  imagenPortadaSeleccionada = primerBoton?.dataset.url || primeraImagen?.dataset.originalUrl || null;
 
   imagenesActualesEl.addEventListener("click", function (e) {
     const boton = e.target.closest("button.imagen-actual");
@@ -172,7 +201,7 @@ if (imagenesActualesEl) {
     const img = boton.querySelector("img");
     if (!img) return;
 
-    imagenPortadaSeleccionada = img.src;
+    imagenPortadaSeleccionada = boton.dataset.url || img.dataset.originalUrl || img.src;
     renderizarImagenesActuales();
   });
 

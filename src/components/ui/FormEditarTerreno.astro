@@ -1,7 +1,12 @@
 ---
+import { getSupabaseImageUrl } from "../../lib/supabaseImage";
+
 const { terreno } = Astro.props;
 
 const imagenes: string[] = Array.isArray(terreno.imagenes) ? terreno.imagenes : [];
+const imagenesMiniatura = imagenes.map((img) =>
+  getSupabaseImageUrl(img, { width: 420, quality: 70, resize: "cover" }),
+);
 ---
 
 <form
@@ -96,18 +101,24 @@ const imagenes: string[] = Array.isArray(terreno.imagenes) ? terreno.imagenes : 
           class="grid max-h-72 grid-cols-2 gap-3 overflow-y-auto pr-1 sm:grid-cols-3 lg:grid-cols-4"
         >
           {
-            imagenes.map((img, index) => (
+            imagenes.map((img, index) => {
+              const miniatura = imagenesMiniatura[index] ?? img;
+
+              return (
               <button
                 type="button"
                 class="imagen-actual group relative overflow-hidden rounded-2xl text-left transition hover:scale-[1.03]"
                 data-url={img}
               >
                 <img
-                  src={img}
+                  src={miniatura}
+                  data-original-url={img}
                   alt={`Imagen ${index + 1}`}
                   class={index === 0
                     ? "h-32 w-full rounded-2xl border-4 border-sky-500 object-cover shadow-2xl"
                     : "h-24 w-full rounded-2xl border border-slate-200 object-cover shadow-md opacity-80 group-hover:opacity-100"}
+                  onload="if(this.naturalWidth>this.naturalHeight){this.classList.add('scale-[1.18]');}"
+                  onerror="if(!this.dataset.fallbacked){this.dataset.fallbacked='1';this.src=this.dataset.originalUrl;}"
                 />
 
                 <span class={index === 0
@@ -117,7 +128,8 @@ const imagenes: string[] = Array.isArray(terreno.imagenes) ? terreno.imagenes : 
                   {index === 0 ? "Portada" : "Elegir portada"}
                 </span>
               </button>
-            ))
+              );
+            })
           }
         </div>
       </div>

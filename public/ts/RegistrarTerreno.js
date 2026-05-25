@@ -90,6 +90,11 @@ function renderizarPreviews() {
         index === indicePortada
           ? "h-32 w-full rounded-2xl border-4 border-sky-500 object-cover shadow-2xl"
           : "h-24 w-full rounded-2xl border border-slate-200 object-cover shadow-md opacity-80 group-hover:opacity-100";
+      img.onload = function () {
+        if (img.naturalWidth > img.naturalHeight) {
+          img.classList.add("scale-[1.18]");
+        }
+      };
 
       wrapper.appendChild(img);
 

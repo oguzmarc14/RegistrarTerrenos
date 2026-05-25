@@ -1,4 +1,6 @@
   ---
+  import { getSupabaseImageUrl } from "../../lib/supabaseImage";
+
   interface Props {
     id: string | number;
     titulo: string;
@@ -39,23 +41,29 @@
 
   const imagenPrincipal = imagenes.length > 0 ? imagenes[0] : null;
   const fotosExtra = Math.max(imagenes.length - 1, 0);
+  const imagenMiniatura = imagenPrincipal
+    ? getSupabaseImageUrl(imagenPrincipal, { width: 1056, quality: 72, resize: "contain" })
+    : null;
   ---
 
   <article class="relative flex flex-col overflow-hidden rounded-[1.6rem] border border-slate-200/70 bg-white/95 shadow-[0_20px_50px_rgba(15,23,42,0.12)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_28px_70px_rgba(15,23,42,0.18)] sm:min-h-[40rem]">
-    <div class="relative h-48 sm:h-[22rem] overflow-hidden rounded-t-[1.6rem] bg-slate-100">
+    <div class="relative h-[14.3rem] sm:h-[26.4rem] overflow-hidden rounded-t-[1.6rem] bg-slate-50">
       {imagenPrincipal ? (
         <img
-          src={imagenPrincipal}
+          src={imagenMiniatura ?? imagenPrincipal}
+          data-original-url={imagenPrincipal}
           alt={titulo}
-          class="h-full w-full object-cover"
+          class="h-full w-full object-contain p-2"
           loading="lazy"
           decoding="async"
+          onload="if(this.naturalWidth>this.naturalHeight){this.classList.remove('object-contain','p-2');this.classList.add('object-cover','scale-[1.25]');}"
+          onerror="if(!this.dataset.fallbacked){this.dataset.fallbacked='1';this.src=this.dataset.originalUrl;}"
         />
       ) : (
         <img
           src="/no-image.jpg"
           alt="Sin imagen"
-          class="h-full w-full object-cover"
+          class="h-full w-full object-contain p-2"
           loading="lazy"
           decoding="async"
         />

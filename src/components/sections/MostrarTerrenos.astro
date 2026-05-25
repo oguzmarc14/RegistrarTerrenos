@@ -1,7 +1,6 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import Footer from "./Footer.astro";
-
 const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
 const supabaseKey = import.meta.env.PUBLIC_SUPABASE_KEY;
 ---
@@ -30,6 +29,28 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_KEY;
   const supabaseKey = contenedor.dataset.key;
 
   const supabase = createClient(supabaseUrl, supabaseKey);
+
+  function getMiniatura(url) {
+    if (!url) return url;
+
+    try {
+      const parsedUrl = new URL(url);
+      const publicPath = "/storage/v1/object/public/";
+      const renderPath = "/storage/v1/render/image/public/";
+
+      if (!parsedUrl.pathname.includes(publicPath)) return url;
+
+      parsedUrl.pathname = parsedUrl.pathname.replace(publicPath, renderPath);
+      parsedUrl.searchParams.delete("download");
+      parsedUrl.searchParams.set("width", "1056");
+      parsedUrl.searchParams.set("quality", "72");
+      parsedUrl.searchParams.set("resize", "contain");
+
+      return parsedUrl.toString();
+    } catch {
+      return url;
+    }
+  }
 
   function formatearPrecio(valor) {
     const texto = String(valor ?? "").trim();
@@ -72,17 +93,19 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_KEY;
           ? terreno.imagenes[0]
           : null;
 
+        const imagenMiniatura = imagenPrincipal ? getMiniatura(imagenPrincipal) : null;
+
         const fotosExtra = Array.isArray(terreno.imagenes)
           ? Math.max(terreno.imagenes.length - 1, 0)
           : 0;
 
         const card = `
     <article class="relative flex flex-col overflow-hidden rounded-[1.6rem] border border-slate-200/70 bg-white/95 shadow-[0_20px_50px_rgba(15,23,42,0.12)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_28px_70px_rgba(15,23,42,0.18)] sm:min-h-[40rem]">
-      <div class="relative h-48 sm:h-[22rem] overflow-hidden rounded-t-[1.6rem] bg-slate-100">
+      <div class="relative h-[14.3rem] sm:h-[26.4rem] overflow-hidden rounded-t-[1.6rem] bg-slate-50">
         ${
           imagenPrincipal
-            ? `<img src="${imagenPrincipal}" alt="${terreno.titulo}" class="h-full w-full object-cover" loading="lazy" decoding="async" />`
-            : `<img src="/no-image.jpg" alt="Sin imagen" class="h-full w-full object-cover" loading="lazy" decoding="async" />`
+            ? `<img src="${imagenMiniatura}" data-original-url="${imagenPrincipal}" alt="${terreno.titulo}" class="h-full w-full object-contain p-2" loading="lazy" decoding="async" onload="if(this.naturalWidth>this.naturalHeight){this.classList.remove('object-contain','p-2');this.classList.add('object-cover','scale-[1.25]');}" onerror="if(!this.dataset.fallbacked){this.dataset.fallbacked='1';this.src=this.dataset.originalUrl;}" />`
+            : `<img src="/no-image.jpg" alt="Sin imagen" class="h-full w-full object-contain p-2" loading="lazy" decoding="async" />`
         }
 
         ${
