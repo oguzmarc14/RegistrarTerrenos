@@ -1,7 +1,8 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js";
 
 const SUPABASE_URL = "https://ssrmztcxoijibjntrtqe.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNzcm16dGN4b2lqaWJqbnRydHFlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMzOTA3NDQsImV4cCI6MjA2ODk2Njc0NH0.Wg9rToI2VzpKrnNmAvRVIlky7bSRjCDfFZ4OuZIaesI";
+const SUPABASE_KEY =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNzcm16dGN4b2lqaWJqbnRydHFlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMzOTA3NDQsImV4cCI6MjA2ODk2Njc0NH0.Wg9rToI2VzpKrnNmAvRVIlky7bSRjCDfFZ4OuZIaesI";
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 function getMiniatura(url) {
@@ -29,7 +30,9 @@ function getMiniatura(url) {
 const form = document.getElementById("formularioEditarTerreno");
 const nuevasImagenesInput = document.getElementById("nuevasImagenes");
 const previewNuevas = document.getElementById("previewNuevas");
-const descripcionInput = form ? form.querySelector('textarea[name="descripcion"]') : null;
+const descripcionInput = form
+  ? form.querySelector('textarea[name="descripcion"]')
+  : null;
 const imagenesActualesEl = document.getElementById("imagenes-actuales");
 
 let imagenPortadaSeleccionada = null;
@@ -63,7 +66,8 @@ if (nuevasImagenesInput) {
       reader.onload = function (e) {
         const wrapper = document.createElement("button");
         wrapper.type = "button";
-        wrapper.className = "group relative overflow-hidden rounded-2xl text-left transition hover:scale-[1.03]";
+        wrapper.className =
+          "group relative overflow-hidden rounded-2xl text-left transition hover:scale-[1.03]";
 
         const img = document.createElement("img");
         const target = e && e.target ? e.target : null;
@@ -85,7 +89,8 @@ if (nuevasImagenesInput) {
             ? "absolute left-2 top-2 rounded-full bg-sky-600 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white shadow-lg backdrop-blur"
             : "absolute left-2 top-2 rounded-full bg-black/60 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white opacity-0 shadow-lg backdrop-blur transition group-hover:opacity-100";
 
-        badge.innerText = index === indicePortadaNuevas ? "Portada" : "Elegir portada";
+        badge.innerText =
+          index === indicePortadaNuevas ? "Portada" : "Elegir portada";
 
         wrapper.addEventListener("click", () => {
           imagenPortadaSeleccionada = img.src;
@@ -109,7 +114,9 @@ if (nuevasImagenesInput) {
 function renderizarImagenesActuales() {
   if (!imagenesActualesEl) return;
 
-  const botones = Array.from(imagenesActualesEl.querySelectorAll("button.imagen-actual"));
+  const botones = Array.from(
+    imagenesActualesEl.querySelectorAll("button.imagen-actual"),
+  );
 
   botones.forEach((boton, index) => {
     const img = boton.querySelector("img");
@@ -155,7 +162,8 @@ function renderizarNuevasPreviews() {
     reader.onload = function (e) {
       const wrapper = document.createElement("button");
       wrapper.type = "button";
-      wrapper.className = "group relative overflow-hidden rounded-2xl text-left transition hover:scale-[1.03]";
+      wrapper.className =
+        "group relative overflow-hidden rounded-2xl text-left transition hover:scale-[1.03]";
 
       const img = document.createElement("img");
       const target = e && e.target ? e.target : null;
@@ -172,7 +180,8 @@ function renderizarNuevasPreviews() {
           ? "absolute left-2 top-2 rounded-full bg-sky-600 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white shadow-lg backdrop-blur"
           : "absolute left-2 top-2 rounded-full bg-black/60 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white opacity-0 shadow-lg backdrop-blur transition group-hover:opacity-100";
 
-      badge.innerText = index === indicePortadaNuevas ? "Portada" : "Elegir portada";
+      badge.innerText =
+        index === indicePortadaNuevas ? "Portada" : "Elegir portada";
 
       wrapper.addEventListener("click", () => {
         imagenPortadaSeleccionada = img.src;
@@ -192,7 +201,8 @@ function renderizarNuevasPreviews() {
 if (imagenesActualesEl) {
   const primeraImagen = imagenesActualesEl.querySelector("img");
   const primerBoton = imagenesActualesEl.querySelector("button.imagen-actual");
-  imagenPortadaSeleccionada = primerBoton?.dataset.url || primeraImagen?.dataset.originalUrl || null;
+  imagenPortadaSeleccionada =
+    primerBoton?.dataset.url || primeraImagen?.dataset.originalUrl || null;
 
   imagenesActualesEl.addEventListener("click", function (e) {
     const boton = e.target.closest("button.imagen-actual");
@@ -201,7 +211,8 @@ if (imagenesActualesEl) {
     const img = boton.querySelector("img");
     if (!img) return;
 
-    imagenPortadaSeleccionada = boton.dataset.url || img.dataset.originalUrl || img.src;
+    imagenPortadaSeleccionada =
+      boton.dataset.url || img.dataset.originalUrl || img.src;
     renderizarImagenesActuales();
   });
 
@@ -223,14 +234,18 @@ async function convertirAWebP(file) {
         canvas.toBlob(
           (blob) => {
             if (blob) {
-              const webpFile = new File([blob], file.name.replace(/\.[^.]+$/, ".webp"), { type: "image/webp" });
+              const webpFile = new File(
+                [blob],
+                file.name.replace(/\.[^.]+$/, ".webp"),
+                { type: "image/webp" },
+              );
               resolve(webpFile);
             } else {
               reject(new Error("No se pudo convertir a WebP"));
             }
           },
           "image/webp",
-          0.9
+          0.9,
         );
       };
       img.onerror = reject;
@@ -293,6 +308,40 @@ function mostrarAlerta({ titulo = "Mensaje", mensaje = "", tipo = "success" }) {
   });
 }
 
+function extraerCoordenadasGoogleMaps(url) {
+  if (!url) {
+    return {
+      latitud: null,
+      longitud: null,
+    };
+  }
+
+  const texto = decodeURIComponent(String(url));
+
+  const patrones = [
+    /@(-?\d+(?:\.\d+)?),\s*(-?\d+(?:\.\d+)?)/,
+    /!3d(-?\d+(?:\.\d+)?)!4d(-?\d+(?:\.\d+)?)/,
+    /maps\/search\/(-?\d+(?:\.\d+)?),\+?(-?\d+(?:\.\d+)?)/,
+    /[?&]q=(-?\d+(?:\.\d+)?),\+?(-?\d+(?:\.\d+)?)/,
+  ];
+
+  for (const patron of patrones) {
+    const match = texto.match(patron);
+
+    if (match) {
+      return {
+        latitud: Number(match[1]),
+        longitud: Number(match[2]),
+      };
+    }
+  }
+
+  return {
+    latitud: null,
+    longitud: null,
+  };
+}
+
 function normalizarPrecio(valor) {
   const texto = String(valor ?? "").trim();
 
@@ -314,19 +363,26 @@ if (form) {
 
     const id = form.querySelector('input[name="id"]').value;
     const titulo = form.querySelector('input[name="titulo"]').value;
-    const descripcion = form.querySelector('textarea[name="descripcion"]').value;
+    const descripcion = form.querySelector(
+      'textarea[name="descripcion"]',
+    ).value;
     const precio = form.querySelector('input[name="precio"]').value;
     const medidas = form.querySelector('input[name="medidas"]').value;
     const ubicacion = form.querySelector('input[name="ubicacion"]').value;
     const googleMaps = form.querySelector('input[name="googleMaps"]').value;
     const tipo = form.querySelector('select[name="tipo"]').value;
+    const { latitud, longitud } = extraerCoordenadasGoogleMaps(googleMaps);
+
+    console.log("Latitud:", latitud);
+    console.log("Longitud:", longitud);
 
     // Validar que el precio no esté vacío
     const precioLimpio = precio?.trim();
     if (!precioLimpio) {
       mostrarAlerta({
         titulo: "Precio requerido",
-        mensaje: "Por favor ingresa un precio. Puede ser un número (ej. 50000) o texto (ej. Consultar, A negociar).",
+        mensaje:
+          "Por favor ingresa un precio. Puede ser un número (ej. 50000) o texto (ej. Consultar, A negociar).",
         tipo: "error",
       });
       return;
@@ -340,7 +396,7 @@ if (form) {
       let imagenes = [];
       if (imagenesActualesEl) {
         const imgs = imagenesActualesEl.querySelectorAll("img");
-        imagenes = Array.from(imgs).map(img => img.src);
+        imagenes = Array.from(imgs).map((img) => img.src);
       }
 
       // Procesar y subir nuevas imágenes
@@ -361,7 +417,9 @@ if (form) {
       }
 
       if (imagenPortadaSeleccionada && imagenes.length > 0) {
-        const indicePortada = imagenes.findIndex((url) => url === imagenPortadaSeleccionada);
+        const indicePortada = imagenes.findIndex(
+          (url) => url === imagenPortadaSeleccionada,
+        );
 
         if (indicePortada > 0) {
           const portada = imagenes.splice(indicePortada, 1)[0];
@@ -379,15 +437,18 @@ if (form) {
         ubicacion,
         google_maps: googleMaps,
         tipo,
+
+        latitud,
+        longitud,
       };
-      
+
       // Solo agregar imágenes si hay al menos una
       if (imagenes.length > 0) {
         datosEnvio.imagenes = imagenes;
       }
-      
+
       console.log("Datos a enviar:", datosEnvio);
-      
+
       const response = await fetch("/api/editarTerreno-api", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
