@@ -12,6 +12,7 @@
     "@supabase/supabase-js": "^2.53.0",
     "@tailwindcss/vite": "^4.1.11",
     "astro": "^5.12.3",
+    "leaflet": "^1.9.4",
     "swiper": "^11.2.10",
     "tailwindcss": "^4.1.11",
     "uuid": "^11.1.0"

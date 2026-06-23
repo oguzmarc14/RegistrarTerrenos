@@ -1,0 +1,305 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
+const supabaseKey = import.meta.env.PUBLIC_SUPABASE_KEY;
+---
+
+<Layout>
+  <section class="mapa-hero">
+    <span class="badge">Ubicaciones disponibles</span>
+    <h1>Explora propiedades en el mapa</h1>
+    <p>
+      Visualiza terrenos, casas, departamentos y propiedades comerciales
+      disponibles por ubicación.
+    </p>
+  </section>
+
+  <section class="filtros-mapa">
+    <button class="filter-btn active" data-tipo="todos">Todos</button>
+    <button class="filter-btn" data-tipo="terreno">Terrenos</button>
+    <button class="filter-btn" data-tipo="casa">Casas</button>
+    <button class="filter-btn" data-tipo="propiedad-comercial">Propiedades Comerciales</button>
+    <button class="filter-btn" data-tipo="departamento">Departamentos</button>
+    <button class="filter-btn" data-tipo="terreno-comercial">Terrenos Comerciales</button>
+  </section>
+
+  <section class="mapa-wrapper">
+    <div id="map"></div>
+  </section>
+
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  />
+
+  <script define:vars={{ supabaseUrl, supabaseKey }} type="module">
+    import * as L from "https://unpkg.com/leaflet@1.9.4/dist/leaflet-src.esm.js";
+
+    const map = L.map("map").setView([21.515091, -102.235731], 13);
+
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: "© OpenStreetMap",
+    }).addTo(map);
+
+    const markersLayer = L.layerGroup().addTo(map);
+
+    const url = `${supabaseUrl}/rest/v1/Terrenos?select=*`;
+
+    const res = await fetch(url, {
+      headers: {
+        apikey: supabaseKey,
+        Authorization: `Bearer ${supabaseKey}`,
+      },
+    });
+
+    const terrenos = await res.json();
+
+    const propiedades = Array.isArray(terrenos)
+      ? terrenos.filter(
+          (item) =>
+            item.latitud !== null &&
+            item.longitud !== null
+        )
+      : [];
+
+    function normalizarTipo(tipo) {
+      return String(tipo || "")
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .trim()
+        .replace(/\s+/g, "-");
+    }
+
+    function renderMarkers(tipoSeleccionado = "todos") {
+      markersLayer.clearLayers();
+
+      const filtradas =
+        tipoSeleccionado === "todos"
+          ? propiedades
+          : propiedades.filter(
+              (item) => normalizarTipo(item.tipo) === tipoSeleccionado
+            );
+
+      filtradas.forEach((item) => {
+        const lat = Number(item.latitud);
+        const lng = Number(item.longitud);
+        const imagen = item.imagenes?.[0] || item.src_imagen || "";
+
+        const marker = L.marker([lat, lng]).addTo(markersLayer);
+
+        marker.bindPopup(`
+          <div class="popup-card">
+            ${
+              imagen
+                ? `<img src="${imagen}" class="popup-img" />`
+                : ""
+            }
+
+            <span class="popup-tipo">
+              ${item.tipo ?? "Propiedad"}
+            </span>
+
+            <h3>${item.titulo ?? "Propiedad disponible"}</h3>
+
+            <p>${item.ubicacion ?? ""}</p>
+
+            <strong>$${item.precio ?? "0"}</strong>
+
+            <a href="/Terreno/${item.id}">
+              Ver detalles →
+            </a>
+          </div>
+        `);
+      });
+
+      if (filtradas.length > 0) {
+        const bounds = L.latLngBounds(
+          filtradas.map((item) => [
+            Number(item.latitud),
+            Number(item.longitud),
+          ])
+        );
+
+        map.fitBounds(bounds, {
+          padding: [50, 50],
+          maxZoom: 15,
+        });
+      }
+    }
+
+    renderMarkers();
+
+    document.querySelectorAll(".filter-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document
+          .querySelectorAll(".filter-btn")
+          .forEach((b) => b.classList.remove("active"));
+
+        btn.classList.add("active");
+
+        renderMarkers(btn.dataset.tipo);
+      });
+    });
+  </script>
+
+  <style>
+    :global(body) {
+      background: #06263a;
+    }
+
+    .mapa-hero {
+      padding: 4rem 1.5rem 2rem;
+      text-align: center;
+      color: white;
+      background:
+        radial-gradient(circle at top, rgba(13, 115, 164, 0.45), transparent 35%),
+        linear-gradient(180deg, #06263a 0%, #041b2b 100%);
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.6rem 1.2rem;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .mapa-hero h1 {
+      max-width: 850px;
+      margin: 1.2rem auto;
+      font-size: clamp(2.4rem, 5vw, 4.5rem);
+      line-height: 1;
+      font-weight: 900;
+    }
+
+    .mapa-hero p {
+      max-width: 720px;
+      margin: 0 auto;
+      color: rgba(255, 255, 255, 0.78);
+      font-size: 1.1rem;
+    }
+
+    .filtros-mapa {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      justify-content: center;
+      padding: 1.5rem;
+      background: #041b2b;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .filter-btn {
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: rgba(255, 255, 255, 0.08);
+      color: white;
+      padding: 0.8rem 1.2rem;
+      border-radius: 999px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: 0.25s ease;
+    }
+
+    .filter-btn:hover,
+    .filter-btn.active {
+      background: #0b79aa;
+      border-color: #0b79aa;
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.28);
+    }
+
+    .mapa-wrapper {
+      padding: 1.5rem;
+      background: #041b2b;
+    }
+
+    #map {
+      height: 72vh;
+      width: 100%;
+      border-radius: 28px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
+    }
+
+    :global(.leaflet-popup-content-wrapper) {
+      border-radius: 18px;
+      overflow: hidden;
+    }
+
+    :global(.popup-card) {
+      width: 240px;
+      font-family: system-ui, sans-serif;
+    }
+
+    :global(.popup-img) {
+      width: 100%;
+      height: 130px;
+      object-fit: cover;
+      border-radius: 14px;
+      margin-bottom: 10px;
+    }
+
+    :global(.popup-tipo) {
+      display: inline-block;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-weight: 800;
+      color: #0b79aa;
+      margin-bottom: 6px;
+    }
+
+    :global(.popup-card h3) {
+      margin: 0 0 6px;
+      font-size: 1rem;
+      color: #092337;
+    }
+
+    :global(.popup-card p) {
+      margin: 0 0 8px;
+      color: #555;
+      font-size: 0.85rem;
+    }
+
+    :global(.popup-card strong) {
+      display: block;
+      margin-bottom: 10px;
+      color: #092337;
+      font-size: 1rem;
+    }
+
+    :global(.popup-card a) {
+      display: block;
+      text-align: center;
+      background: #0b79aa;
+      color: white;
+      padding: 0.65rem;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 800;
+    }
+
+    @media (max-width: 768px) {
+      .mapa-hero {
+        padding-top: 2.5rem;
+      }
+
+      #map {
+        height: 70vh;
+        border-radius: 18px;
+      }
+
+      .mapa-wrapper {
+        padding: 1rem;
+      }
+    }
+  </style>
+</Layout>

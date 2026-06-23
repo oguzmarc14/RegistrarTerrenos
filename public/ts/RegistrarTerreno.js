@@ -2,7 +2,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js";
 
 const SUPABASE_URL = "https://ssrmztcxoijibjntrtqe.supabase.co";
 const SUPABASE_KEY =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNzcm16dGN4b2lqaWJqbnRydHFlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMzOTA3NDQsImV4cCI6MjA2ODk2Njc0NH0.Wg9rToI2VzpKrnNmAvRVIlky7bSRjCDfFZ4OuZIaesI";  
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNzcm16dGN4b2lqaWJqbnRydHFlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMzOTA3NDQsImV4cCI6MjA2ODk2Njc0NH0.Wg9rToI2VzpKrnNmAvRVIlky7bSRjCDfFZ4OuZIaesI";
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
@@ -186,7 +186,7 @@ async function convertirAWebP(file) {
               const webpFile = new File(
                 [blob],
                 file.name.replace(/\.[^.]+$/, ".webp"),
-                { type: "image/webp" }
+                { type: "image/webp" },
               );
 
               resolve(webpFile);
@@ -195,7 +195,7 @@ async function convertirAWebP(file) {
             }
           },
           "image/webp",
-          0.9
+          0.9,
         );
       };
 
@@ -208,11 +208,47 @@ async function convertirAWebP(file) {
   });
 }
 
+function extraerCoordenadasGoogleMaps(url) {
+  if (!url) return { latitud: null, longitud: null };
+
+  const texto = decodeURIComponent(String(url));
+
+  const patrones = [
+    /@(-?\d+(?:\.\d+)?),\s*(-?\d+(?:\.\d+)?)/,
+    /!3d(-?\d+(?:\.\d+)?)!4d(-?\d+(?:\.\d+)?)/,
+    /maps\/search\/(-?\d+(?:\.\d+)?),\+?(-?\d+(?:\.\d+)?)/,
+    /[?&]q=(-?\d+(?:\.\d+)?),\+?(-?\d+(?:\.\d+)?)/,
+  ];
+
+  for (const patron of patrones) {
+    const match = texto.match(patron);
+
+    if (match) {
+      return {
+        latitud: Number(match[1]),
+        longitud: Number(match[2]),
+      };
+    }
+  }
+
+  return {
+    latitud: null,
+    longitud: null,
+  };
+}
+
 form?.addEventListener("submit", async (e) => {
   e.preventDefault();
 
   const formData = new FormData(form);
   const tipo = formData.get("tipo");
+
+  const googleMaps = formData.get("googleMaps")?.toString().trim() || "";
+
+  const { latitud, longitud } = extraerCoordenadasGoogleMaps(googleMaps);
+
+  console.log("Latitud:", latitud);
+  console.log("Longitud:", longitud);
 
   if (!tipo) {
     mostrarAlerta({
@@ -228,7 +264,8 @@ form?.addEventListener("submit", async (e) => {
   if (!precio) {
     mostrarAlerta({
       titulo: "Precio requerido",
-      mensaje: "Por favor ingresa un precio. Puede ser un número (ej. 50000) o texto (ej. Consultar, A negociar).",
+      mensaje:
+        "Por favor ingresa un precio. Puede ser un número (ej. 50000) o texto (ej. Consultar, A negociar).",
       tipo: "error",
     });
     boton.disabled = false;
@@ -310,10 +347,13 @@ form?.addEventListener("submit", async (e) => {
     precio: precio,
     medidas: formData.get("medidas"),
     ubicacion: formData.get("ubicacion"),
-    google_maps: formData.get("googleMaps"),
     tipo: formData.get("tipo"),
     fecha: new Date().toISOString(),
     imagenes: urls,
+
+    google_maps: googleMaps,
+    latitud,
+    longitud,
   });
 
   if (insertError) {
