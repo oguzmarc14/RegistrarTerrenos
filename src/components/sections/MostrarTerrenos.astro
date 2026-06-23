@@ -4,13 +4,13 @@ import Footer from "./Footer.astro";
 const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
 const supabaseKey = import.meta.env.PUBLIC_SUPABASE_KEY;
 ---
-  
+
 <Layout>
   <div class="bg-gradient-to-b from-sky-950 via-sky-800/90 to-sky-950/90">
     <section class="mx-auto px-4 py-8">
       <div
         id="contenedor-terrenos"
-        class="grid gap-10 sm:gap-12 md:gap-14 grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-3 mx-auto px-4 md:px-8 text-white w-max-7xl"
+        class="grid gap-10 sm:gap-12 md:gap-14 grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-3 mx-auto px-4 md:px-8 text-white max-w-7xl"
         data-url={supabaseUrl}
         data-key={supabaseKey}
       >
@@ -44,7 +44,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_KEY;
       parsedUrl.searchParams.delete("download");
       parsedUrl.searchParams.set("width", "1056");
       parsedUrl.searchParams.set("quality", "72");
-      parsedUrl.searchParams.set("resize", "contain");
+      parsedUrl.searchParams.set("resize", "cover");
 
       return parsedUrl.toString();
     } catch {
@@ -70,7 +70,9 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_KEY;
 
     const { data, error } = await supabase
       .from("Terrenos")
-      .select("id, titulo, descripcion, precio, imagenes, medidas, ubicacion, tipo, fecha")
+      .select(
+        "id, titulo, descripcion, precio, imagenes, medidas, ubicacion, tipo, fecha",
+      )
       .order("fecha", { ascending: false });
 
     if (error) {
@@ -89,22 +91,25 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_KEY;
     contenedor.innerHTML = ""; // limpiar
 
     data.forEach((terreno) => {
-        const imagenPrincipal = Array.isArray(terreno.imagenes) && terreno.imagenes.length > 0
+      const imagenPrincipal =
+        Array.isArray(terreno.imagenes) && terreno.imagenes.length > 0
           ? terreno.imagenes[0]
           : null;
 
-        const imagenMiniatura = imagenPrincipal ? getMiniatura(imagenPrincipal) : null;
+      const imagenMiniatura = imagenPrincipal
+        ? getMiniatura(imagenPrincipal)
+        : null;
 
-        const fotosExtra = Array.isArray(terreno.imagenes)
-          ? Math.max(terreno.imagenes.length - 1, 0)
-          : 0;
+      const fotosExtra = Array.isArray(terreno.imagenes)
+        ? Math.max(terreno.imagenes.length - 1, 0)
+        : 0;
 
-        const card = `
+      const card = `
     <article class="relative flex flex-col overflow-hidden rounded-[1.6rem] border border-slate-200/70 bg-white/95 shadow-[0_20px_50px_rgba(15,23,42,0.12)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_28px_70px_rgba(15,23,42,0.18)] sm:min-h-[40rem]">
       <div class="relative h-[14.3rem] sm:h-[26.4rem] overflow-hidden rounded-t-[1.6rem] bg-slate-50">
         ${
           imagenPrincipal
-            ? `<img src="${imagenMiniatura}" data-original-url="${imagenPrincipal}" alt="${terreno.titulo}" class="h-full w-full object-contain p-2" loading="lazy" decoding="async" onload="if(this.naturalWidth>this.naturalHeight){this.classList.remove('object-contain','p-2');this.classList.add('object-cover','scale-[1.25]');}" onerror="if(!this.dataset.fallbacked){this.dataset.fallbacked='1';this.src=this.dataset.originalUrl;}" />`
+            ? `<img src="${imagenMiniatura}" data-original-url="${imagenPrincipal}" alt="${terreno.titulo ?? 'Terreno'}" class="h-full w-full object-cover" loading="lazy" decoding="async" onerror="if(!this.dataset.fallbacked){this.dataset.fallbacked='1';this.src=this.dataset.originalUrl;}" />`
             : `<img src="/no-image.jpg" alt="Sin imagen" class="h-full w-full object-contain p-2" loading="lazy" decoding="async" />`
         }
 
@@ -116,7 +121,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_KEY;
       </div>
       <div class="flex flex-1 flex-col p-3 sm:p-5">
         <div class="space-y-2">
-          ${terreno.tipo ? `<span class="bg-sky-900/20 text-black inline-block px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide">${terreno.tipo}</span>` : ''}
+          ${terreno.tipo ? `<span class="bg-sky-900/20 text-black inline-block px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide">${terreno.tipo}</span>` : ""}
           <h2 class="text-lg sm:text-2xl font-bold tracking-tight text-slate-950">${terreno.titulo}</h2>
           <p class="text-sm text-slate-600 overflow-hidden" style="display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;">${terreno.descripcion ?? ""}</p>
 
@@ -125,8 +130,8 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_KEY;
           </div>
 
           <div class="mt-2 flex flex-col sm:flex-row sm:gap-2 gap-2">
-            ${terreno.medidas ? `<div class="flex-1 rounded-xl border border-slate-300/70 bg-slate-100 p-2 text-sm font-medium text-slate-700">Medidas<br/><span class="font-semibold">${terreno.medidas}</span></div>` : ''}
-            ${terreno.ubicacion ? `<div class="flex-1 rounded-xl border border-slate-300/70 bg-slate-100 p-2 text-sm font-medium text-slate-700">Ubicación<br/><span class="font-semibold">${terreno.ubicacion}</span></div>` : ''}
+            ${terreno.medidas ? `<div class="flex-1 rounded-xl border border-slate-300/70 bg-slate-100 p-2 text-sm font-medium text-slate-700">Medidas<br/><span class="font-semibold">${terreno.medidas}</span></div>` : ""}
+            ${terreno.ubicacion ? `<div class="flex-1 rounded-xl border border-slate-300/70 bg-slate-100 p-2 text-sm font-medium text-slate-700">Ubicación<br/><span class="font-semibold">${terreno.ubicacion}</span></div>` : ""}
           </div>
         </div>
 
@@ -157,8 +162,8 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_KEY;
       </div>
     </article>
   `;
-        contenedor.insertAdjacentHTML("beforeend", card);
-      });
+      contenedor.insertAdjacentHTML("beforeend", card);
+    });
   }
 
   cargarTerrenos();
