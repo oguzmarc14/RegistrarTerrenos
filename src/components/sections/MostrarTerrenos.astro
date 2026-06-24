@@ -42,8 +42,8 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_KEY;
 
       parsedUrl.pathname = parsedUrl.pathname.replace(publicPath, renderPath);
       parsedUrl.searchParams.delete("download");
-      parsedUrl.searchParams.set("width", "900");
-      parsedUrl.searchParams.set("height", "1200");
+      parsedUrl.searchParams.set("width", "1200");
+      parsedUrl.searchParams.set("height", "750");
       parsedUrl.searchParams.set("quality", "72");
       parsedUrl.searchParams.set("resize", "cover");
 
@@ -107,7 +107,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_KEY;
 
       const card = `
     <article class="relative flex flex-col overflow-hidden rounded-[1.6rem] border border-slate-200/70 bg-white/95 shadow-[0_20px_50px_rgba(15,23,42,0.12)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_28px_70px_rgba(15,23,42,0.18)] sm:min-h-[40rem]">
-      <div class="relative aspect-[3/4] overflow-hidden rounded-t-[1.6rem] bg-slate-50">
+      <div class="relative aspect-[16/10] overflow-hidden rounded-t-[1.6rem] bg-slate-50">
         ${
           imagenPrincipal
             ? `<img src="${imagenMiniatura}" data-original-url="${imagenPrincipal}" alt="${terreno.titulo ?? "Terreno"}" class="h-full w-full object-cover" loading="lazy" decoding="async" onerror="if(!this.dataset.fallbacked){this.dataset.fallbacked='1';this.src=this.dataset.originalUrl;}" />`
