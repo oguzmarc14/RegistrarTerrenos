@@ -1,35 +1,120 @@
 ---
-import CardServicios from "../ui/CardServicios.astro";
-
-const phone = "524751080850"; 
+const phone = "524751080850";
 ---
 
-<section id="servicios" class="bg-gradient-to-b from-sky-950 via-sky-900 to-sky-950 py-20 ">
-  <div class="w-full mx-auto px-6">
-    <h2 class="text-4xl md:text-5xl text-center text-white -mt-12 mb-4">
-      Servicios
-    </h2>
+<section
+  id="servicios"
+  class="relative overflow-hidden pt-20 pb-12 bg-gradient-to-b from-[#010D15] via-[#021c2e] to-[#06233A]"
+>
+  <div class="absolute inset-0 pointer-events-none">
+    <div
+      class="absolute left-1/2 top-[55%] h-[850px] w-[850px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#1C4766]/20 blur-[180px]"
+    ></div>
+  </div>
 
-    <div class="flex justify-center md:gap-28 flex-col md:flex-row">
-      <CardServicios
-        titulo="¿Quieres Escriturar tu Terreno?"
-        descripcion={`Te asesoramos durante todo el proceso legal para escriturar tu terreno. 
-Nos aseguramos de que todos tus documentos estén en regla, facilitando un trámite 
-seguro y confiable. Con nuestra experiencia en el mercado local, garantizamos que tu inversión 
-esté protegida y lista para cualquier proyecto de construcción o venta.`}
-        boton="Contáctame"
+  <div class="relative z-10 mx-auto max-w-7xl px-4">
+    <div class="mb-14 text-center">
+      <span class="inline-flex rounded-full border border-white/10 bg-white/5 px-5 py-2 text-sm font-semibold tracking-wide text-white/75 backdrop-blur-md">
+        Servicios inmobiliarios
+      </span>
+
+      <h2 class="mt-6 text-3xl md:text-5xl font-semibold text-white">
+        ¿Qué necesitas hacer con tu propiedad?
+      </h2>
+
+      <p class="mx-auto mt-5 max-w-2xl text-lg text-white/65">
+        Elige una opción y recibe asesoría directa por WhatsApp.
+      </p>
+    </div>
+
+    <div class="grid gap-6 lg:grid-cols-2">
+      <a
         href={`https://wa.me/${phone}?text=${encodeURIComponent("Hola, Noe Aguilera quiero informes para escriturar mi terreno")}`}
-      />
+        target="_blank"
+        rel="noopener noreferrer"
+        class="group relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.06] p-8 md:p-10 shadow-2xl backdrop-blur-xl transition duration-500 hover:-translate-y-2 hover:bg-white/[0.09]"
+      >
+        <div class="absolute inset-x-0 top-0 h-1 bg-white/30"></div>
 
-      <CardServicios
-        titulo="¿Quieres Publicar tu Terreno?"
-        descripcion={`Nosotros te ayudamos a que tu terreno llegue a más personas interesadas. 
-Publicamos tu propiedad con la mejor presentación, destacando sus características y 
-asegurando que tenga la visibilidad que merece. Con nuestro apoyo, tu proceso de venta 
-será más rápido, seguro y efectivo.`}
-        boton="Contáctame"
+        <span class="text-sm font-semibold uppercase tracking-[0.25em] text-white/45">
+          Servicio legal
+        </span>
+
+        <h3 class="mt-5 text-3xl md:text-4xl font-semibold text-white">
+          Escriturar terreno
+        </h3>
+
+        <div class="mt-8 space-y-4 border-y border-white/10 py-6">
+          <div class="flex items-center gap-4">
+            <span class="h-2 w-2 rounded-full bg-white/70"></span>
+            <p class="text-white/70">Revisión de documentos</p>
+          </div>
+
+          <div class="flex items-center gap-4">
+            <span class="h-2 w-2 rounded-full bg-white/70"></span>
+            <p class="text-white/70">Orientación paso a paso</p>
+          </div>
+
+          <div class="flex items-center gap-4">
+            <span class="h-2 w-2 rounded-full bg-white/70"></span>
+            <p class="text-white/70">Proceso más claro y seguro</p>
+          </div>
+        </div>
+
+        <div class="mt-8 flex items-center justify-between gap-4">
+          <span class="font-semibold text-white">
+            Solicitar asesoría
+          </span>
+
+          <span class="flex h-12 w-12 items-center justify-center rounded-full bg-white text-2xl text-[#021c2e] transition group-hover:translate-x-1">
+            →
+          </span>
+        </div>
+      </a>
+
+      <a
         href={`https://wa.me/${phone}?text=${encodeURIComponent("Hola, Noe Aguilera quiero publicar mi terreno en tu página")}`}
-      />
+        target="_blank"
+        rel="noopener noreferrer"
+        class="group relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.06] p-8 md:p-10 shadow-2xl backdrop-blur-xl transition duration-500 hover:-translate-y-2 hover:bg-white/[0.09]"
+      >
+        <div class="absolute inset-x-0 top-0 h-1 bg-white/30"></div>
+
+        <span class="text-sm font-semibold uppercase tracking-[0.25em] text-white/45">
+          Venta de propiedad
+        </span>
+
+        <h3 class="mt-5 text-3xl md:text-4xl font-semibold text-white">
+          Publicar terreno
+        </h3>
+
+        <div class="mt-8 space-y-4 border-y border-white/10 py-6">
+          <div class="flex items-center gap-4">
+            <span class="h-2 w-2 rounded-full bg-white/70"></span>
+            <p class="text-white/70">Fotos e información clara</p>
+          </div>
+
+          <div class="flex items-center gap-4">
+            <span class="h-2 w-2 rounded-full bg-white/70"></span>
+            <p class="text-white/70">Mayor visibilidad para compradores</p>
+          </div>
+
+          <div class="flex items-center gap-4">
+            <span class="h-2 w-2 rounded-full bg-white/70"></span>
+            <p class="text-white/70">Contacto directo con interesados</p>
+          </div>
+        </div>
+
+        <div class="mt-8 flex items-center justify-between gap-4">
+          <span class="font-semibold text-white">
+            Publicar propiedad
+          </span>
+
+          <span class="flex h-12 w-12 items-center justify-center rounded-full bg-white text-2xl text-[#021c2e] transition group-hover:translate-x-1">
+            →
+          </span>
+        </div>
+      </a>
     </div>
   </div>
 </section>

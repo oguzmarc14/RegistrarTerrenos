@@ -1,17 +1,167 @@
 ---
-import UbicacionComponent from "../ui/UbicacionComponent.astro"
+import UbicacionComponent from "../ui/UbicacionComponent.astro";
+
+const phone = "524751080850";
 ---
 
-<section class=" flex flex-col items-center bg-gradient-to-b from-sky-950 via-sky-900 to-sky-950/90 px-4 py-12">
-  <h2 class="-mt-18 text-3xl md:text-5xl text-white font-normal text-center">
-    Conoce mi ubicación
-  </h2>
+<section
+  id="ubicacion"
+  class="relative overflow-hidden py-24 bg-gradient-to-b from-[#06233A] via-[#041F33] to-[#010D15]"
+>
+  <div class="absolute inset-0 pointer-events-none">
+    <div
+      class="absolute left-1/2 top-1/2 h-[900px] w-[900px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#1C4766]/20 blur-[180px]"
+    >
+    </div>
+  </div>
 
-  <div class="w-full max-w-5xl mt-10 rounded-3xl overflow-hidden aspect-video mb-14">
-    <UbicacionComponent 
-      lat={21.5209919} 
-      lon={-102.2377808} 
-      zoom={17} 
-    />
+  <div class="relative z-10 mx-auto max-w-7xl px-4">
+    <div class="mb-14 text-center">
+      <span
+        class="inline-flex rounded-full border border-white/10 bg-white/5 px-5 py-2 text-sm font-semibold tracking-wide text-white/75 backdrop-blur-md"
+      >
+        Atención presencial
+      </span>
+
+      <h2 class="mt-6 text-3xl md:text-5xl font-semibold text-white">
+        Visítame o agenda una cita
+      </h2>
+
+      <p class="mx-auto mt-5 max-w-2xl text-lg text-white/65">
+        Agenda una asesoría directa y recibe atención personalizada.
+      </p>
+    </div>
+
+    <div class="grid gap-8 lg:grid-cols-[1.15fr_0.85fr]">
+      <!-- MAPA -->
+      <div
+        class="overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.05] shadow-2xl backdrop-blur-xl"
+      >
+        <div class="aspect-video lg:aspect-auto lg:h-full min-h-[420px]">
+          <UbicacionComponent lat={21.5209919} lon={-102.2377808} zoom={17} />
+        </div>
+      </div>
+
+      <!-- FORMULARIO -->
+      <div
+        class="rounded-[2rem] border border-white/10 bg-white/[0.06] p-8 shadow-2xl backdrop-blur-xl"
+      >
+        <span
+          class="text-sm font-semibold uppercase tracking-[0.25em] text-white/50"
+        >
+          Agenda tu cita
+        </span>
+
+        <h3 class="mt-4 text-3xl font-semibold text-white">
+          Recibe atención personalizada
+        </h3>
+
+        <form id="whatsapp-form" class="mt-8 space-y-4">
+          <input
+            id="nombre"
+            type="text"
+            required
+            placeholder="Tu nombre"
+            class="w-full rounded-2xl border border-white/10 bg-white/10 px-5 py-4 text-white placeholder:text-white/40 outline-none transition focus:border-white/30 focus:bg-white/[0.14]"
+          />
+
+          <input
+            id="fecha"
+            type="date"
+            required
+            class="w-full rounded-2xl border border-white/10 bg-white/10 px-5 py-4 text-white outline-none transition focus:border-white/30 focus:bg-white/[0.14]"
+          />
+
+          <select
+            id="hora"
+            required
+            class="w-full appearance-none rounded-2xl border border-white/10 bg-white/10 px-5 py-4 text-white outline-none transition focus:border-white/30 focus:bg-white/[0.14]"
+          >
+            <option value="" disabled selected class="bg-[#183349] text-white">
+              Selecciona horario aproximado
+            </option>
+            <option class="bg-[#183349] text-white">09:00 - 11:00</option>
+            <option class="bg-[#183349] text-white">11:00 - 13:00</option>
+            <option class="bg-[#183349] text-white">13:00 - 15:00</option>
+            <option class="bg-[#183349] text-white">15:00 - 17:00</option>
+            <option class="bg-[#183349] text-white">17:00 - 19:00</option>
+          </select>
+
+          <select
+            id="motivo"
+            required
+            class="w-full appearance-none rounded-2xl border border-white/10 bg-white/10 px-5 py-4 text-white outline-none transition focus:border-white/30 focus:bg-white/[0.14]"
+          >
+            <option value="" disabled selected class="bg-[#183349] text-white">
+              Selecciona el motivo de tu cita
+            </option>
+            <option value="Comprar un terreno" class="bg-[#183349] text-white">
+              Comprar un terreno
+            </option>
+            <option
+              value="Vender o publicar mi propiedad"
+              class="bg-[#183349] text-white"
+            >
+              Vender o publicar mi propiedad
+            </option>
+            <option
+              value="Escriturar un terreno"
+              class="bg-[#183349] text-white"
+            >
+              Escriturar un terreno
+            </option>
+            <option
+              value="Recibir asesoría personalizada"
+              class="bg-[#183349] text-white"
+            >
+              Recibir asesoría personalizada
+            </option>
+          </select>
+
+          <textarea
+            id="mensaje"
+            rows="4"
+            placeholder="Cuéntame brevemente en qué puedo ayudarte"
+            class="w-full resize-none rounded-2xl border border-white/10 bg-white/10 px-5 py-4 text-white placeholder:text-white/40 outline-none transition focus:border-white/30 focus:bg-white/[0.14]"
+          ></textarea>
+
+          <button
+            type="submit"
+            class="mt-4 inline-flex w-full items-center justify-center rounded-full bg-white px-7 py-4 text-base font-bold text-[#021c2e] transition hover:-translate-y-1 hover:bg-slate-100"
+          >
+            Enviar por WhatsApp
+          </button>
+        </form>
+      </div>
+    </div>
   </div>
 </section>
+
+<script is:inline>
+  document.addEventListener("DOMContentLoaded", () => {
+    const form = document.getElementById("whatsapp-form");
+
+    form?.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const nombre = document.getElementById("nombre").value.trim();
+      const fecha = document.getElementById("fecha").value;
+      const hora = document.getElementById("hora").value;
+      const motivo = document.getElementById("motivo").value;
+      const mensaje = document.getElementById("mensaje").value.trim();
+
+      const texto = `Hola Noé, me gustaría agendar una cita para recibir asesoría personalizada.
+
+Nombre: ${nombre}
+Fecha deseada: ${fecha}
+Horario aproximado: ${hora}
+Motivo: ${motivo}
+Mensaje: ${mensaje || "Me gustaría recibir orientación y resolver algunas dudas."}
+
+Quedo atento a tu confirmación.`;
+
+      const url = `https://wa.me/524751080850?text=${encodeURIComponent(texto)}`;
+      window.open(url, "_blank");
+    });
+  });
+</script>

@@ -1,68 +1,235 @@
 <section
   id="Video-Terrenos"
-  class="py-20 bg-gradient-to-b bg-gradient-to-b from-sky-950 via-sky-900 to-sky-950"
+  class="relative overflow-hidden pt-24 pb-20 bg-gradient-to-b from-[#06233A] via-[#041F33] to-[#010D15]"
 >
-  <div class="mx-auto px-4 text-center max-w-7xl">
-    <!-- H1 principal -->
-    <h1 class="text-3xl md:text-5xl text-white leading-tight mb-14">
-      Comprar terreno en Encarnación de Díaz desde cualquier lugar
-    </h1>
-
+  <!-- Glow central -->
+  <div class="absolute inset-0 pointer-events-none">
     <div
-      class="flex flex-col md:flex-row items-center justify-center gap-12 md:gap-24"
-    >
-      <!-- Video -->
-      <div
-        class="relative transition-all duration-700 transform hover:-translate-y-1 hover:scale-105"
-      >
-        <video
-          id="video-presentacion"
-          class="w-full max-w-[420px] rounded-3xl shadow-lg border-2 border-white/10"
-          autoplay
-          muted
-          loop
-          playsinline
-          preload="auto"
-        >
-          <source src="/noe-aguilera-terrenos.mp4" type="video/mp4" />
-          Tu navegador no soporta el video.
-        </video>
+      class="absolute left-1/2 top-[55%] h-[800px] w-[1200px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-sky-500/10 blur-[250px]"
+    ></div>
+  </div>
 
-        <!-- Controles -->
-        <div class="absolute bottom-4 right-4 flex flex-col gap-2">
-          <button
-            onclick="document.getElementById('video-presentacion').muted = false;"
-            class="bg-sky-900 text-white px-4 py-2 text-sm rounded-full shadow-lg hover:bg-sky-800 transition"
+  <div class="relative z-10 mx-auto max-w-7xl px-4">
+    <div class="mb-10 text-center">
+      <span
+        class="inline-flex rounded-full border border-white/10 bg-white/5 px-5 py-2 text-sm font-semibold tracking-wide text-white/75 backdrop-blur-md"
+      >
+        Atención presencial y a distancia
+      </span>
+
+      <h2
+        class="mt-6 text-3xl md:text-5xl font-semibold text-white leading-tight"
+      >
+        Compra tu terreno aunque estés lejos
+      </h2>
+
+      <p class="mx-auto mt-5 max-w-2xl text-lg text-white/65">
+        Recibe información clara, fotos, videos y asesoría directa antes de
+        tomar una decisión.
+      </p>
+    </div>
+
+    <div class="grid items-center gap-12 lg:grid-cols-[0.9fr_1.1fr]">
+      <!-- Video -->
+      <div class="relative mx-auto w-full max-w-[430px]">
+        <div
+          class="relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 shadow-2xl"
+        >
+          <video
+            id="video-presentacion"
+            class="aspect-[9/16] w-full object-cover"
+            autoplay
+            muted
+            loop
+            playsinline
+            preload="metadata"
           >
-            🔊 Sonido
-          </button>
-          <button
-            onclick="document.getElementById('video-presentacion').currentTime = 0; document.getElementById('video-presentacion').play();"
-            class="bg-green-600 text-white px-4 py-2 text-sm rounded-full shadow-lg hover:bg-green-500 transition"
+            <source src="/noe-aguilera-terrenos.mp4" type="video/mp4" />
+            Tu navegador no soporta el video.
+          </video>
+
+          <div
+            class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/75 to-transparent p-5"
           >
-            🔄 Reiniciar
-          </button>
+            <div class="flex flex-wrap items-center justify-between gap-3">
+              <span class="text-sm font-medium text-white/85">
+                Recorrido y asesoría personalizada
+              </span>
+
+              <div class="flex gap-2">
+                <button
+                  id="playPauseBtn"
+                  type="button"
+                  class="video-control-btn"
+                  aria-label="Pausar video"
+                >
+                  ⏸
+                </button>
+
+                <button
+                  id="muteBtn"
+                  type="button"
+                  class="video-control-btn"
+                  aria-label="Activar sonido"
+                >
+                  🔇
+                </button>
+
+                <button
+                  id="restartBtn"
+                  type="button"
+                  class="video-control-btn"
+                  aria-label="Reiniciar video"
+                >
+                  ↺
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- Card de texto -->
+      <!-- Información -->
       <div
-        class="bg-white/5 border border-white/10 backdrop-blur-lg p-6 md:p-10 rounded-3xl shadow-md text-left max-w-[450px] transition hover:scale-105 hover:shadow-xl duration-500"
+        class="rounded-[2rem] border border-white/10 bg-white/[0.06] p-7 md:p-10 shadow-2xl backdrop-blur-xl"
       >
-        <h2 class="text-white text-xl md:text-3xl font-semibold mb-6">
-          Invierte a distancia con total confianza
-        </h2>
-        <p class="text-white/90 text-base md:text-xl leading-relaxed">
-          No importa dónde te encuentres, puedo ayudarte a adquirir el terreno
-          ideal en Encarnación de Díaz y sus alrededores.
+        <span
+          class="text-sm font-semibold uppercase tracking-[0.25em] text-white/50"
+        >
+          Inversión a distancia
+        </span>
+
+        <h3 class="mt-4 text-3xl md:text-5xl font-semibold text-white">
+          Decide con claridad antes de visitar
+        </h3>
+
+        <p class="mt-5 text-lg leading-relaxed text-white/70">
+          Ideal para compradores que viven fuera de Encarnación de Díaz y desean
+          revisar opciones reales antes de apartar o agendar una visita.
         </p>
-        <p class="text-white/90 text-base md:text-xl leading-relaxed mt-6">
-          Me encargo de todo el proceso: opciones verificadas con fotos y
-          videos reales, asesoría personalizada y acompañamiento en cada paso.
-          Con mi experiencia en el mercado local, te aseguro transparencia,
-          seguridad y tranquilidad.
-        </p>
+
+        <div class="mt-8 space-y-5 border-y border-white/10 py-7">
+          <div class="flex gap-5">
+            <div class="mt-2 h-2 w-2 shrink-0 rounded-full bg-white/70"></div>
+            <div>
+              <h4 class="text-lg font-semibold text-white">
+                Recorridos y material visual
+              </h4>
+              <p class="mt-1 text-sm leading-relaxed text-white/60">
+                Fotos y videos para conocer mejor cada propiedad.
+              </p>
+            </div>
+          </div>
+
+          <div class="flex gap-5">
+            <div class="mt-2 h-2 w-2 shrink-0 rounded-full bg-white/70"></div>
+            <div>
+              <h4 class="text-lg font-semibold text-white">
+                Comunicación directa
+              </h4>
+              <p class="mt-1 text-sm leading-relaxed text-white/60">
+                Resuelve dudas de ubicación, precio, medidas y disponibilidad.
+              </p>
+            </div>
+          </div>
+
+          <div class="flex gap-5">
+            <div class="mt-2 h-2 w-2 shrink-0 rounded-full bg-white/70"></div>
+            <div>
+              <h4 class="text-lg font-semibold text-white">
+                Acompañamiento personalizado
+              </h4>
+              <p class="mt-1 text-sm leading-relaxed text-white/60">
+                Asesoría clara para invertir con mayor seguridad.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-8 flex flex-col gap-4 sm:flex-row">
+          <a
+            href="https://wa.me/524751080850"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center justify-center rounded-full bg-white px-7 py-4 text-base font-bold text-[#021c2e] transition hover:-translate-y-1 hover:bg-slate-100"
+          >
+            Solicitar asesoría
+          </a>
+
+          <a
+            href="#propiedades"
+            class="inline-flex items-center justify-center rounded-full border border-white/15 px-7 py-4 text-base font-semibold text-white transition hover:-translate-y-1 hover:bg-white/10"
+          >
+            Ver propiedades
+          </a>
+        </div>
       </div>
     </div>
   </div>
 </section>
+
+<script is:inline>
+  document.addEventListener("DOMContentLoaded", () => {
+    const video = document.getElementById("video-presentacion");
+    const playPauseBtn = document.getElementById("playPauseBtn");
+    const muteBtn = document.getElementById("muteBtn");
+    const restartBtn = document.getElementById("restartBtn");
+
+    if (!video || !playPauseBtn || !muteBtn || !restartBtn) return;
+
+    playPauseBtn.addEventListener("click", () => {
+      if (video.paused) {
+        video.play();
+        playPauseBtn.textContent = "⏸";
+        playPauseBtn.setAttribute("aria-label", "Pausar video");
+      } else {
+        video.pause();
+        playPauseBtn.textContent = "▶";
+        playPauseBtn.setAttribute("aria-label", "Reproducir video");
+      }
+    });
+
+    muteBtn.addEventListener("click", () => {
+      video.muted = !video.muted;
+      muteBtn.textContent = video.muted ? "🔇" : "🔊";
+      muteBtn.setAttribute(
+        "aria-label",
+        video.muted ? "Activar sonido" : "Silenciar video"
+      );
+    });
+
+    restartBtn.addEventListener("click", () => {
+      video.currentTime = 0;
+      video.play();
+      playPauseBtn.textContent = "⏸";
+      playPauseBtn.setAttribute("aria-label", "Pausar video");
+    });
+  });
+</script>
+
+<style>
+  .video-control-btn {
+    display: flex;
+    height: 44px;
+    width: 44px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    font-size: 18px;
+    line-height: 1;
+    backdrop-filter: blur(12px);
+    transition:
+      transform 0.25s ease,
+      background 0.25s ease,
+      border-color 0.25s ease;
+  }
+
+  .video-control-btn:hover {
+    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.18);
+    border-color: rgba(255, 255, 255, 0.25);
+  }
+</style>

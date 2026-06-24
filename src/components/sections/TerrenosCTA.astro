@@ -1,0 +1,92 @@
+<section
+  id="explorar-terrenos"
+  class="relative overflow-hidden py- bg-gradient-to-b from-[#010D15] via-[#06233A] to-[#010D15]"
+>
+  <div class="absolute inset-0 pointer-events-none">
+    <div
+      class="absolute left-1/2 top-[55%] h-[950px] w-[950px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#1C4766]/20 blur-[190px]"
+    ></div>
+  </div>
+
+  <div class="relative z-10 mx-auto max-w-7xl px-4">
+    <!-- Encabezado -->
+    <div class="mb-14 text-center">
+      <span
+        class="inline-flex rounded-full border border-white/10 bg-white/5 px-5 py-2 text-sm font-semibold tracking-wide text-white/75 backdrop-blur-md"
+      >
+        Explora propiedades
+      </span>
+
+      <h2 class="mt-6 text-3xl md:text-5xl font-semibold text-white">
+        Encuentra tu próximo terreno
+      </h2>
+
+      <p class="mx-auto mt-5 max-w-2xl text-lg text-white/65">
+        Explora propiedades disponibles o visualízalas directamente en el mapa.
+      </p>
+    </div>
+
+    <!-- Cards -->
+    <div class="grid gap-6 lg:grid-cols-2">
+      <!-- TERRENOS -->
+      <a
+        href="/Terrenos"
+        class="group overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.06] p-5 shadow-2xl backdrop-blur-xl transition-all duration-500 hover:-translate-y-2 hover:bg-white/[0.08]"
+      >
+        <img
+          src="/terrenos.webp"
+          alt="Terrenos disponibles"
+          class="aspect-[16/10] w-full rounded-[1.5rem] object-cover"
+        />
+
+        <div class="mt-6 flex items-center justify-between gap-4">
+          <div>
+            <h3 class="text-2xl font-semibold text-white">
+              Ver todos los terrenos
+            </h3>
+
+            <p class="mt-2 text-sm text-white/60">
+              Fotos, precio, medidas, ubicación y detalles de cada propiedad.
+            </p>
+          </div>
+
+          <span
+            class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-white text-2xl text-[#021c2e] transition group-hover:translate-x-1"
+          >
+            →
+          </span>
+        </div>
+      </a>
+
+      <!-- MAPA -->
+      <a
+        href="/MapaTerrenos"
+        class="group overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.06] p-5 shadow-2xl backdrop-blur-xl transition-all duration-500 hover:-translate-y-2 hover:bg-white/[0.08]"
+      >
+        <img
+          src="/mapa.webp"
+          alt="Mapa interactivo"
+          class="aspect-[16/10] w-full rounded-[1.5rem] object-cover"
+        />
+
+        <div class="mt-6 flex items-center justify-between gap-4">
+          <div>
+            <h3 class="text-2xl font-semibold text-white">
+              Explorar terrenos por ubicación
+            </h3>
+
+            <p class="mt-2 text-sm text-white/60">
+              Encuentra propiedades directamente desde el mapa interactivo.
+            </p>
+          </div>
+
+          <span
+            class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-white text-2xl text-[#021c2e] transition group-hover:translate-x-1"
+          >
+            →
+          </span>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
