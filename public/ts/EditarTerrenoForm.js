@@ -20,7 +20,7 @@ function getMiniatura(url) {
     parsedUrl.searchParams.set("width", "1280");
     parsedUrl.searchParams.set("height", "720");
     parsedUrl.searchParams.set("quality", "72");
-    parsedUrl.searchParams.set("resize", "cover");
+    parsedUrl.searchParams.set("resize", "contain");
 
     return parsedUrl.toString();
   } catch {
@@ -398,10 +398,12 @@ if (form) {
       let imagenes = [];
 
       if (imagenesActualesEl) {
-        const botones = imagenesActualesEl.querySelectorAll(".imagen-actual");
+        const botones = imagenesActualesEl.querySelectorAll(
+          "button.imagen-actual",
+        );
 
         imagenes = Array.from(botones)
-          .map((btn) => btn.dataset.url)
+          .map((boton) => boton.dataset.url)
           .filter(Boolean);
       }
 

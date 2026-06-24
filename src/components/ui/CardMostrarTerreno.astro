@@ -60,7 +60,7 @@ const imagenMiniatura = imagenPrincipal
           src={imagenMiniatura ?? imagenPrincipal}
           data-original-url={imagenPrincipal}
           alt={titulo}
-          class="h-full w-full object-cover"
+          class="h-full w-full object-contain"
           loading="lazy"
           decoding="async"
           onerror="if(!this.dataset.fallbacked){this.dataset.fallbacked='1';this.src=this.dataset.originalUrl;}"
