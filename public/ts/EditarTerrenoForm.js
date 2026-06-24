@@ -394,10 +394,15 @@ if (form) {
 
     try {
       // Obtener imágenes actuales
+      // Obtener imágenes actuales (URL ORIGINAL)
       let imagenes = [];
+
       if (imagenesActualesEl) {
-        const imgs = imagenesActualesEl.querySelectorAll("img");
-        imagenes = Array.from(imgs).map((img) => img.src);
+        const botones = imagenesActualesEl.querySelectorAll(".imagen-actual");
+
+        imagenes = Array.from(botones)
+          .map((btn) => btn.dataset.url)
+          .filter(Boolean);
       }
 
       // Procesar y subir nuevas imágenes
