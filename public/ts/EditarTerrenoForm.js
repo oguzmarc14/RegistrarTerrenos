@@ -17,8 +17,9 @@ function getMiniatura(url) {
 
     parsedUrl.pathname = parsedUrl.pathname.replace(publicPath, renderPath);
     parsedUrl.searchParams.delete("download");
-    parsedUrl.searchParams.set("width", "420");
-    parsedUrl.searchParams.set("quality", "70");
+    parsedUrl.searchParams.set("width", "1280");
+    parsedUrl.searchParams.set("height", "720");
+    parsedUrl.searchParams.set("quality", "72");
     parsedUrl.searchParams.set("resize", "cover");
 
     return parsedUrl.toString();

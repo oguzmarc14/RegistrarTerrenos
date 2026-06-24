@@ -10,7 +10,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_KEY;
     <section class="mx-auto px-4 py-8">
       <div
         id="contenedor-terrenos"
-        class="grid gap-10 sm:gap-12 md:gap-14 grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-3 mx-auto px-4 md:px-8 text-white max-w-7xl"
+        class="grid gap-10 md:gap-12 grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 mx-auto px-4 md:px-8 text-white max-w-[90rem]"
         data-url={supabaseUrl}
         data-key={supabaseKey}
       >
@@ -43,7 +43,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_KEY;
       parsedUrl.pathname = parsedUrl.pathname.replace(publicPath, renderPath);
       parsedUrl.searchParams.delete("download");
       parsedUrl.searchParams.set("width", "1200");
-      parsedUrl.searchParams.set("height", "750");
+      parsedUrl.searchParams.set("height", "720");
       parsedUrl.searchParams.set("quality", "72");
       parsedUrl.searchParams.set("resize", "cover");
 
@@ -107,7 +107,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_KEY;
 
       const card = `
     <article class="relative flex flex-col overflow-hidden rounded-[1.6rem] border border-slate-200/70 bg-white/95 shadow-[0_20px_50px_rgba(15,23,42,0.12)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_28px_70px_rgba(15,23,42,0.18)] sm:min-h-[40rem]">
-      <div class="relative aspect-[16/10] overflow-hidden rounded-t-[1.6rem] bg-slate-50">
+      <div class="relative aspect-[16/9] overflow-hidden rounded-t-[1.6rem] bg-slate-50">
         ${
           imagenPrincipal
             ? `<img src="${imagenMiniatura}" data-original-url="${imagenPrincipal}" alt="${terreno.titulo ?? "Terreno"}" class="h-full w-full object-cover" loading="lazy" decoding="async" onerror="if(!this.dataset.fallbacked){this.dataset.fallbacked='1';this.src=this.dataset.originalUrl;}" />`

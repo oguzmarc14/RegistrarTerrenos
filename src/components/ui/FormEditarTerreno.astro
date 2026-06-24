@@ -3,9 +3,16 @@ import { getSupabaseImageUrl } from "../../lib/supabaseImage";
 
 const { terreno } = Astro.props;
 
-const imagenes: string[] = Array.isArray(terreno.imagenes) ? terreno.imagenes : [];
+const imagenes: string[] = Array.isArray(terreno.imagenes)
+  ? terreno.imagenes
+  : [];
 const imagenesMiniatura = imagenes.map((img) =>
-  getSupabaseImageUrl(img, { width: 420, quality: 70, resize: "cover" }),
+  getSupabaseImageUrl(img, {
+    width: 1280,
+    height: 720,
+    quality: 72,
+    resize: "cover",
+  }),
 );
 ---
 
@@ -16,10 +23,10 @@ const imagenesMiniatura = imagenes.map((img) =>
   <input type="hidden" name="id" value={terreno.id} />
 
   <div class="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
-    <div class="rounded-[1.5rem] border border-white/10 bg-sky-950/40 p-5 sm:p-6">
-      <h2 class="mb-5 text-xl font-bold text-white">
-        Información del terreno
-      </h2>
+    <div
+      class="rounded-[1.5rem] border border-white/10 bg-sky-950/40 p-5 sm:p-6"
+    >
+      <h2 class="mb-5 text-xl font-bold text-white">Información del terreno</h2>
 
       <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
         <input
@@ -35,7 +42,8 @@ const imagenesMiniatura = imagenes.map((img) =>
           placeholder="Descripción"
           required
           class="md:col-span-2 h-40 resize-y rounded-2xl border border-white/15 bg-white/10 px-4 py-3 text-white outline-none placeholder:text-white/50 focus:border-amber-400"
-        >{terreno.descripcion || ""}</textarea>
+          >{terreno.descripcion || ""}</textarea
+        >
 
         <input
           name="precio"
@@ -73,26 +81,39 @@ const imagenesMiniatura = imagenes.map((img) =>
           class="md:col-span-2 rounded-2xl border border-white/15 bg-sky-950/80 px-4 py-3 text-white outline-none focus:border-amber-400"
         >
           <option value="">Selecciona el tipo de propiedad</option>
-          <option value="terreno" selected={terreno.tipo === "terreno"}>Terreno</option>
+          <option value="terreno" selected={terreno.tipo === "terreno"}
+            >Terreno</option
+          >
           <option value="casa" selected={terreno.tipo === "casa"}>Casa</option>
-          <option value="comercial" selected={terreno.tipo === "comercial"}>Propiedad Comercial</option>
-          <option value="departamento" selected={terreno.tipo === "departamento"}>Departamento</option>
-          <option value="terreno-comercial" selected={terreno.tipo === "terreno-comercial"}>Terreno Comercial</option>
+          <option value="comercial" selected={terreno.tipo === "comercial"}
+            >Propiedad Comercial</option
+          >
+          <option
+            value="departamento"
+            selected={terreno.tipo === "departamento"}>Departamento</option
+          >
+          <option
+            value="terreno-comercial"
+            selected={terreno.tipo === "terreno-comercial"}
+            >Terreno Comercial</option
+          >
         </select>
       </div>
     </div>
 
-    <div class="rounded-[1.5rem] border border-white/10 bg-white/80 p-5 text-sky-900 shadow-xl sm:p-6">
-      <h2 class="text-xl font-bold">
-        Imágenes del terreno
-      </h2>
+    <div
+      class="rounded-[1.5rem] border border-white/10 bg-white/80 p-5 text-sky-900 shadow-xl sm:p-6"
+    >
+      <h2 class="text-xl font-bold">Imágenes del terreno</h2>
 
       <p class="mt-2 text-sm leading-6 text-sky-950">
         Da clic sobre una imagen para elegirla como portada principal.
       </p>
 
       <div class="mt-6 rounded-3xl border border-slate-200 bg-slate-50 p-4">
-        <h3 class="mb-3 text-sm font-bold uppercase tracking-[0.18em] text-sky-800">
+        <h3
+          class="mb-3 text-sm font-bold uppercase tracking-[0.18em] text-sky-800"
+        >
           Imágenes actuales
         </h3>
 
@@ -105,29 +126,34 @@ const imagenesMiniatura = imagenes.map((img) =>
               const miniatura = imagenesMiniatura[index] ?? img;
 
               return (
-              <button
-                type="button"
-                class="imagen-actual group relative overflow-hidden rounded-2xl text-left transition hover:scale-[1.03]"
-                data-url={img}
-              >
-                <img
-                  src={miniatura}
-                  data-original-url={img}
-                  alt={`Imagen ${index + 1}`}
-                  class={index === 0
-                    ? "h-32 w-full rounded-2xl border-4 border-sky-500 object-cover shadow-2xl"
-                    : "h-24 w-full rounded-2xl border border-slate-200 object-cover shadow-md opacity-80 group-hover:opacity-100"}
-                  onload="if(this.naturalWidth>this.naturalHeight){this.classList.add('scale-[1.18]');}"
-                  onerror="if(!this.dataset.fallbacked){this.dataset.fallbacked='1';this.src=this.dataset.originalUrl;}"
-                />
-
-                <span class={index === 0
-                  ? "badge-portada absolute left-2 top-2 rounded-full bg-sky-600 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white shadow-lg backdrop-blur"
-                  : "badge-portada absolute left-2 top-2 rounded-full bg-black/60 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white opacity-0 shadow-lg backdrop-blur transition group-hover:opacity-100"}
+                <button
+                  type="button"
+                  class="imagen-actual group relative overflow-hidden rounded-2xl text-left transition hover:scale-[1.03]"
+                  data-url={img}
                 >
-                  {index === 0 ? "Portada" : "Elegir portada"}
-                </span>
-              </button>
+                  <img
+                    src={miniatura}
+                    data-original-url={img}
+                    alt={`Imagen ${index + 1}`}
+                    class={
+                      index === 0
+                        ? "h-32 w-full rounded-2xl border-4 border-sky-500 object-cover shadow-2xl"
+                        : "h-24 w-full rounded-2xl border border-slate-200 object-cover shadow-md opacity-80 group-hover:opacity-100"
+                    }
+                    onload="if(this.naturalWidth>this.naturalHeight){this.classList.add('scale-[1.18]');}"
+                    onerror="if(!this.dataset.fallbacked){this.dataset.fallbacked='1';this.src=this.dataset.originalUrl;}"
+                  />
+
+                  <span
+                    class={
+                      index === 0
+                        ? "badge-portada absolute left-2 top-2 rounded-full bg-sky-600 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white shadow-lg backdrop-blur"
+                        : "badge-portada absolute left-2 top-2 rounded-full bg-black/60 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white opacity-0 shadow-lg backdrop-blur transition group-hover:opacity-100"
+                    }
+                  >
+                    {index === 0 ? "Portada" : "Elegir portada"}
+                  </span>
+                </button>
               );
             })
           }
@@ -135,7 +161,9 @@ const imagenesMiniatura = imagenes.map((img) =>
       </div>
 
       <div class="mt-6 flex justify-center">
-        <div class="flex min-h-44 w-full flex-col items-center justify-center rounded-3xl border-2 border-dashed border-sky-900/20 bg-slate-50 p-6 text-center transition hover:border-sky-800 hover:bg-sky-50">
+        <div
+          class="flex min-h-44 w-full flex-col items-center justify-center rounded-3xl border-2 border-dashed border-sky-900/20 bg-slate-50 p-6 text-center transition hover:border-sky-800 hover:bg-sky-50"
+        >
           <input
             type="file"
             id="nuevasImagenes"
@@ -159,14 +187,17 @@ const imagenesMiniatura = imagenes.map((img) =>
       </div>
 
       <div class="mt-6 rounded-3xl border border-slate-200 bg-slate-50 p-4">
-        <h3 class="mb-3 text-sm font-bold uppercase tracking-[0.18em] text-sky-800">
+        <h3
+          class="mb-3 text-sm font-bold uppercase tracking-[0.18em] text-sky-800"
+        >
           Nuevas imágenes
         </h3>
 
         <div
           id="previewNuevas"
           class="grid max-h-72 grid-cols-2 gap-3 overflow-y-auto pr-1 sm:grid-cols-3 lg:grid-cols-4"
-        ></div>
+        >
+        </div>
       </div>
     </div>
   </div>
