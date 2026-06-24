@@ -4,10 +4,7 @@ interface Prop {
   isOverlay?: boolean;
 }
 
-const {
-  class: className = "",
-  isOverlay = false,
-} = Astro.props as Prop;
+const { class: className = "", isOverlay = false } = Astro.props as Prop;
 ---
 
 <nav
@@ -37,19 +34,28 @@ const {
       <div class="flex items-center gap-3">
         <ul class="flex gap-3">
           <li class="duration-300 hover:scale-110">
-            <a href="https://www.facebook.com/noe.aguilera.3133" aria-label="Facebook">
+            <a
+              href="https://www.facebook.com/noe.aguilera.3133"
+              aria-label="Facebook"
+            >
               <img src="/facebook.png" class="w-8 sm:w-12" alt="Facebook" />
             </a>
           </li>
 
           <li class="duration-300 hover:scale-110">
-            <a href="https://www.instagram.com/noeaguilera30/" aria-label="Instagram">
+            <a
+              href="https://www.instagram.com/noeaguilera30/"
+              aria-label="Instagram"
+            >
               <img src="/instagram.png" class="w-8 sm:w-12" alt="Instagram" />
             </a>
           </li>
 
           <li class="duration-300 hover:scale-110">
-            <a href="https://www.tiktok.com/@noeaguileratrader" aria-label="TikTok">
+            <a
+              href="https://www.tiktok.com/@noeaguileratrader"
+              aria-label="TikTok"
+            >
               <img src="/tik-tok.png" class="w-8 sm:w-12" alt="TikTok" />
             </a>
           </li>
@@ -67,13 +73,19 @@ const {
 
     <div class="mx-6 border-t border-white/15"></div>
 
-    <ul class="flex justify-center gap-8 pb-3 pt-3 text-[10px] font-bold uppercase tracking-wide text-white sm:text-sm">
+    <ul
+      class="flex justify-center gap-8 pb-3 pt-3 text-[10px] font-bold uppercase tracking-wide text-white sm:text-sm"
+    >
       <li class="duration-300 hover:scale-110 hover:text-sky-300">
         <a href="/">Home</a>
       </li>
 
       <li class="duration-300 hover:scale-110 hover:text-sky-300">
         <a href="/Terrenos">Terrenos</a>
+      </li>
+
+      <li class="duration-300 hover:scale-110 hover:text-sky-300">
+        <a href="/MapaTerrenos">Mapa De Terrenos</a>
       </li>
 
       <li class="duration-300 hover:scale-110 hover:text-sky-300">
