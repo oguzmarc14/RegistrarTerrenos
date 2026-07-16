@@ -1,6 +1,6 @@
 import { a as createComponent, f as renderComponent, r as renderTemplate, h as defineScriptVars, m as maybeRenderHead } from '../chunks/astro/server_B9knNAVK.mjs';
 import 'kleur/colors';
-import { $ as $$Layout } from '../chunks/Layout_6kDN2m-r.mjs';
+import { $ as $$Layout } from '../chunks/Layout_B2zy3T1P.mjs';
 import { $ as $$Footer, a as $$Navbar } from '../chunks/Footer_98v3p14c.mjs';
 /* empty css                                        */
 export { renderers } from '../renderers.mjs';

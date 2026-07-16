@@ -1,6 +1,6 @@
 import { c as createAstro, a as createComponent, r as renderTemplate, b as addAttribute, m as maybeRenderHead, f as renderComponent } from '../chunks/astro/server_B9knNAVK.mjs';
 import 'kleur/colors';
-import { $ as $$Layout } from '../chunks/Layout_6kDN2m-r.mjs';
+import { $ as $$Layout } from '../chunks/Layout_B2zy3T1P.mjs';
 import 'clsx';
 import { g as getSupabaseImageUrl } from '../chunks/supabaseImage_BtVtnH0c.mjs';
 import { createClient } from '@supabase/supabase-js';

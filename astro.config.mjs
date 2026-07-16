@@ -11,7 +11,15 @@ export default defineConfig({
   adapter: vercel(),
 
   integrations: [
-    sitemap()
+    sitemap({
+      filter: (page) =>
+        !page.includes("/EditarTerreno") &&
+        !page.includes("/EditarTerrenoId") &&
+        !page.includes("/iniciarsesion") &&
+        !page.includes("/panelAdmin") &&
+        !page.includes("/primeroIniciarSesion") &&
+        !page.includes("/RegistrarTerrenos")
+    })
   ],
 
   vite: {
