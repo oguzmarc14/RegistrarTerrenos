@@ -1,16 +1,24 @@
 // @ts-check
 import { defineConfig } from "astro/config";
 import tailwindcss from "@tailwindcss/vite";
-import vercel from "@astrojs/vercel/serverless"; // 👈 NUEVO
+import vercel from "@astrojs/vercel/serverless";
+import sitemap from "@astrojs/sitemap";
 
 export default defineConfig({
-  output: "server",                 // 👈 Habilita SSR en Vercel
-  adapter: vercel(),                // 👈 Usa serverless functions
+  site: "https://noeaguilera.com",
+
+  output: "server",
+  adapter: vercel(),
+
+  integrations: [
+    sitemap()
+  ],
+
   vite: {
     plugins: [tailwindcss()],
     build: {
       rollupOptions: {
-        external: ["uuid"]          // (lo de antes, si lo sigues necesitando)
+        external: ["uuid"]
       }
     }
   }

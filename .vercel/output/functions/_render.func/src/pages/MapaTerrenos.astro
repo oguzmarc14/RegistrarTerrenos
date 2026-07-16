@@ -1,0 +1,437 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Navbar from "../components/ui/Navbar.astro";
+import Footer from "../components/sections/Footer.astro";
+
+const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
+const supabaseKey = import.meta.env.PUBLIC_SUPABASE_KEY;
+---
+
+<Layout>
+  <Navbar />
+
+  <section class="mapa-hero">
+    <span class="badge">📍 Mapa interactivo</span>
+
+    <h2 class="titulo-mapa">
+      Propiedades disponibles en Encarnación de Díaz
+    </h2>
+
+    <p>
+      Terrenos, casas, departamentos y propiedades comerciales identificadas por color.
+    </p>
+  </section>
+
+  <section class="filtros-mapa">
+    <button class="filter-btn active" data-tipo="todos">Todos <span id="count-todos">0</span></button>
+    <button class="filter-btn" data-tipo="terreno">Terrenos <span id="count-terreno">0</span></button>
+    <button class="filter-btn" data-tipo="casa">Casas <span id="count-casa">0</span></button>
+    <button class="filter-btn" data-tipo="propiedad-comercial">Propiedades comerciales <span id="count-propiedad-comercial">0</span></button>
+    <button class="filter-btn" data-tipo="departamento">Departamentos <span id="count-departamento">0</span></button>
+    <button class="filter-btn" data-tipo="terreno-comercial">Terrenos comerciales <span id="count-terreno-comercial">0</span></button>
+  </section>
+
+  <section class="mapa-wrapper">
+    <aside class="mapa-leyenda">
+      <h2>Índice del mapa</h2>
+      <p>Los colores indican el tipo de propiedad.</p>
+
+      <div class="leyenda-grid">
+        <div class="leyenda-item"><span class="dot terreno"></span> Terrenos</div>
+        <div class="leyenda-item"><span class="dot casa"></span> Casas</div>
+        <div class="leyenda-item"><span class="dot propiedad-comercial"></span> Propiedades comerciales</div>
+        <div class="leyenda-item"><span class="dot departamento"></span> Departamentos</div>
+        <div class="leyenda-item"><span class="dot terreno-comercial"></span> Terrenos comerciales</div>
+      </div>
+
+      <div class="leyenda-status">
+        Mostrando: <strong id="estado-filtro">Todas las propiedades</strong>
+      </div>
+    </aside>
+
+    <div id="map"></div>
+  </section>
+
+  <Footer />
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+  <script define:vars={{ supabaseUrl, supabaseKey }} type="module">
+    import * as L from "https://unpkg.com/leaflet@1.9.4/dist/leaflet-src.esm.js";
+
+    const tipos = {
+      terreno: { label: "Terreno", color: "#0ea5e9" },
+      casa: { label: "Casa", color: "#22c55e" },
+      "propiedad-comercial": { label: "Propiedad comercial", color: "#a855f7" },
+      departamento: { label: "Departamento", color: "#eab308" },
+      "terreno-comercial": { label: "Terreno comercial", color: "#f97316" },
+    };
+
+    function normalizarTipo(tipo) {
+      const limpio = String(tipo || "")
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .trim()
+        .replace(/\s+/g, "-");
+
+      const alias = {
+        terreno: "terreno",
+        terrenos: "terreno",
+        casa: "casa",
+        casas: "casa",
+        departamento: "departamento",
+        departamentos: "departamento",
+        comercial: "propiedad-comercial",
+        "propiedad-comercial": "propiedad-comercial",
+        "propiedades-comerciales": "propiedad-comercial",
+        "terreno-comercial": "terreno-comercial",
+        "terrenos-comerciales": "terreno-comercial",
+      };
+
+      return alias[limpio] || limpio;
+    }
+
+    const map = L.map("map").setView([21.515091, -102.235731], 13);
+
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: "© OpenStreetMap",
+    }).addTo(map);
+
+    const markersLayer = L.layerGroup().addTo(map);
+
+    const res = await fetch(`${supabaseUrl}/rest/v1/Terrenos?select=*`, {
+      headers: {
+        apikey: supabaseKey,
+        Authorization: `Bearer ${supabaseKey}`,
+      },
+    });
+
+    const terrenos = await res.json();
+
+    const propiedades = Array.isArray(terrenos)
+      ? terrenos
+          .filter((item) => item.latitud !== null && item.longitud !== null)
+          .map((item) => ({
+            ...item,
+            tipoNormalizado: normalizarTipo(item.tipo),
+          }))
+      : [];
+
+    function crearIcono(tipo) {
+      const info = tipos[tipo] || { color: "#64748b" };
+
+      return L.divIcon({
+        className: "custom-marker",
+        html: `
+          <div class="marker-pin" style="--marker-color:${info.color}">
+            <span></span>
+          </div>
+        `,
+        iconSize: [34, 42],
+        iconAnchor: [17, 42],
+        popupAnchor: [0, -38],
+      });
+    }
+
+    function actualizarContadores() {
+      document.getElementById("count-todos").textContent = propiedades.length;
+
+      Object.keys(tipos).forEach((tipo) => {
+        const total = propiedades.filter((item) => item.tipoNormalizado === tipo).length;
+        document.getElementById(`count-${tipo}`).textContent = total;
+      });
+    }
+
+    function renderMarkers(tipoSeleccionado = "todos") {
+      markersLayer.clearLayers();
+
+      const filtradas =
+        tipoSeleccionado === "todos"
+          ? propiedades
+          : propiedades.filter((item) => item.tipoNormalizado === tipoSeleccionado);
+
+      document.getElementById("estado-filtro").textContent =
+        tipoSeleccionado === "todos"
+          ? `Todas las propiedades (${filtradas.length})`
+          : `${tipos[tipoSeleccionado]?.label || "Propiedades"} (${filtradas.length})`;
+
+      filtradas.forEach((item) => {
+        const lat = Number(item.latitud);
+        const lng = Number(item.longitud);
+        const imagen = item.imagenes?.[0] || item.src_imagen || "";
+
+        const infoTipo = tipos[item.tipoNormalizado] || {
+          label: item.tipo || "Propiedad",
+          color: "#64748b",
+        };
+
+        const marker = L.marker([lat, lng], {
+          icon: crearIcono(item.tipoNormalizado),
+        }).addTo(markersLayer);
+
+        marker.bindPopup(`
+          <div class="popup-card">
+            ${imagen ? `<img src="${imagen}" class="popup-img" />` : ""}
+            <span class="popup-tipo" style="color:${infoTipo.color}">
+              ${infoTipo.label}
+            </span>
+            <h3>${item.titulo ?? "Propiedad disponible"}</h3>
+            <p>${item.ubicacion ?? ""}</p>
+            <strong>$${item.precio ?? "0"}</strong>
+            <a href="/Terreno/${item.id}" style="background:${infoTipo.color}">
+              Ver detalles →
+            </a>
+          </div>
+        `);
+      });
+
+      if (filtradas.length > 0) {
+        const bounds = L.latLngBounds(
+          filtradas.map((item) => [Number(item.latitud), Number(item.longitud)])
+        );
+
+        map.fitBounds(bounds, {
+          padding: [60, 60],
+          maxZoom: 15,
+        });
+      }
+    }
+
+    actualizarContadores();
+    renderMarkers("todos");
+
+    document.querySelectorAll(".filter-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".filter-btn").forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        renderMarkers(btn.dataset.tipo);
+      });
+    });
+  </script>
+
+  <style>
+    :global(body) {
+      background: #06263a;
+    }
+
+    .mapa-hero {
+      padding: 3.4rem 1.5rem 2rem;
+      text-align: center;
+      color: white;
+      background:
+        radial-gradient(circle at top, rgba(13, 115, 164, 0.45), transparent 35%),
+        linear-gradient(180deg, #06263a 0%, #041b2b 100%);
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.55rem 1.1rem;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    .titulo-mapa {
+      max-width: 1100px;
+      margin: 1rem auto 0.75rem;
+      font-size: clamp(2rem, 3vw, 3.1rem);
+      line-height: 1.08;
+      font-weight: 900;
+      color: white;
+    }
+
+    .mapa-hero p {
+      max-width: 680px;
+      margin: 0 auto;
+      color: rgba(255, 255, 255, 0.78);
+      font-size: 1rem;
+    }
+
+    .filtros-mapa {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      justify-content: center;
+      padding: 1.5rem;
+      background: #041b2b;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .filter-btn {
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: rgba(255, 255, 255, 0.08);
+      color: white;
+      padding: 0.8rem 1.2rem;
+      border-radius: 999px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: 0.25s ease;
+    }
+
+    .filter-btn span {
+      display: inline-flex;
+      margin-left: 0.4rem;
+      min-width: 1.5rem;
+      height: 1.5rem;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.18);
+      font-size: 0.75rem;
+    }
+
+    .filter-btn:hover,
+    .filter-btn.active {
+      background: #0b79aa;
+      border-color: #0b79aa;
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.28);
+    }
+
+    .mapa-wrapper {
+      position: relative;
+      padding: 1.5rem;
+      background: #041b2b;
+    }
+
+    .mapa-leyenda {
+      position: absolute;
+      z-index: 700;
+      top: 2.5rem;
+      left: 2.5rem;
+      width: min(350px, calc(100% - 5rem));
+      border-radius: 24px;
+      padding: 1.2rem;
+      background: rgba(4, 27, 43, 0.92);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(12px);
+    }
+
+    .mapa-leyenda h2 {
+      margin: 0 0 0.35rem;
+      font-size: 1.1rem;
+    }
+
+    .mapa-leyenda p {
+      margin: 0 0 1rem;
+      color: rgba(255, 255, 255, 0.72);
+      font-size: 0.9rem;
+    }
+
+    .leyenda-grid {
+      display: grid;
+      gap: 0.65rem;
+    }
+
+    .leyenda-item {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 999px;
+      display: inline-block;
+      box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.12);
+    }
+
+    .dot.terreno { background: #0ea5e9; }
+    .dot.casa { background: #22c55e; }
+    .dot.propiedad-comercial { background: #a855f7; }
+    .dot.departamento { background: #eab308; }
+    .dot.terreno-comercial { background: #f97316; }
+
+    #map {
+      height: 72vh;
+      width: 100%;
+      border-radius: 28px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
+    }
+
+    :global(.custom-marker) {
+      background: transparent;
+      border: none;
+    }
+
+    :global(.marker-pin) {
+      width: 34px;
+      height: 34px;
+      border-radius: 50% 50% 50% 0;
+      background: var(--marker-color);
+      transform: rotate(-45deg);
+      border: 3px solid white;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
+    }
+
+    :global(.marker-pin span) {
+      width: 11px;
+      height: 11px;
+      display: block;
+      border-radius: 999px;
+      background: white;
+      margin: 8px auto;
+    }
+
+    :global(.popup-card) {
+      width: 240px;
+      font-family: system-ui, sans-serif;
+    }
+
+    :global(.popup-img) {
+      width: 100%;
+      height: 130px;
+      object-fit: cover;
+      border-radius: 14px;
+      margin-bottom: 10px;
+    }
+
+    :global(.popup-card a) {
+      display: block;
+      text-align: center;
+      color: white;
+      padding: 0.65rem;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 800;
+    }
+
+    @media (max-width: 768px) {
+      .mapa-hero {
+        padding: 2.4rem 1.1rem 1.6rem;
+      }
+
+      .titulo-mapa {
+        font-size: clamp(1.8rem, 8vw, 2.7rem);
+      }
+
+      .mapa-wrapper {
+        padding: 1rem;
+      }
+
+      .mapa-leyenda {
+        position: static;
+        width: 100%;
+        margin-bottom: 1rem;
+      }
+
+      #map {
+        height: 70vh;
+        border-radius: 18px;
+      }
+    }
+  </style>
+</Layout>

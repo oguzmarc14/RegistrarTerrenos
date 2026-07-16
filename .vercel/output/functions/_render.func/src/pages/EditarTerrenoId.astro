@@ -1,0 +1,64 @@
+---
+import Layout from "../layouts/Layout.astro";
+import FormEditarTerreno from "../components/ui/FormEditarTerreno.astro";
+import { createClient } from "@supabase/supabase-js";
+
+const supabase = createClient(
+  import.meta.env.PUBLIC_SUPABASE_URL,
+  import.meta.env.PUBLIC_SUPABASE_KEY
+);
+
+const id = Astro.url.searchParams.get("id");
+
+let terreno = null;
+
+if (id) {
+  const { data } = await supabase
+    .from("Terrenos")
+    .select("id, titulo, descripcion, precio, imagenes, medidas, ubicacion, tipo, fecha, google_maps")
+    .eq("id", id)
+    .single();
+
+  terreno = data;
+}
+---
+
+<script is:inline>
+  document.documentElement.classList.add("auth-loading");
+</script>
+
+<style is:global>
+  html.auth-loading body {
+    visibility: hidden;
+  }
+</style>
+
+<Layout>
+  <section class="min-h-screen bg-gradient-to-b from-sky-950 via-sky-800 to-sky-950 text-white">
+    <div class="mx-auto max-w-7xl px-4 py-10 sm:py-12 lg:py-14">
+      <div class="mb-8 text-center">
+        <span class="inline-flex items-center rounded-full bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.25em] text-white/80 backdrop-blur">
+          Edición individual
+        </span>
+
+        <h1 class="mt-4 text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">
+          Editar terreno
+        </h1>
+
+        <p class="mx-auto mt-3 max-w-3xl text-sm leading-7 text-sky-100/80 sm:text-base">
+          Ajusta la información de la propiedad con una vista más elegante y clara.
+        </p>
+      </div>
+
+      {
+        terreno ? (
+          <FormEditarTerreno terreno={terreno} />
+        ) : (
+          <p class="text-center text-red-200">No se encontró el terreno.</p>
+        )
+      }
+    </div>
+  </section>
+</Layout>
+
+<script type="module" src="/ts/authGuard.js"></script>
