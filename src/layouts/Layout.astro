@@ -1,5 +1,7 @@
 ---
 import "/styles/global.css";
+import WhatsappBoton from "../components/ui/WhatsappBoton.astro";
+
 ---
 
 <!doctype html>
@@ -24,6 +26,7 @@ import "/styles/global.css";
   </head>
   <body class:list={["bg-gray-200"]}>
     <slot />
+    <WhatsappBoton />
   </body>
 </html>
 
