@@ -1,22 +1,94 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import Footer from "./Footer.astro";
+
 const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
 const supabaseKey = import.meta.env.PUBLIC_SUPABASE_KEY;
 ---
 
 <Layout>
-  <div class="bg-gradient-to-b from-sky-950 via-sky-800/90 to-sky-950/90">
-    <section class="mx-auto px-4 py-8">
-      <div
-        id="contenedor-terrenos"
-        class="grid gap-10 md:gap-12 grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 mx-auto px-4 md:px-8 text-white max-w-[90rem]"
-        data-url={supabaseUrl}
-        data-key={supabaseKey}
-      >
-        <p class="text-center col-span-full">Cargando terrenos...</p>
-      </div>
-    </section>
+  <div
+    class="min-h-screen bg-gradient-to-b from-sky-950 via-[#075985] to-sky-950"
+  >
+    <main>
+      <section class="mx-auto max-w-[96rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
+        <!-- ENCABEZADO -->
+        <div class="mx-auto mb-9 max-w-3xl text-center">
+          <span
+            class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.18em] text-sky-100 backdrop-blur-sm"
+          >
+            <svg
+              class="h-4 w-4"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              aria-hidden="true"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6"
+              />
+            </svg>
+
+            Catálogo de propiedades
+          </span>
+
+          <h1
+            class="mt-4 text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-5xl"
+          >
+            Encuentra el terreno ideal para ti
+          </h1>
+
+          <p
+            class="mx-auto mt-4 max-w-2xl text-sm leading-7 text-sky-100/80 sm:text-base"
+          >
+            Conoce nuestras propiedades disponibles y solicita información
+            directamente por WhatsApp.
+          </p>
+
+          <p
+            id="contador-propiedades"
+            class="mt-3 hidden text-sm font-semibold text-sky-200"
+          >
+          </p>
+        </div>
+
+        <!-- CONTENEDOR -->
+        <div
+          id="contenedor-terrenos"
+          class="mx-auto grid max-w-[90rem] grid-cols-1 gap-7 md:grid-cols-2 xl:grid-cols-3"
+          data-url={supabaseUrl}
+          data-key={supabaseKey}
+        >
+          <!-- CARGA INICIAL -->
+          {
+            Array.from({ length: 3 }).map(() => (
+              <article class="overflow-hidden rounded-[1.6rem] border border-white/10 bg-white shadow-2xl shadow-sky-950/20">
+                <div class="aspect-[16/10] animate-pulse bg-slate-200" />
+
+                <div class="space-y-4 p-5 sm:p-6">
+                  <div class="h-5 w-24 animate-pulse rounded-full bg-slate-200" />
+                  <div class="h-7 w-4/5 animate-pulse rounded-lg bg-slate-200" />
+                  <div class="h-4 w-full animate-pulse rounded bg-slate-100" />
+                  <div class="h-4 w-2/3 animate-pulse rounded bg-slate-100" />
+                  <div class="h-8 w-1/2 animate-pulse rounded-lg bg-slate-200" />
+
+                  <div class="grid grid-cols-2 gap-3">
+                    <div class="h-16 animate-pulse rounded-xl bg-slate-100" />
+                    <div class="h-16 animate-pulse rounded-xl bg-slate-100" />
+                  </div>
+
+                  <div class="h-12 animate-pulse rounded-xl bg-slate-200" />
+                </div>
+              </article>
+            ))
+          }
+        </div>
+      </section>
+    </main>
+
     <Footer />
   </div>
 </Layout>
@@ -25,26 +97,49 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_KEY;
   import { createClient } from "https://esm.sh/@supabase/supabase-js";
 
   const contenedor = document.getElementById("contenedor-terrenos");
+  const contador = document.getElementById("contador-propiedades");
+
+  if (!(contenedor instanceof HTMLElement)) {
+    throw new Error("No se encontró el contenedor de terrenos.");
+  }
+
   const supabaseUrl = contenedor.dataset.url;
   const supabaseKey = contenedor.dataset.key;
 
-  const supabase = createClient(supabaseUrl, supabaseKey);
+  /**
+   * Escapa cualquier texto proveniente de Supabase antes de insertarlo
+   * mediante innerHTML.
+   */
+  function escaparHTML(valor) {
+    return String(valor ?? "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
 
   function getMiniatura(url) {
-    if (!url) return url;
+    if (!url) return "";
 
     try {
       const parsedUrl = new URL(url);
       const publicPath = "/storage/v1/object/public/";
       const renderPath = "/storage/v1/render/image/public/";
 
-      if (!parsedUrl.pathname.includes(publicPath)) return url;
+      if (!parsedUrl.pathname.includes(publicPath)) {
+        return url;
+      }
 
-      parsedUrl.pathname = parsedUrl.pathname.replace(publicPath, renderPath);
+      parsedUrl.pathname = parsedUrl.pathname.replace(
+        publicPath,
+        renderPath
+      );
+
       parsedUrl.searchParams.delete("download");
       parsedUrl.searchParams.set("width", "1200");
-      parsedUrl.searchParams.set("height", "720");
-      parsedUrl.searchParams.set("quality", "72");
+      parsedUrl.searchParams.set("height", "750");
+      parsedUrl.searchParams.set("quality", "78");
       parsedUrl.searchParams.set("resize", "cover");
 
       return parsedUrl.toString();
@@ -56,115 +151,461 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_KEY;
   function formatearPrecio(valor) {
     const texto = String(valor ?? "").trim();
 
-    if (!texto) return "";
+    if (!texto) {
+      return "Precio a consultar";
+    }
 
     const esSoloNumero = /^[\d.,\s]+$/.test(texto);
-    if (!esSoloNumero) return texto;
 
-    const numero = Number(texto.replace(/\s+/g, "").replace(/,/g, ""));
-    return Number.isFinite(numero) ? `$${numero.toLocaleString()} MXN` : texto;
+    if (!esSoloNumero) {
+      return texto;
+    }
+
+    const numero = Number(
+      texto.replace(/\s+/g, "").replace(/,/g, "")
+    );
+
+    return Number.isFinite(numero)
+      ? `$${numero.toLocaleString("es-MX")} MXN`
+      : texto;
+  }
+
+  function crearMensajeWhatsApp(terreno) {
+    const titulo =
+      String(terreno.titulo ?? "").trim() || "esta propiedad";
+
+    const ubicacion = String(terreno.ubicacion ?? "").trim();
+
+    const mensaje = ubicacion
+      ? `Hola Noé Aguilera, quiero información sobre la propiedad "${titulo}", ubicada en ${ubicacion}.`
+      : `Hola Noé Aguilera, quiero información sobre la propiedad "${titulo}".`;
+
+    return `https://wa.me/524751080850?text=${encodeURIComponent(
+      mensaje
+    )}`;
+  }
+
+  function mostrarError() {
+    contenedor.innerHTML = `
+      <div class="col-span-full mx-auto w-full max-w-xl rounded-2xl border border-red-300/20 bg-white/10 p-7 text-center text-white shadow-xl backdrop-blur-sm">
+        <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-red-500/15 text-red-200">
+          <svg
+            class="h-7 w-7"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            aria-hidden="true"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M12 9v4m0 4h.01M10.3 3.8 2.6 17.1A2 2 0 0 0 4.3 20h15.4a2 2 0 0 0 1.7-2.9L13.7 3.8a2 2 0 0 0-3.4 0Z"
+            />
+          </svg>
+        </div>
+
+        <h2 class="mt-4 text-xl font-bold">
+          No pudimos cargar las propiedades
+        </h2>
+
+        <p class="mt-2 text-sm leading-6 text-sky-100/80">
+          Ocurrió un problema al consultar la información. Intenta
+          recargar la página.
+        </p>
+
+        <button
+          type="button"
+          id="boton-reintentar"
+          class="mt-5 inline-flex items-center justify-center rounded-xl bg-white px-5 py-3 text-sm font-bold text-sky-950 transition hover:bg-sky-50"
+        >
+          Intentar nuevamente
+        </button>
+      </div>
+    `;
+
+    document
+      .getElementById("boton-reintentar")
+      ?.addEventListener("click", cargarTerrenos);
+  }
+
+  function mostrarSinResultados() {
+    contenedor.innerHTML = `
+      <div class="col-span-full mx-auto w-full max-w-xl rounded-2xl border border-white/15 bg-white/10 p-8 text-center text-white shadow-xl backdrop-blur-sm">
+        <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-white/10 text-sky-100">
+          <svg
+            class="h-8 w-8"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.7"
+            aria-hidden="true"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6"
+            />
+          </svg>
+        </div>
+
+        <h2 class="mt-4 text-xl font-bold">
+          No hay propiedades disponibles
+        </h2>
+
+        <p class="mt-2 text-sm leading-6 text-sky-100/80">
+          Próximamente agregaremos nuevas opciones al catálogo.
+        </p>
+      </div>
+    `;
+  }
+
+  function crearTarjeta(terreno) {
+    const titulo =
+      String(terreno.titulo ?? "").trim() ||
+      "Propiedad disponible";
+
+    const descripcion =
+      String(terreno.descripcion ?? "").trim() ||
+      "Solicita información para conocer todos los detalles de esta propiedad.";
+
+    const tipo =
+      String(terreno.tipo ?? "").trim() || "Propiedad";
+
+    const medidas =
+      String(terreno.medidas ?? "").trim() ||
+      "Consultar medidas";
+
+    const ubicacion =
+      String(terreno.ubicacion ?? "").trim() ||
+      "Consultar ubicación";
+
+    const precio = formatearPrecio(terreno.precio);
+
+    const imagenes = Array.isArray(terreno.imagenes)
+      ? terreno.imagenes.filter(Boolean)
+      : [];
+
+    const imagenPrincipal =
+      imagenes.length > 0 ? String(imagenes[0]) : "";
+
+    const imagenMiniatura = imagenPrincipal
+      ? getMiniatura(imagenPrincipal)
+      : "";
+
+    const cantidadFotos = imagenes.length;
+
+    const whatsappHref = crearMensajeWhatsApp(terreno);
+
+    const id = encodeURIComponent(String(terreno.id ?? ""));
+
+    return `
+      <article
+        class="property-card group relative flex h-full flex-col overflow-hidden rounded-[1.6rem] border border-white/20 bg-white shadow-[0_20px_55px_rgba(2,6,23,0.22)] transition duration-300 hover:-translate-y-1.5 hover:shadow-[0_30px_75px_rgba(2,6,23,0.3)]"
+      >
+        <!-- IMAGEN -->
+        <div class="relative aspect-[16/10] overflow-hidden bg-slate-200">
+          ${
+            imagenPrincipal
+              ? `
+                <img
+                  src="${escaparHTML(imagenMiniatura)}"
+                  data-original-url="${escaparHTML(imagenPrincipal)}"
+                  alt="${escaparHTML(titulo)}"
+                  class="h-full w-full object-cover transition duration-700 ease-out group-hover:scale-[1.055]"
+                  loading="lazy"
+                  decoding="async"
+                />
+              `
+              : `
+                <img
+                  src="/no-image.jpg"
+                  alt="Propiedad sin fotografía"
+                  class="h-full w-full object-cover"
+                  loading="lazy"
+                  decoding="async"
+                />
+              `
+          }
+
+          <!-- Oscurecimiento inferior -->
+          <div
+            class="pointer-events-none absolute inset-0 bg-gradient-to-t from-slate-950/65 via-transparent to-slate-950/15"
+          ></div>
+
+          <!-- Tipo de propiedad -->
+          <span
+            class="absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-full border border-white/30 bg-sky-950/80 px-3 py-1.5 text-[0.68rem] font-bold uppercase tracking-[0.14em] text-white shadow-lg backdrop-blur-md"
+          >
+            <svg
+              class="h-3.5 w-3.5"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              aria-hidden="true"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M3 21h18M5 21V8l7-5 7 5v13"
+              />
+            </svg>
+
+            ${escaparHTML(tipo)}
+          </span>
+
+          ${
+            cantidadFotos > 0
+              ? `
+                <span
+                  class="absolute right-4 top-4 inline-flex items-center gap-1.5 rounded-full border border-white/25 bg-slate-950/70 px-3 py-1.5 text-xs font-semibold text-white shadow-lg backdrop-blur-md"
+                  aria-label="${cantidadFotos} fotografías"
+                >
+                  <svg
+                    class="h-4 w-4"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.9"
+                    aria-hidden="true"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M4 7a2 2 0 0 1 2-2h2l1-2h6l1 2h2a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7Z"
+                    />
+                    <circle cx="12" cy="12.5" r="3.5" />
+                  </svg>
+
+                  ${cantidadFotos}
+                </span>
+              `
+              : ""
+          }
+
+          <!-- Ubicación sobre fotografía -->
+          <div
+            class="absolute inset-x-4 bottom-4 flex items-center gap-2 text-sm font-semibold text-white"
+          >
+            <svg
+              class="h-5 w-5 shrink-0 text-sky-200"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              aria-hidden="true"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M12 21s7-5.2 7-12a7 7 0 1 0-14 0c0 6.8 7 12 7 12Z"
+              />
+              <circle cx="12" cy="9" r="2.5" />
+            </svg>
+
+            <span class="line-clamp-1">
+              ${escaparHTML(ubicacion)}
+            </span>
+          </div>
+        </div>
+
+        <!-- INFORMACIÓN -->
+        <div class="flex flex-1 flex-col p-5 sm:p-6">
+          <div>
+            <h2
+              class="line-clamp-2 min-h-[3.5rem] text-xl font-bold leading-7 tracking-tight text-sky-950 sm:text-[1.4rem]"
+            >
+              ${escaparHTML(titulo)}
+            </h2>
+
+            <p
+              class="mt-3 line-clamp-3 min-h-[4.5rem] text-sm leading-6 text-slate-600"
+            >
+              ${escaparHTML(descripcion)}
+            </p>
+          </div>
+
+          <!-- PRECIO -->
+          <div class="mt-5 border-y border-slate-200 py-4">
+            <p
+              class="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-slate-400"
+            >
+              Precio
+            </p>
+
+            <p
+              class="mt-1 text-2xl font-extrabold tracking-tight text-emerald-700"
+            >
+              ${escaparHTML(precio)}
+            </p>
+          </div>
+
+          <!-- DATOS -->
+          <div class="mt-4 grid gap-3">
+            <div
+              class="flex min-h-[4.5rem] items-start gap-3 rounded-xl border border-slate-200 bg-slate-50 p-3.5"
+            >
+              <div
+                class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-sky-100 text-sky-800"
+              >
+                <svg
+                  class="h-5 w-5"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  aria-hidden="true"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M4 20 20 4M8 4h12v12M4 8v12h12"
+                  />
+                </svg>
+              </div>
+
+              <div class="min-w-0">
+                <p
+                  class="text-[0.65rem] font-bold uppercase tracking-[0.14em] text-slate-400"
+                >
+                  Medidas
+                </p>
+
+                <p
+                  class="mt-1 line-clamp-2 text-sm font-semibold leading-5 text-slate-800"
+                >
+                  ${escaparHTML(medidas)}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- BOTONES -->
+          <div class="mt-auto grid grid-cols-[1fr_auto] gap-3 pt-5">
+            <a
+              href="/Terreno/${id}"
+              aria-label="Ver detalles de ${escaparHTML(titulo)}"
+              class="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-sky-950 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-sky-950/20 transition duration-200 hover:bg-sky-800 focus:outline-none focus:ring-4 focus:ring-sky-300"
+            >
+              Ver propiedad
+
+              <svg
+                class="h-4 w-4 transition-transform group-hover:translate-x-0.5"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                aria-hidden="true"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="m9 18 6-6-6-6"
+                />
+              </svg>
+            </a>
+
+            <a
+              href="${escaparHTML(whatsappHref)}"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Solicitar información por WhatsApp"
+              title="Solicitar información por WhatsApp"
+              class="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-600 text-white shadow-lg shadow-emerald-900/20 transition duration-200 hover:-translate-y-0.5 hover:bg-emerald-700 focus:outline-none focus:ring-4 focus:ring-emerald-300"
+            >
+              <svg
+                class="h-6 w-6"
+                viewBox="0 0 32 32"
+                fill="currentColor"
+                aria-hidden="true"
+              >
+                <path d="M16 3C9.373 3 4 8.373 4 15c0 2.604.787 5.004 2.145 7.017L4 29l7.17-2.104C12.19 27.184 14.05 27.5 16 27.5c6.627 0 12-5.373 12-12S22.627 3 16 3Zm0 22c-1.702 0-3.3-.393-4.728-1.088l-.338-.168-4.26 1.248 1.264-4.147-.22-.34A8.932 8.932 0 0 1 7 15c0-4.963 4.037-9 9-9s9 4.037 9 9-4.037 9-9 9Zm4.998-6.682c-.273-.137-1.616-.797-1.867-.888s-.433-.137-.613.137c-.18.273-.703.888-.862 1.07-.16.18-.32.205-.593.068-.273-.137-1.15-.423-2.191-1.345-.81-.723-1.357-1.616-1.516-1.889-.16-.273-.017-.42.12-.557.124-.124.273-.32.41-.48.137-.16.182-.273.273-.456.091-.18.046-.34-.023-.48-.068-.137-.613-1.48-.84-2.03-.221-.53-.446-.46-.613-.468l-.523-.009c-.18 0-.48.068-.733.34s-.96.94-.96 2.29.983 2.656 1.12 2.84c.137.182 1.937 2.957 4.693 4.144.657.283 1.17.453 1.57.58.66.21 1.26.18 1.733.11.53-.079 1.616-.658 1.844-1.295.228-.637.228-1.182.16-1.295-.068-.114-.25-.183-.523-.32Z" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </article>
+    `;
   }
 
   async function cargarTerrenos() {
-    contenedor.innerHTML =
-      "<p class='col-span-full text-center'>Cargando terrenos...</p>";
+    if (!supabaseUrl || !supabaseKey) {
+      console.error(
+        "Faltan las variables públicas de configuración de Supabase."
+      );
 
-    const { data, error } = await supabase
-      .from("Terrenos")
-      .select(
-        "id, titulo, descripcion, precio, imagenes, medidas, ubicacion, tipo, fecha",
-      )
-      .order("fecha", { ascending: false });
-
-    if (error) {
-      contenedor.innerHTML =
-        "<p class='col-span-full text-center text-red-500'>❌ Error al cargar terrenos</p>";
-      console.error(error);
+      mostrarError();
       return;
     }
 
-    if (!data || data.length === 0) {
-      contenedor.innerHTML =
-        "<p class='col-span-full text-center'>No hay terrenos aún.</p>";
-      return;
+    contenedor.setAttribute("aria-busy", "true");
+
+    try {
+      const supabase = createClient(supabaseUrl, supabaseKey);
+
+      const { data, error } = await supabase
+        .from("Terrenos")
+        .select(
+          "id, titulo, descripcion, precio, imagenes, medidas, ubicacion, tipo, fecha"
+        )
+        .order("fecha", { ascending: false });
+
+      if (error) {
+        throw error;
+      }
+
+      if (!data || data.length === 0) {
+        mostrarSinResultados();
+
+        if (contador) {
+          contador.classList.add("hidden");
+        }
+
+        return;
+      }
+
+      contenedor.innerHTML = data.map(crearTarjeta).join("");
+
+      if (contador) {
+        contador.textContent =
+          data.length === 1
+            ? "1 propiedad disponible"
+            : `${data.length} propiedades disponibles`;
+
+        contador.classList.remove("hidden");
+      }
+
+      // Si la miniatura optimizada falla, se intenta cargar
+      // automáticamente la imagen original.
+      contenedor
+        .querySelectorAll("img[data-original-url]")
+        .forEach((imagen) => {
+          imagen.addEventListener(
+            "error",
+            () => {
+              if (
+                imagen instanceof HTMLImageElement &&
+                imagen.dataset.originalUrl &&
+                imagen.src !== imagen.dataset.originalUrl
+              ) {
+                imagen.src = imagen.dataset.originalUrl;
+                return;
+              }
+
+              if (imagen instanceof HTMLImageElement) {
+                imagen.src = "/no-image.jpg";
+              }
+            },
+            { once: true }
+          );
+        });
+    } catch (error) {
+      console.error("Error al cargar los terrenos:", error);
+      mostrarError();
+    } finally {
+      contenedor.setAttribute("aria-busy", "false");
     }
-
-    contenedor.innerHTML = ""; // limpiar
-
-    data.forEach((terreno) => {
-      const imagenPrincipal =
-        Array.isArray(terreno.imagenes) && terreno.imagenes.length > 0
-          ? terreno.imagenes[0]
-          : null;
-
-      const imagenMiniatura = imagenPrincipal
-        ? getMiniatura(imagenPrincipal)
-        : null;
-
-      const fotosExtra = Array.isArray(terreno.imagenes)
-        ? Math.max(terreno.imagenes.length - 1, 0)
-        : 0;
-
-      const card = `
-    <article class="relative flex flex-col overflow-hidden rounded-[1.6rem] border border-slate-200/70 bg-white/95 shadow-[0_20px_50px_rgba(15,23,42,0.12)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_28px_70px_rgba(15,23,42,0.18)] sm:min-h-[40rem]">
-      <div class="relative aspect-[16/9] overflow-hidden rounded-t-[1.6rem] bg-slate-50">
-        ${
-          imagenPrincipal
-            ? `<img src="${imagenMiniatura}" data-original-url="${imagenPrincipal}" alt="${terreno.titulo ?? "Terreno"}" class="h-full w-full object-cover" loading="lazy" decoding="async" onerror="if(!this.dataset.fallbacked){this.dataset.fallbacked='1';this.src=this.dataset.originalUrl;}" />`
-            : `<img src="/no-image.jpg" alt="Sin imagen" class="h-full w-full object-contain p-2" loading="lazy" decoding="async" />`
-        }
-
-        ${
-          fotosExtra > 0
-            ? `<span class="absolute left-3 top-3 rounded-full bg-slate-950/80 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-white backdrop-blur">+${fotosExtra} fotos</span>`
-            : ""
-        }
-      </div>
-      <div class="flex flex-1 flex-col p-3 sm:p-5">
-        <div class="space-y-2">
-          ${terreno.tipo ? `<span class="bg-sky-900/20 text-black inline-block px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide">${terreno.tipo}</span>` : ""}
-          <h2 class="text-lg sm:text-2xl font-bold tracking-tight text-slate-950">${terreno.titulo}</h2>
-          <p class="text-sm text-slate-600 overflow-hidden" style="display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;">${terreno.descripcion ?? ""}</p>
-
-          <div class="pt-2">
-            <p class="text-xl sm:text-2xl font-extrabold text-emerald-700">${formatearPrecio(terreno.precio)}</p>
-          </div>
-
-          <div class="mt-2 flex flex-col sm:flex-row sm:gap-2 gap-2">
-            ${terreno.medidas ? `<div class="flex-1 rounded-xl border border-slate-300/70 bg-slate-100 p-2 text-sm font-medium text-slate-700">Medidas<br/><span class="font-semibold">${terreno.medidas}</span></div>` : ""}
-            ${terreno.ubicacion ? `<div class="flex-1 rounded-xl border border-slate-300/70 bg-slate-100 p-2 text-sm font-medium text-slate-700">Ubicación<br/><span class="font-semibold">${terreno.ubicacion}</span></div>` : ""}
-          </div>
-        </div>
-
-        <div class="mt-auto mb-3 flex gap-3 pt-3">
-          <a
-            href="https://wa.me/524751080850?text=Hola%20Noe%20Aguilera%20quiero%20información%20de%20este%20terreno:%20${encodeURIComponent(terreno.titulo)}%20en%20${encodeURIComponent(terreno.ubicacion)}"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="inline-flex items-center justify-center gap-2 rounded-full border border-emerald-700/20 bg-gradient-to-r from-emerald-600 to-emerald-500 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-950/15 transition hover:brightness-95"
-          >
-            <!-- Logo WhatsApp Blanco -->
-            <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 32 32" class="w-5 h-5">
-              <path
-                d="M16 3C9.373 3 4 8.373 4 15c0 2.604.787 5.004 2.145 7.017L4 29l7.17-2.104C12.19 27.184 14.05 27.5 16 27.5c6.627 0 12-5.373 12-12S22.627 3 16 3zm0 22c-1.702 0-3.3-.393-4.728-1.088l-.338-.168-4.26 1.248 1.264-4.147-.22-.34A8.932 8.932 0 0 1 7 15c0-4.963 4.037-9 9-9s9 4.037 9 9-4.037 9-9 9zm4.998-6.682c-.273-.137-1.616-.797-1.867-.888s-.433-.137-.613.137c-.18.273-.703.888-.862 1.07-.16.18-.32.205-.593.068-.273-.137-1.15-.423-2.191-1.345-.81-.723-1.357-1.616-1.516-1.889-.16-.273-.017-.42.12-.557.124-.124.273-.320.41-.48.137-.16.182-.273.273-.456.091-.18.046-.34-.023-.48-.068-.137-.613-1.48-.84-2.03-.221-.53-.446-.46-.613-.468l-.523-.009c-.18 0-.48.068-.733.34s-.96.94-.96 2.29.983 2.656 1.12 2.84c.137.182 1.937 2.957 4.693 4.144.657.283 1.17.453 1.57.58.66.21 1.26.18 1.733.11.53-.079 1.616-.658 1.844-1.295.228-.637.228-1.182.16-1.295-.068-.114-.25-.183-.523-.32z"
-              />
-            </svg>
-            Contactame
-          </a>
-
-          <a
-            href="/Terreno/${terreno.id}"
-            class="inline-flex items-center justify-center gap-2 rounded-full border border-sky-900/30 bg-sky-900 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-sky-950/20 transition hover:bg-sky-800"
-          >
-            Ver más
-          </a>
-        </div>
-
-      </div>
-    </article>
-  `;
-      contenedor.insertAdjacentHTML("beforeend", card);
-    });
   }
 
   cargarTerrenos();
