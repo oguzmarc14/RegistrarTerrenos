@@ -1,6 +1,7 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import Footer from "./Footer.astro";
+import TipoTerreno from "../ui/TipoTerreno.astro";
 
 const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
 const supabaseKey = import.meta.env.PUBLIC_SUPABASE_KEY;
@@ -11,9 +12,11 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_KEY;
     class="min-h-screen bg-gradient-to-b from-sky-950 via-[#075985] to-sky-950"
   >
     <main>
-      <section class="mx-auto max-w-[96rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
+      <section
+        class="mx-auto max-w-[96rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14"
+      >
         <!-- ENCABEZADO -->
-        <div class="mx-auto mb-9 max-w-3xl text-center">
+        <div class="mx-auto mb-9 max-w-5xl text-center">
           <span
             class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.18em] text-sky-100 backdrop-blur-sm"
           >
@@ -28,8 +31,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_KEY;
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
-                d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6"
-              />
+                d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6"></path>
             </svg>
 
             Catálogo de propiedades
@@ -47,6 +49,18 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_KEY;
             Conoce nuestras propiedades disponibles y solicita información
             directamente por WhatsApp.
           </p>
+
+          <h3
+            class:list={[
+              "xl:text-4xl",
+              "text-white",
+              "text-3xl",
+              "text-center",
+            ]}
+          >
+            ¿Que tipo de terrenos buscas?
+          </h3>
+          <TipoTerreno />
 
           <p
             id="contador-propiedades"
@@ -131,10 +145,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_KEY;
         return url;
       }
 
-      parsedUrl.pathname = parsedUrl.pathname.replace(
-        publicPath,
-        renderPath
-      );
+      parsedUrl.pathname = parsedUrl.pathname.replace(publicPath, renderPath);
 
       parsedUrl.searchParams.delete("download");
       parsedUrl.searchParams.set("width", "1200");
@@ -161,9 +172,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_KEY;
       return texto;
     }
 
-    const numero = Number(
-      texto.replace(/\s+/g, "").replace(/,/g, "")
-    );
+    const numero = Number(texto.replace(/\s+/g, "").replace(/,/g, ""));
 
     return Number.isFinite(numero)
       ? `$${numero.toLocaleString("es-MX")} MXN`
@@ -171,8 +180,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_KEY;
   }
 
   function crearMensajeWhatsApp(terreno) {
-    const titulo =
-      String(terreno.titulo ?? "").trim() || "esta propiedad";
+    const titulo = String(terreno.titulo ?? "").trim() || "esta propiedad";
 
     const ubicacion = String(terreno.ubicacion ?? "").trim();
 
@@ -180,9 +188,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_KEY;
       ? `Hola Noé Aguilera, quiero información sobre la propiedad "${titulo}", ubicada en ${ubicacion}.`
       : `Hola Noé Aguilera, quiero información sobre la propiedad "${titulo}".`;
 
-    return `https://wa.me/524751080850?text=${encodeURIComponent(
-      mensaje
-    )}`;
+    return `https://wa.me/524751080850?text=${encodeURIComponent(mensaje)}`;
   }
 
   function mostrarError() {
@@ -262,23 +268,18 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_KEY;
 
   function crearTarjeta(terreno) {
     const titulo =
-      String(terreno.titulo ?? "").trim() ||
-      "Propiedad disponible";
+      String(terreno.titulo ?? "").trim() || "Propiedad disponible";
 
     const descripcion =
       String(terreno.descripcion ?? "").trim() ||
       "Solicita información para conocer todos los detalles de esta propiedad.";
 
-    const tipo =
-      String(terreno.tipo ?? "").trim() || "Propiedad";
+    const tipo = String(terreno.tipo ?? "").trim() || "Propiedad";
 
-    const medidas =
-      String(terreno.medidas ?? "").trim() ||
-      "Consultar medidas";
+    const medidas = String(terreno.medidas ?? "").trim() || "Consultar medidas";
 
     const ubicacion =
-      String(terreno.ubicacion ?? "").trim() ||
-      "Consultar ubicación";
+      String(terreno.ubicacion ?? "").trim() || "Consultar ubicación";
 
     const precio = formatearPrecio(terreno.precio);
 
@@ -286,8 +287,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_KEY;
       ? terreno.imagenes.filter(Boolean)
       : [];
 
-    const imagenPrincipal =
-      imagenes.length > 0 ? String(imagenes[0]) : "";
+    const imagenPrincipal = imagenes.length > 0 ? String(imagenes[0]) : "";
 
     const imagenMiniatura = imagenPrincipal
       ? getMiniatura(imagenPrincipal)
@@ -532,7 +532,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_KEY;
   async function cargarTerrenos() {
     if (!supabaseUrl || !supabaseKey) {
       console.error(
-        "Faltan las variables públicas de configuración de Supabase."
+        "Faltan las variables públicas de configuración de Supabase.",
       );
 
       mostrarError();
@@ -547,7 +547,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_KEY;
       const { data, error } = await supabase
         .from("Terrenos")
         .select(
-          "id, titulo, descripcion, precio, imagenes, medidas, ubicacion, tipo, fecha"
+          "id, titulo, descripcion, precio, imagenes, medidas, ubicacion, tipo, fecha",
         )
         .order("fecha", { ascending: false });
 
@@ -597,7 +597,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_KEY;
                 imagen.src = "/no-image.jpg";
               }
             },
-            { once: true }
+            { once: true },
           );
         });
     } catch (error) {
