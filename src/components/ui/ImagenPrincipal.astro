@@ -2,64 +2,60 @@
 import Navbar from "./Navbar.astro";
 interface Props {
   h2Title: string;
+  emphasis?: string;
   srcImage: string;
   description: string;
   class?: string;
 }
-const { h2Title, srcImage, description, class: className = "" } = Astro.props as Props;
+const { h2Title, emphasis = "Más cerca", srcImage, description, class: className = "" } = Astro.props as Props;
 ---
 <section class:list={["property-hero", className]} aria-labelledby="hero-title">
   <img src={srcImage} alt="" class="hero-image" loading="eager" fetchpriority="high" decoding="async" />
   <div class="hero-shade" aria-hidden="true"></div>
   <Navbar isOverlay={true} />
-  <div class="hero-container">
-    <div class="hero-copy">
-      <p class="hero-eyebrow"><span aria-hidden="true"></span>Encarnación de Díaz · Jalisco</p>
-      <h1 id="hero-title">{h2Title}</h1>
-      <p class="hero-description">{description}</p>
-      <div class="hero-actions">
-        <a href="/Terrenos" class="hero-primary">Ver terrenos <span aria-hidden="true">↗</span></a>
-        <a href="#Video-Terrenos" class="hero-video"><span class="play" aria-hidden="true">▶</span>Conoce el lugar</a>
-      </div>
+  <div class="hero-content">
+    <img src="/logo.png" alt="Noé Aguilera · Construcción y bienes raíces" class="hero-brand" width="497" height="200" decoding="async" />
+    <h1 id="hero-title"><span class="hero-outline">{h2Title}</span><span class="hero-solid">{emphasis}</span></h1>
+    <p class="hero-location">{description}</p>
+    <div class="hero-actions">
+      <a href="/Terrenos" class="hero-button hero-primary"><span>Ver terrenos</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6" /></svg></a>
+      <a href="#Video-Terrenos" class="hero-button hero-video"><span class="play" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="m9 5 11 7-11 7V5Z" /></svg></span><span>Ver video</span></a>
     </div>
-    <div class="hero-footer"><p>Noé Aguilera · Bienes raíces</p><a href="/MapaTerrenos">Explorar ubicación <span aria-hidden="true">↗</span></a></div>
   </div>
 </section>
 <style>
-  .property-hero { --cream:#f5f1e8; --gold:#d5bc92; position:relative; isolation:isolate; display:flex; min-height:780px; min-height:max(780px,100svh); background:#18241e; color:var(--cream); font-family:"Manrope",Arial,sans-serif; }
+  .property-hero { position:relative; isolation:isolate; display:grid; min-height:800px; min-height:max(800px,100svh); background:#031a30; color:#fff; font-family:"Manrope",Arial,sans-serif; }
   .hero-image,.hero-shade { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; }
   .hero-image { z-index:-3; object-fit:cover; object-position:center; }
-  .hero-shade { z-index:-2; background:linear-gradient(90deg,rgba(12,23,18,.9),rgba(12,23,18,.6) 45%,rgba(12,23,18,.15)),linear-gradient(0deg,rgba(8,15,11,.65),transparent 45%,rgba(8,15,11,.3)); }
-  .hero-container { box-sizing:border-box; width:min(100%,1440px); margin-inline:auto; display:flex; flex-direction:column; padding:190px clamp(24px,6vw,96px) 0; }
-  .hero-copy { margin-block:auto; padding:40px 0 90px; max-width:800px; }
-  .hero-eyebrow { display:flex; align-items:center; gap:14px; margin:0 0 24px; color:var(--gold); font-size:11px; font-weight:600; letter-spacing:.18em; text-transform:uppercase; line-height:1.8; }
-  .hero-eyebrow span { width:36px; height:1px; background:currentColor; flex-shrink:0; }
-  h1 { margin:0; max-width:13ch; font-family:"Cormorant Garamond",Georgia,serif; font-size:clamp(3.8rem,7.5vw,7.5rem); font-weight:400; line-height:.98; letter-spacing:-.035em; text-wrap:balance; }
-  .hero-description { max-width:43ch; margin:28px 0 0; color:rgba(245,241,232,.85); font-size:17px; line-height:1.8; text-wrap:pretty; }
-  .hero-actions { display:flex; flex-wrap:wrap; align-items:center; gap:24px 34px; margin-top:36px; }
-  .hero-primary { display:inline-flex; min-height:56px; box-sizing:border-box; align-items:center; justify-content:space-between; gap:40px; padding:16px 24px; background:var(--cream); color:#18241e; font-size:14px; font-weight:600; text-decoration:none; transition:background .2s; }
-  .hero-primary:hover { background:var(--gold); }
-  .hero-primary span { font-size:24px; line-height:1; }
-  .hero-video { display:inline-flex; min-height:48px; align-items:center; gap:12px; color:var(--cream); font-size:13px; text-decoration:none; }
-  .play { display:grid; place-items:center; width:42px; height:42px; border:1px solid rgba(245,241,232,.5); border-radius:50%; font-size:11px; }
-  .hero-video:hover .play { background:rgba(213,188,146,.2); border-color:var(--gold); }
-  .hero-footer { display:flex; align-items:center; justify-content:space-between; gap:20px; border-top:1px solid rgba(245,241,232,.25); padding:22px 0; font-size:12px; }
-  .hero-footer p { margin:0; color:rgba(245,241,232,.75); }
-  .hero-footer a { display:inline-flex; align-items:center; min-height:44px; gap:20px; color:var(--cream); text-decoration:none; }
-  a:focus-visible { outline:2px solid var(--gold); outline-offset:6px; }
+  .hero-shade { z-index:-2; background:linear-gradient(180deg,rgba(2,17,34,.32),rgba(2,17,34,.25) 45%,rgba(2,17,34,.55)); }
+  .hero-content { box-sizing:border-box; width:100%; max-width:1440px; margin:auto; padding:235px 32px 100px; display:flex; flex-direction:column; align-items:center; text-align:center; }
+  .hero-brand { width:clamp(180px,20vw,280px); height:auto; margin-bottom:28px; }
+  h1 { margin:0; display:flex; flex-direction:column; align-items:center; gap:4px; font-family:"Barlow Condensed","Arial Narrow",Arial,sans-serif; text-transform:uppercase; line-height:1; letter-spacing:.025em; }
+  .hero-outline { display:block; font-size:clamp(42px,6.8vw,100px); font-weight:500; color:#fff; }
+  @supports (-webkit-text-stroke:1px white) { .hero-outline { color:transparent; -webkit-text-stroke:1px rgba(255,255,255,.96); } }
+  .hero-solid { display:block; font-size:clamp(76px,10.5vw,154px); font-weight:700; letter-spacing:.015em; }
+  .hero-location { margin:22px 0 0; font-size:clamp(11px,1.3vw,18px); font-weight:500; line-height:1.8; letter-spacing:.28em; text-transform:uppercase; text-wrap:balance; text-shadow:0 2px 12px rgba(0,0,0,.7); }
+  .hero-actions { display:flex; flex-wrap:wrap; justify-content:center; gap:18px; margin-top:30px; }
+  .hero-button { display:inline-flex; box-sizing:border-box; min-height:58px; min-width:200px; justify-content:center; align-items:center; gap:24px; padding:14px 28px; border:1px solid rgba(255,255,255,.65); border-radius:999px; text-decoration:none; font-size:14px; font-weight:600; line-height:1.4; box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 8px 28px rgba(0,0,0,.12); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); transition:background .2s,transform .2s,border-color .2s; }
+  .hero-primary { background:rgba(255,255,255,.88); color:#06233a; }
+  .hero-primary>svg { width:24px; height:24px; }
+  .hero-video { background:rgba(5,30,50,.48); color:#fff; gap:14px; }
+  .play { display:grid; place-items:center; width:30px; height:30px; border:1px solid rgba(255,255,255,.9); border-radius:50%; }
+  .play svg { width:16px; height:16px; }
+  .hero-primary:hover { background:#fff; transform:translateY(-2px); }
+  .hero-video:hover { background:rgba(5,30,50,.7); border-color:#fff; transform:translateY(-2px); }
+  .hero-button:focus-visible { outline:3px solid #7dd3fc; outline-offset:5px; }
   @media(max-width:767px) {
-    .property-hero { min-height:max(740px,100svh); }
-    .hero-container { padding-top:170px; }
-    .hero-copy { padding:36px 0 64px; }
-    .hero-image { object-position:62% center; }
-    .hero-shade { background:linear-gradient(90deg,rgba(12,23,18,.85),rgba(12,23,18,.42)),linear-gradient(0deg,rgba(8,15,11,.7),transparent); }
-    .hero-eyebrow { font-size:9px; letter-spacing:.12em; gap:10px; }
-    .hero-eyebrow span { width:24px; }
-    h1 { font-size:clamp(3.3rem,12vw,5rem); }
-    .hero-description { font-size:15px; max-width:34ch; margin-top:24px; }
-    .hero-actions { gap:18px 24px; margin-top:28px; }
-    .hero-footer { font-size:10px; gap:12px; }
-    .hero-footer a { gap:10px; }
+    .property-hero { min-height:780px; min-height:max(780px,100svh); }
+    .hero-content { padding:210px 20px 70px; }
+    .hero-brand { width:190px; margin-bottom:30px; }
+    .hero-outline { font-size:clamp(30px,7.7vw,59px); letter-spacing:.01em; }
+    .hero-solid { font-size:clamp(66px,17vw,120px); }
+    .hero-location { max-width:34ch; margin-top:22px; font-size:11px; letter-spacing:.18em; }
+    .hero-actions { gap:12px; margin-top:28px; }
+    .hero-button { min-width:148px; min-height:52px; padding:12px 19px; gap:12px; font-size:13px; }
+    .hero-video { background:rgba(5,30,50,.65); }
   }
-  @media(prefers-reduced-motion:reduce) { .hero-primary { transition:none; } }
+  @media(max-width:359px) { .hero-actions { flex-direction:column; width:min(100%,230px); } .hero-button { width:100%; } }
+  @media(prefers-reduced-motion:reduce) { .hero-button { transition:none; } }
 </style>
