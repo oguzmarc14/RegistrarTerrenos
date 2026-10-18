@@ -1,17 +1,28 @@
 ---
 import "/styles/global.css";
 import WhatsappBoton from "../components/ui/WhatsappBoton.astro";
+interface Props { title?: string; description?: string; image?: string; }
+const {
+  title = "Terrenos en Encarnación de Díaz | Noé Aguilera",
+  description = "Conoce terrenos y propiedades en Encarnación de Díaz, Jalisco. Consulta opciones, ubicación y agenda una visita con Noé Aguilera.",
+  image = "/header1.webp",
+} = Astro.props;
+const origin = Astro.site ?? new URL("https://noeaguilera.com");
+const canonical = new URL(Astro.url.pathname, origin);
+const imageUrl = new URL(image, origin);
+const privateRoutes = ["/EditarTerreno", "/iniciarsesion", "/panelAdmin", "/primeroIniciarSesion", "/RegistrarTerrenos"];
+const isPrivate = privateRoutes.some((route) => Astro.url.pathname.startsWith(route));
 
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="es">
   <head>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="icon" type="image/png" href="/logo-oscuro.png" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&family=Playfair+Display+SC:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Manrope:wght@400;500;600;700&family=Oswald:wght@200..700&family=Playfair+Display+SC:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&display=swap"
       rel="stylesheet"
     />
     <meta charset="UTF-8" />
@@ -21,8 +32,21 @@ import WhatsappBoton from "../components/ui/WhatsappBoton.astro";
       type="module"
       src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-element-bundle.min.js"
     ></script>
-    <link rel="icon" href="/favicon.ico" />
-    <title>Noe Aguilera</title>
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical.href} />
+    <meta name="robots" content={isPrivate ? "noindex, nofollow" : "index, follow"} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_MX" />
+    <meta property="og:site_name" content="Noé Aguilera" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical.href} />
+    <meta property="og:image" content={imageUrl.href} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={imageUrl.href} />
   </head>
   <body class:list={["bg-gray-200"]}>
     <slot />

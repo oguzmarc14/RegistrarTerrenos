@@ -13,7 +13,7 @@ const { class: className = "", isOverlay = false } = Astro.props as Prop;
     "w-full",
     "border-b",
     "border-white/15",
-    "bg-sky-950/80",
+    isOverlay ? "bg-[#18241e]/35" : "bg-sky-950/80",
     "backdrop-blur-md",
     "backdrop-saturate-150",
     "shadow-lg",
@@ -27,7 +27,7 @@ const { class: className = "", isOverlay = false } = Astro.props as Prop;
         <img
           src="/logo.png"
           class="w-28 duration-300 hover:scale-105 sm:w-40"
-          alt="Logo del sitio"
+          alt="Noé Aguilera · Inicio"
         />
       </a>
 
@@ -77,7 +77,7 @@ const { class: className = "", isOverlay = false } = Astro.props as Prop;
       class="flex justify-center gap-8 pb-3 pt-3 text-[10px] font-bold uppercase tracking-wide text-white sm:text-sm"
     >
       <li class="duration-300 hover:scale-110 hover:text-sky-300">
-        <a href="/">Home</a>
+        <a href="/">Inicio</a>
       </li>
 
       <li class="duration-300 hover:scale-110 hover:text-sky-300">

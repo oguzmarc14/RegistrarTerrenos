@@ -1,148 +1,65 @@
 ---
-import Button from "./Button.astro";
 import Navbar from "./Navbar.astro";
-
 interface Props {
   h2Title: string;
   srcImage: string;
   description: string;
   class?: string;
 }
-
-const {
-  h2Title,
-  srcImage,
-  description,
-  class: className = "",
-} = Astro.props as Props;
+const { h2Title, srcImage, description, class: className = "" } = Astro.props as Props;
 ---
-
-<article
-  class:list={["relative min-h-screen overflow-hidden bg-sky-950", className]}
->
-  <!-- Imagen fondo -->
-  <img
-    src={srcImage}
-    alt="Imagen de fondo"
-    class="absolute inset-0 h-full w-full scale-105 object-cover"
-  />
-
-  <!-- Overlays -->
-  <div
-    class="absolute inset-0 bg-gradient-to-r from-sky-950 via-sky-950/80 to-sky-950/30"
-  >
-  </div>
-  <div
-    class="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-black/40"
-  >
-  </div>
-
-  <!-- Navbar -->
+<section class:list={["property-hero", className]} aria-labelledby="hero-title">
+  <img src={srcImage} alt="" class="hero-image" loading="eager" fetchpriority="high" decoding="async" />
+  <div class="hero-shade" aria-hidden="true"></div>
   <Navbar isOverlay={true} />
-
-  <!-- Hero -->
-  <div
-    class="relative z-10 mx-auto flex min-h-screen max-w-7xl items-center px-5 pb-8 pt-44 sm:px-8 sm:pt-40 lg:px-12"
-  >
-    <div class="grid w-full items-center gap-6 lg:grid-cols-[1.05fr_0.95fr]">
-      <!-- TEXTO -->
-      <div
-        class="mx-auto flex max-w-3xl flex-col items-center text-center lg:mx-0 lg:items-start lg:text-left"
-      >
-        <!-- Badge -->
-        <span
-          class="inline-flex rounded-full border border-white/15 bg-sky-700/40 px-3 py-2 text-[10px] font-bold uppercase tracking-[0.22em] text-white/85 backdrop-blur-md sm:px-4 sm:text-xs"
-        >
-          Bienes raíces · Encarnación de Díaz
-        </span>
-
-        <!-- Título -->
-        <h1
-          class="mt-4 max-w-md text-[2.2rem] font-black leading-[1] tracking-tight text-white drop-shadow-2xl sm:mt-6 sm:text-5xl lg:max-w-3xl lg:text-7xl"
-        >
-          {h2Title}
-        </h1>
-
-        <!-- Descripción -->
-        <p
-          class="mt-4 max-w-sm text-[15px] leading-7 text-sky-50/85 drop-shadow sm:mt-6 sm:max-w-2xl sm:text-lg sm:leading-8 lg:text-xl"
-        >
-          {description}
-        </p>
-
-        <!-- Botones -->
-        <div
-          class="mt-6 flex w-full max-w-xs flex-col items-center justify-center gap-3 sm:mt-8 sm:max-w-none sm:flex-row sm:gap-4 lg:justify-start"
-        >
-          <Button href="/Terrenos" text="Ver terrenos" isGhost={false} />
-          <Button href="#Video-Terrenos" text="Ver video" isGhost={true} />
-        </div>
-
-        <!-- Stats -->
-        <div class="mt-10 grid w-full max-w-xs grid-cols-3 gap-3 sm:max-w-xl">
-          <div
-            class="rounded-2xl border border-white/10 bg-white/[0.06] p-4 backdrop-blur-xl"
-          >
-            <p class="text-2xl font-semibold text-white">+30</p>
-            <p class="mt-1 text-xs text-white/55">Propiedades</p>
-          </div>
-
-          <div
-            class="rounded-2xl border border-white/10 bg-white/[0.06] p-4 backdrop-blur-xl"
-          >
-            <p class="text-2xl font-semibold text-white">24/7</p>
-            <p class="mt-1 text-xs text-white/55">Atención</p>
-          </div>
-
-          <div
-            class="rounded-2xl border border-white/10 bg-white/[0.06] p-4 backdrop-blur-xl"
-          >
-            <p class="text-2xl font-semibold text-white">Local</p>
-            <p class="mt-1 text-xs text-white/55">Asesoría</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- CARD -->
-      <div class="mt-2 flex justify-center lg:mt-0 lg:justify-end">
-        <div
-          class="w-full max-w-[320px] rounded-[1.7rem] border border-white/10 bg-white/10 p-3 text-white shadow-2xl shadow-black/40 backdrop-blur-xl sm:max-w-sm sm:p-5"
-        >
-          <!-- Imagen -->
-          <div class="overflow-hidden rounded-[1.2rem]">
-            <img
-              src={srcImage}
-              alt="Propiedad destacada"
-              class="h-44 w-full rounded-[1.2rem] object-cover sm:h-56"
-            />
-          </div>
-
-          <!-- Texto -->
-          <div class="mt-4">
-            <p
-              class="text-[10px] font-bold uppercase tracking-[0.25em] text-sky-100/70 sm:text-xs"
-            >
-              Propiedad destacada
-            </p>
-
-            <h3 class="mt-2 text-2xl font-black leading-tight">
-              Encuentra tu próxima inversión
-            </h3>
-
-            <p class="mt-3 text-sm leading-6 text-white/70">
-              Casas, terrenos y oportunidades listas para conocer.
-            </p>
-
-            <!-- Botón -->
-            <a
-              href="/Terrenos"
-              class="mt-4 inline-flex w-full items-center justify-center rounded-2xl bg-white px-5 py-3 text-sm font-bold text-sky-950 transition hover:bg-sky-100"
-            >
-              Explorar catálogo
-            </a>
-          </div>
-        </div>
+  <div class="hero-container">
+    <div class="hero-copy">
+      <p class="hero-eyebrow"><span aria-hidden="true"></span>Encarnación de Díaz · Jalisco</p>
+      <h1 id="hero-title">{h2Title}</h1>
+      <p class="hero-description">{description}</p>
+      <div class="hero-actions">
+        <a href="/Terrenos" class="hero-primary">Ver terrenos <span aria-hidden="true">↗</span></a>
+        <a href="#Video-Terrenos" class="hero-video"><span class="play" aria-hidden="true">▶</span>Conoce el lugar</a>
       </div>
     </div>
+    <div class="hero-footer"><p>Noé Aguilera · Bienes raíces</p><a href="/MapaTerrenos">Explorar ubicación <span aria-hidden="true">↗</span></a></div>
   </div>
-</article>
+</section>
+<style>
+  .property-hero { --cream:#f5f1e8; --gold:#d5bc92; position:relative; isolation:isolate; display:flex; min-height:780px; min-height:max(780px,100svh); background:#18241e; color:var(--cream); font-family:"Manrope",Arial,sans-serif; }
+  .hero-image,.hero-shade { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; }
+  .hero-image { z-index:-3; object-fit:cover; object-position:center; }
+  .hero-shade { z-index:-2; background:linear-gradient(90deg,rgba(12,23,18,.9),rgba(12,23,18,.6) 45%,rgba(12,23,18,.15)),linear-gradient(0deg,rgba(8,15,11,.65),transparent 45%,rgba(8,15,11,.3)); }
+  .hero-container { box-sizing:border-box; width:min(100%,1440px); margin-inline:auto; display:flex; flex-direction:column; padding:190px clamp(24px,6vw,96px) 0; }
+  .hero-copy { margin-block:auto; padding:40px 0 90px; max-width:800px; }
+  .hero-eyebrow { display:flex; align-items:center; gap:14px; margin:0 0 24px; color:var(--gold); font-size:11px; font-weight:600; letter-spacing:.18em; text-transform:uppercase; line-height:1.8; }
+  .hero-eyebrow span { width:36px; height:1px; background:currentColor; flex-shrink:0; }
+  h1 { margin:0; max-width:13ch; font-family:"Cormorant Garamond",Georgia,serif; font-size:clamp(3.8rem,7.5vw,7.5rem); font-weight:400; line-height:.98; letter-spacing:-.035em; text-wrap:balance; }
+  .hero-description { max-width:43ch; margin:28px 0 0; color:rgba(245,241,232,.85); font-size:17px; line-height:1.8; text-wrap:pretty; }
+  .hero-actions { display:flex; flex-wrap:wrap; align-items:center; gap:24px 34px; margin-top:36px; }
+  .hero-primary { display:inline-flex; min-height:56px; box-sizing:border-box; align-items:center; justify-content:space-between; gap:40px; padding:16px 24px; background:var(--cream); color:#18241e; font-size:14px; font-weight:600; text-decoration:none; transition:background .2s; }
+  .hero-primary:hover { background:var(--gold); }
+  .hero-primary span { font-size:24px; line-height:1; }
+  .hero-video { display:inline-flex; min-height:48px; align-items:center; gap:12px; color:var(--cream); font-size:13px; text-decoration:none; }
+  .play { display:grid; place-items:center; width:42px; height:42px; border:1px solid rgba(245,241,232,.5); border-radius:50%; font-size:11px; }
+  .hero-video:hover .play { background:rgba(213,188,146,.2); border-color:var(--gold); }
+  .hero-footer { display:flex; align-items:center; justify-content:space-between; gap:20px; border-top:1px solid rgba(245,241,232,.25); padding:22px 0; font-size:12px; }
+  .hero-footer p { margin:0; color:rgba(245,241,232,.75); }
+  .hero-footer a { display:inline-flex; align-items:center; min-height:44px; gap:20px; color:var(--cream); text-decoration:none; }
+  a:focus-visible { outline:2px solid var(--gold); outline-offset:6px; }
+  @media(max-width:767px) {
+    .property-hero { min-height:max(740px,100svh); }
+    .hero-container { padding-top:170px; }
+    .hero-copy { padding:36px 0 64px; }
+    .hero-image { object-position:62% center; }
+    .hero-shade { background:linear-gradient(90deg,rgba(12,23,18,.85),rgba(12,23,18,.42)),linear-gradient(0deg,rgba(8,15,11,.7),transparent); }
+    .hero-eyebrow { font-size:9px; letter-spacing:.12em; gap:10px; }
+    .hero-eyebrow span { width:24px; }
+    h1 { font-size:clamp(3.3rem,12vw,5rem); }
+    .hero-description { font-size:15px; max-width:34ch; margin-top:24px; }
+    .hero-actions { gap:18px 24px; margin-top:28px; }
+    .hero-footer { font-size:10px; gap:12px; }
+    .hero-footer a { gap:10px; }
+  }
+  @media(prefers-reduced-motion:reduce) { .hero-primary { transition:none; } }
+</style>
